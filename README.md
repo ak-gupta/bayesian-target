@@ -13,6 +13,8 @@ The encoding proceeds as follows:
 5. For each level in the categorical variable,
     1. Generate the posterior distribution using the observed target values for the categorical level,
     2. Set the encoding value to a sample from the posterior distribution
+        * If a new level has appeared in the dataset, the encoding will be sampled from the prior distribution.
+          To disable this behaviour, initialize the encoder with ``handle_unknown="error"``.
 
 Then, we repeat step 5.2 a total of ``n_estimators`` times, generating a total of ``n_estimators`` training datasets
 with unique encodings. The end model is a vote from each sampled dataset.
@@ -94,7 +96,8 @@ use a DataFrame with categorical data types.
 ensemble.fit(X, y, categorical_feature=[5])
 ```
 
-When you call ``predict`` on a novel dataset, note that the encoder will transform your data at runtime:
+When you call ``predict`` on a novel dataset, note that the encoder will transform your data at runtime and it
+will encode based on the *mean of the posterior distribution*:
 
 ```python
 ensemble.predict(X)
