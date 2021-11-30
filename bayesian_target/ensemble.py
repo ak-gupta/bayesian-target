@@ -3,6 +3,7 @@
 Ensemble estimator that creates multiple models through sampling.
 """
 
+import logging
 from typing import List, Optional, Tuple, Union
 
 from joblib import Parallel, effective_n_jobs
@@ -13,6 +14,8 @@ from sklearn.ensemble._base import BaseEnsemble
 from sklearn.utils.fixes import delayed
 from sklearn.utils.metaestimators import available_if
 from sklearn.utils.validation import check_array, check_is_fitted
+
+LOG = logging.getLogger(__name__)
 
 
 def _estimator_has(attr):
@@ -141,8 +144,8 @@ class BayesianTargetEstimator(BaseEnsemble):
             Categorical features to encode. If a list of int, it will be interpreted
             as indices. If a list of string, it will be interpreted as the column names
             in a pandas DataFrame. If "auto" and the data is a pandas DataFrame, any columns
-            with a ``pd.Categorical`` data type will be encoded. "auto" with a numpy array will
-            be ignored.
+            with a ``pd.Categorical`` data type will be encoded. A numpy array with "auto"
+            will result in all input features being treated as categorical.
         **fit_params
             Parameters to be passed to the underlying estimator.
         
@@ -163,10 +166,16 @@ class BayesianTargetEstimator(BaseEnsemble):
 
         X, y = self._validate_data(X, y, dtype=None)
 
-        if not hasattr(self, "categorical_") and categorical_feature != "auto":
-            self.categorical_ = np.zeros(X.shape[1], dtype=bool)
-            for col in categorical_feature:
-                self.categorical_[col] = True
+        if not hasattr(self, "categorical_"):
+            if categorical_feature == "auto":
+                LOG.warning(
+                    "No categorical features provided. All features will be treated as categorical."
+                )
+                self.categorical_ = np.ones(X.shape[1], dtype=bool)
+            else:
+                self.categorical_ = np.zeros(X.shape[1], dtype=bool)
+                for col in categorical_feature:
+                    self.categorical_[col] = True
 
         # Fit the encoder
         self.encoder_ = clone(self.encoder)
