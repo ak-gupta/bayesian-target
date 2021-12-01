@@ -30,6 +30,10 @@ def _init_prior(dist: str, y) -> Tuple:
     """
     if dist == "bernoulli":
         return np.average(y), 1 - np.average(y)
+    elif dist == "multinomial":
+        _, counts = np.unique(y, return_counts=True)
+
+        return tuple(counts)
     elif dist == "exponential":
         return y.shape[0] + 1, np.sum(y)
     elif dist in ("gamma", "invgamma"):
@@ -68,6 +72,13 @@ def _update_posterior(y, mask, dist, params) -> Tuple:
     """
     if dist == "bernoulli":
         return params[0] + np.sum(y[mask]), params[1] + np.sum(mask) - np.sum(y[mask]), 0, 1
+    elif dist == "multinomial":
+        # This assumes the classes are 0, 1, 2, ..., m
+        unique, counts = np.unique(y[mask], return_counts=True)
+        class_counts = np.zeros((len(params),))
+        class_counts[unique] = counts
+
+        return tuple(np.array(params) + class_counts)
     elif dist == "exponential":
         return params[0] + np.sum(mask), 0, params[1]/(1 + params[1] * np.sum(y[mask]))
     elif dist in ("gamma", "invgamma"):
@@ -104,15 +115,21 @@ def _encode_level(mask, dist, sample, params):
     """
     if dist == "bernoulli":
         random_var = scipy.stats.beta(*params)
+    elif dist == "multinomial":
+        random_var = scipy.stats.dirichlet(params)
     elif dist in ("exponential", "gamma", "invgamma"):
         random_var = scipy.stats.gamma(*params)
     else:
         raise NotImplementedError(f"Likelihood {dist} has not been implemented")
     
     if sample:
-        encoding = random_var.rvs(size=1)
+        encoding = random_var.rvs(size=1).ravel()
     else:
-        encoding = np.array(random_var.stats(moments="mvsk"))
+        avg = random_var.mean()
+        if isinstance(avg, float):
+            encoding = np.array([avg])  # Univariate distributions provide a float
+        else:
+            encoding = avg  # Multinomial provides an array
     
     mask_options = [0, 1, 999]
     for opt in mask_options:
@@ -143,7 +160,7 @@ class BayesianTargetEncoder(_BaseEncoder):
     
     Parameters
     ----------
-    dist : {"bernoulli", "exponential", "gamma", "invgamma"}
+    dist : {"bernoulli", "multinomial", "exponential", "gamma", "invgamma"}
         The likelihood for the target.
     sample : bool, optional (default False)
         Whether or not to encode the categorical values as a sample from the posterior

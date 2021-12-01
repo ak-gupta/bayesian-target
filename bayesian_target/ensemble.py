@@ -57,12 +57,8 @@ def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params)
     estimator
         The trained estimator.
     """
-    X_sample = X.copy()
-    X_encoded = encoder.transform(X_sample[:, categorical_feature])
-    for idx, col in enumerate(categorical_feature):
-        if not col:
-            continue
-        X_sample[:, idx] = X_encoded[:, idx]
+    X_encoded = encoder.transform(X[:, categorical_feature])
+    X_sample = np.hstack((X[:, ~categorical_feature], X_encoded))
     
     return estimator.fit(X_sample, y, **fit_params)
 
@@ -92,7 +88,9 @@ class BayesianTargetEstimator(BaseEnsemble):
     
     Attributes
     ----------
-    base_estimator_
+    categorical_ : np.ndarray
+        A boolean mask indicating which columns are categorical and which are continuous.
+    base_estimator_ : estimator object
         The base estimator from which the ensemble is grown.
     estimators_ : list
         The collection of fitted base estimators.
@@ -221,18 +219,15 @@ class BayesianTargetEstimator(BaseEnsemble):
         check_is_fitted(self)
         self.encoder_.set_params(sample=False)
 
-        X_copy = check_array(X, dtype=None)
-        X_encoded = self.encoder_.transform(X_copy[:, self.categorical_])
-        for idx, col in enumerate(self.categorical_):
-            if not col:
-                continue
-            X_copy[:, idx] = X_encoded[:, idx]
+        X = check_array(X, dtype=None)
+        X_encoded = self.encoder_.transform(X[:, self.categorical_])
+        X_predict = np.hstack((X[:, ~self.categorical_], X_encoded))
         
         # Predict
         parallel = Parallel(n_jobs=self.n_jobs)
 
         out = parallel(
-            delayed(model.predict)(X_copy) for model in self.estimators_
+            delayed(model.predict)(X_predict) for model in self.estimators_
         )
 
         return np.average(np.vstack(out), axis=0)
