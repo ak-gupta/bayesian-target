@@ -1,6 +1,6 @@
 """Import path."""
 
-__version__ = "0.1.0"
+from ._meta import __version__
 
 from typing import List
 
