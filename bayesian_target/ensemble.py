@@ -9,7 +9,7 @@ from typing import List, Optional, Tuple, Union
 from joblib import Parallel, effective_n_jobs
 import numpy as np
 from pandas.api.types import is_categorical_dtype
-from sklearn.base import clone
+from sklearn.base import BaseEstimator, clone
 from sklearn.ensemble._base import BaseEnsemble
 from sklearn.utils.fixes import delayed
 from sklearn.utils.metaestimators import available_if
@@ -20,6 +20,7 @@ LOG = logging.getLogger(__name__)
 
 def _estimator_has(attr):
     """Check if we can delegate a method to the underlying estimator."""
+
     def check(self):
         if hasattr(self, "base_estimator"):
             getattr(self.base_estimator, attr)
@@ -28,14 +29,13 @@ def _estimator_has(attr):
         getattr(self.base_estimator, attr)
 
         return True
-    
-    return check
 
+    return check
 
 
 def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params):
     """Sample and fit the estimator.
-    
+
     Parameters
     ----------
     estimator : estimator object
@@ -51,7 +51,7 @@ def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params)
         A boolean mask indicating which columns are categorical
     **fit_params
         Parameters to be passed to the underlying estimator.
-    
+
     Returns
     -------
     estimator
@@ -59,17 +59,18 @@ def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params)
     """
     X_encoded = encoder.transform(X[:, categorical_feature])
     X_sample = np.hstack((X[:, ~categorical_feature], X_encoded))
-    
+
     return estimator.fit(X_sample, y, **fit_params)
+
 
 class BayesianTargetEstimator(BaseEnsemble):
     """Bayesian target estimator.
-    
+
     This estimator will use the bayesian target encoder to encode multiple
     training datasets. The supplied estimator will be trained multiple times,
     producing ``n_estimators`` submodels. The prediction from the model will
     be an average of each submodel's output.
-    
+
     Parameters
     ----------
     base_estimator : object
@@ -85,7 +86,7 @@ class BayesianTargetEstimator(BaseEnsemble):
     estimator_params : list of str, optional (default tuple())
         The list of attributes to use as parameters when instantiating a
         new base estimator. If none are given, default parameters are used.
-    
+
     Attributes
     ----------
     categorical_ : np.ndarray
@@ -104,7 +105,7 @@ class BayesianTargetEstimator(BaseEnsemble):
         encoder,
         n_estimators: int = 10,
         n_jobs: Optional[int] = None,
-        estimator_params: Union[List[str], Tuple] = tuple()
+        estimator_params: Union[List[str], Tuple] = tuple(),
     ):
         """Init method."""
         super().__init__(
@@ -115,7 +116,6 @@ class BayesianTargetEstimator(BaseEnsemble):
         self.encoder = encoder
         self.n_jobs = n_jobs
 
-
     def fit(
         self,
         X,
@@ -124,13 +124,13 @@ class BayesianTargetEstimator(BaseEnsemble):
         **fit_params
     ):
         """Fit the estimator.
-        
+
         Fitting the estimator involves
-        
+
         1. Fitting the encoder,
         2. Sampling the encoder ``n_estimators`` times,
         3. Fitting the submodels.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
@@ -146,7 +146,7 @@ class BayesianTargetEstimator(BaseEnsemble):
             will result in all input features being treated as categorical.
         **fit_params
             Parameters to be passed to the underlying estimator.
-        
+
         Returns
         -------
         self
@@ -178,10 +178,12 @@ class BayesianTargetEstimator(BaseEnsemble):
         # Fit the encoder
         self.encoder_ = clone(self.encoder)
         self.encoder_.set_params(sample=True)
-        self.encoder_.fit(X[:, self.categorical_], y)  # Need to filter the columns to categoricals
+        self.encoder_.fit(
+            X[:, self.categorical_], y
+        )  # Need to filter the columns to categoricals
 
         self._validate_estimator()
-        self.estimators_ = []
+        self.estimators_: List[BaseEstimator] = []
         estimators = [self._make_estimator() for _ in range(self.n_estimators)]
 
         if effective_n_jobs(self.n_jobs) == 1:
@@ -189,7 +191,7 @@ class BayesianTargetEstimator(BaseEnsemble):
         else:
             parallel = Parallel(n_jobs=self.n_jobs)
             fn = delayed(_sample_and_fit)
-        
+
         parallel(
             fn(estimator, self.encoder_, X, y, self.categorical_, **fit_params)
             for estimator in estimators
@@ -197,20 +199,19 @@ class BayesianTargetEstimator(BaseEnsemble):
 
         return self
 
-
     @available_if(_estimator_has("predict"))
-    def predict(self, X) -> np.ndarray:
+    def predict(self, X):
         """Call predict on the estimators.
-        
+
         The output of this function is the average prediction from all submodels.
         The function will encode the categorical variables using the mean of the posterior
         distribution.
-        
+
         Parameters
         ----------
         X : indexable, length (n_samples,)
             Must fulfill the input assumptions of ``fit``.
-        
+
         Returns
         -------
         np.ndarray of shape (n_samples,)
@@ -222,30 +223,27 @@ class BayesianTargetEstimator(BaseEnsemble):
         X = check_array(X, dtype=None)
         X_encoded = self.encoder_.transform(X[:, self.categorical_])
         X_predict = np.hstack((X[:, ~self.categorical_], X_encoded))
-        
+
         # Predict
         parallel = Parallel(n_jobs=self.n_jobs)
 
-        out = parallel(
-            delayed(model.predict)(X_predict) for model in self.estimators_
-        )
+        out = parallel(delayed(model.predict)(X_predict) for model in self.estimators_)
 
         return np.average(np.vstack(out), axis=0)
 
-
     @available_if(_estimator_has("predict"))
-    def predict_proba(self, X) -> np.ndarray:
+    def predict_proba(self, X):
         """Call predict_proba on the estimators.
-        
+
         The output of this function is the average prediction from all submodels.
         The function will encode the categorical variables using the mean of the posterior
         distribution.
-        
+
         Parameters
         ----------
         X : indexable, length (n_samples,)
             Must fulfill the input assumptions of ``fit``.
-        
+
         Returns
         -------
         np.ndarray of shape (n_samples,)
@@ -254,19 +252,15 @@ class BayesianTargetEstimator(BaseEnsemble):
         check_is_fitted(self)
         self.encoder_.set_params(sample=False)
 
-        X_copy = check_array(X, dtype=None)
-        X_encoded = self.encoder_.transform(X_copy[:, self.categorical_])
-        for idx, col in enumerate(self.categorical_):
-            if not col:
-                continue
-            X_copy[:, idx] = X_encoded[:, idx]
-        
+        X = check_array(X, dtype=None)
+        X_encoded = self.encoder_.transform(X[:, self.categorical_])
+        X_predict = np.hstack((X[:, ~self.categorical_], X_encoded))
+
         # Predict
         parallel = Parallel(n_jobs=self.n_jobs)
 
         out = parallel(
-            delayed(model.predict_proba)(X_copy) for model in self.estimators_
+            delayed(model.predict_proba)(X_predict) for model in self.estimators_
         )
 
         return np.average(np.vstack(out), axis=0)
-

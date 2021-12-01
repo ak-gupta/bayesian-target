@@ -1,7 +1,7 @@
 """Bayesian target encoder."""
 
 import logging
-from typing import Callable, Dict, List, Optional, Tuple, Union
+from typing import Callable, List, Optional, Tuple, Union
 
 from joblib import Parallel, effective_n_jobs
 import numpy as np
@@ -15,14 +15,14 @@ LOG = logging.getLogger(__name__)
 
 def _init_prior(dist: str, y) -> Tuple:
     """Initialize the prior distribution based on the input likelihood.
-    
+
     Parameters
     ----------
     dist : {"bernoulli", "exponential", "gamma", "invgamma"}
         The likelihood for the target.
     y : array-like of shape (n_samples,)
         Target values.
-    
+
     Returns
     -------
     tuple
@@ -39,7 +39,7 @@ def _init_prior(dist: str, y) -> Tuple:
     elif dist in ("gamma", "invgamma"):
         fitter = getattr(scipy.stats, dist)
         alpha, _, _ = fitter.fit(y)
-        
+
         return y.shape[0] * alpha, 0, np.sum(y)
     else:
         raise NotImplementedError(f"Likelihood {dist} has not been implemented.")
@@ -47,7 +47,7 @@ def _init_prior(dist: str, y) -> Tuple:
 
 def _update_posterior(y, mask, dist, params) -> Tuple:
     """Generate the parameters for the posterior distribution.
-    
+
     Parameters
     ----------
     y : array-like of shape (n_samples,)
@@ -65,13 +65,18 @@ def _update_posterior(y, mask, dist, params) -> Tuple:
     tuple
         Parameters for the posterior distribution. The parameters are based on the
         ``scipy.stats`` parameterization of the posterior.
-    
+
     References
     ----------
-    .. [1] A compendium of conjugate priors, from https://www.johndcook.com/CompendiumOfConjugatePriors.pdf
+    .. [1] A compendium of conjugate priors, from https://www.johndcook.com/CompendiumOfConjugatePriors.pdf  # noqa: E501
     """
     if dist == "bernoulli":
-        return params[0] + np.sum(y[mask]), params[1] + np.sum(mask) - np.sum(y[mask]), 0, 1
+        return (
+            params[0] + np.sum(y[mask]),
+            params[1] + np.sum(mask) - np.sum(y[mask]),
+            0,
+            1,
+        )
     elif dist == "multinomial":
         # This assumes the classes are 0, 1, 2, ..., m
         unique, counts = np.unique(y[mask], return_counts=True)
@@ -80,19 +85,23 @@ def _update_posterior(y, mask, dist, params) -> Tuple:
 
         return tuple(np.array(params) + class_counts)
     elif dist == "exponential":
-        return params[0] + np.sum(mask), 0, params[1]/(1 + params[1] * np.sum(y[mask]))
+        return (
+            params[0] + np.sum(mask),
+            0,
+            params[1] / (1 + params[1] * np.sum(y[mask])),
+        )
     elif dist in ("gamma", "invgamma"):
         fitter = getattr(scipy.stats, dist)
         alpha, _, _ = fitter.fit(y)
 
-        return np.sum(mask) * alpha + params[0], 0, params[2]/(1 + np.sum(y[mask]))
+        return np.sum(mask) * alpha + params[0], 0, params[2] / (1 + np.sum(y[mask]))
     else:
         raise NotImplementedError(f"Likelihood {dist} has not been implemented.")
 
 
 def _encode_level(mask, dist, sample, params):
     """Encode a given level.
-    
+
     Parameters
     ----------
     mask : array of shape (n_samples,)
@@ -105,7 +114,7 @@ def _encode_level(mask, dist, sample, params):
         Whether to sample or take the first moment from the posterior distribution.
     params : tuple
         Posterior parameters.
-    
+
     Returns
     -------
     np.ndarray
@@ -121,7 +130,7 @@ def _encode_level(mask, dist, sample, params):
         random_var = scipy.stats.gamma(*params)
     else:
         raise NotImplementedError(f"Likelihood {dist} has not been implemented")
-    
+
     if sample:
         encoding = random_var.rvs(size=1).ravel()
     else:
@@ -130,7 +139,7 @@ def _encode_level(mask, dist, sample, params):
             encoding = np.array([avg])  # Univariate distributions provide a float
         else:
             encoding = avg  # Multinomial provides an array
-    
+
     mask_options = [0, 1, 999]
     for opt in mask_options:
         if (encoding == opt).sum() == 0:
@@ -138,7 +147,7 @@ def _encode_level(mask, dist, sample, params):
             break
     else:
         raise ValueError("Unable to set a mask value.")
-    
+
     X_out = np.empty((mask.shape[0], len(encoding)), dtype=np.float64)
     X_out.fill(mask_val)
     X_out[mask, :] = encoding
@@ -157,7 +166,7 @@ class BayesianTargetEncoder(_BaseEncoder):
     3. For each level in each categorical,
         * Generate the posterior distribution,
         * Set the encoding value(s) as a sample or the mean from the posterior distribution
-    
+
     Parameters
     ----------
     dist : {"bernoulli", "multinomial", "exponential", "gamma", "invgamma"}
@@ -221,10 +230,9 @@ class BayesianTargetEncoder(_BaseEncoder):
         self.handle_unknown = handle_unknown
         self.n_jobs = n_jobs
 
-    
     def fit(self, X, y):
         """Fit the bayesian target encoder.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
@@ -232,7 +240,7 @@ class BayesianTargetEncoder(_BaseEncoder):
             distributions.
         y : array-like of shape (n_samples,) or (n_samples, n_targets)
             Target values. Will be cast to X's dtype if necessary.
-        
+
         Returns
         -------
         self : object
@@ -249,7 +257,7 @@ class BayesianTargetEncoder(_BaseEncoder):
         else:
             parallel = Parallel(n_jobs=self.n_jobs)
             fn = delayed(_update_posterior)
-        
+
         LOG.info("Determining the posterior distribution parameters...")
         self.posterior_params_ = []
         for index, cat in enumerate(self.categories_):
@@ -262,15 +270,14 @@ class BayesianTargetEncoder(_BaseEncoder):
 
         return self
 
-
     def transform(self, X):
         """Transform the input dataset.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             The data to encode.
-        
+
         Returns
         -------
         ndarray
@@ -289,7 +296,7 @@ class BayesianTargetEncoder(_BaseEncoder):
         else:
             parallel = Parallel(n_jobs=self.n_jobs)
             fn = delayed(_encode_level)
-        
+
         encoded = []
         for idx, cat in enumerate(self.categories_):
             # Get the masked array for each level
@@ -298,16 +305,17 @@ class BayesianTargetEncoder(_BaseEncoder):
                     (X_int[:, idx] == levelno) & (X_mask[:, idx]),
                     self.dist,
                     self.sample,
-                    self.posterior_params_[idx][levelno]
+                    self.posterior_params_[idx][levelno],
                 )
                 for levelno in range(cat.shape[0])
             )
             # Add new categorical encodings
             varencoded.append(
-                _encode_level((~X_mask[:, idx]), self.dist, self.sample, self.prior_params_)
+                _encode_level(
+                    (~X_mask[:, idx]), self.dist, self.sample, self.prior_params_
+                )
             )
             stacked = np.ma.stack(varencoded, axis=2).sum(axis=2)
             encoded.append(stacked.data)
-        
 
         return np.hstack(encoded)
