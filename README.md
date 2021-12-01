@@ -1,3 +1,6 @@
+
+[![codecov](https://codecov.io/github/ak-gupta/bayte/branch/main/graph/badge.svg?token=S8BUVKF37O)](https://codecov.io/github/ak-gupta/bayte)
+
 # Overview
 
 This package is a lightweight implementation of bayesian target encoding. This implementation is taken
@@ -24,7 +27,7 @@ For reproducibility, you can set the encoding value to the mean of the posterior
 ## Installation
 
 ```console
-python -m pip install bayesian-target@git+https://github.com/ak-gupta/bayesian-target
+python -m pip install bayte@git+https://github.com/ak-gupta/bayte
 ```
 
 ## Usage
@@ -48,7 +51,7 @@ X[5] = np.random.choice(["red", "green", "blue"], size=1000)
 Import and fit the encoder:
 
 ```python
-import bayesian_target as bt
+import bayte as bt
 
 encoder = bt.BayesianTargetEncoder(dist="bernoulli")
 encoder.fit(X[[5]], y)
@@ -81,7 +84,7 @@ and import a classifier to supply to the ensemble class
 ```python
 from sklearn.svm import SVC
 
-import bayesian_target as bt
+import bayte as bt
 
 ensemble = bt.BayesianTargetEstimator(
     base_estimator=SVC(kernel="linear"),

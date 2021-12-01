@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 from sklearn.utils.estimator_checks import check_estimator
 
-from bayesian_target.encoder import (
+from bayte.encoder import (
     BayesianTargetEncoder,
     _init_prior
 )
