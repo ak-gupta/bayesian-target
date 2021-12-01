@@ -78,12 +78,57 @@ def _update_posterior(y, mask, dist, params) -> Tuple:
     else:
         raise NotImplementedError(f"Likelihood {dist} has not been implemented.")
 
-_POSTERIOR_DISPATCHER: Dict[str, Callable] = {
-    "bernoulli": scipy.stats.beta,
-    "exponential": scipy.stats.gamma,
-    "gamma": scipy.stats.gamma,
-    "invgamma": scipy.stats.invgamma
-}
+
+def _encode_level(mask, dist, sample, params):
+    """Encode a given level.
+    
+    Parameters
+    ----------
+    mask : array of shape (n_samples,)
+        A boolean mask for the categorical value.
+    level : int
+        The level to encode.
+    dist : str
+        The likelihood.
+    sample : bool
+        Whether to sample or take the first moment from the posterior distribution.
+    params : tuple
+        Posterior parameters.
+    
+    Returns
+    -------
+    np.ndarray
+        The array of encoded values. The array is n_samples long; the width
+        depends on the number of values produced by the posterior distribution.
+        Unencoded values are labeled as 0.
+    """
+    if dist == "bernoulli":
+        random_var = scipy.stats.beta(*params)
+    elif dist in ("exponential", "gamma", "invgamma"):
+        random_var = scipy.stats.gamma(*params)
+    else:
+        raise NotImplementedError(f"Likelihood {dist} has not been implemented")
+    
+    if sample:
+        encoding = random_var.rvs(size=1)
+    else:
+        encoding = np.array(random_var.stats(moments="mvsk"))
+    
+    mask_options = [0, 1, 999]
+    for opt in mask_options:
+        if (encoding == opt).sum() == 0:
+            mask_val = opt
+            break
+    else:
+        raise ValueError("Unable to set a mask value.")
+    
+    X_out = np.empty((mask.shape[0], len(encoding)), dtype=np.float64)
+    X_out.fill(mask_val)
+    X_out[mask, :] = encoding
+    X_mask = np.ma.masked_equal(X_out, mask_val)
+
+    return X_mask
+
 
 class BayesianTargetEncoder(_BaseEncoder):
     """Bayesian target encoder.
@@ -222,23 +267,30 @@ class BayesianTargetEncoder(_BaseEncoder):
             force_all_finite=True,
         )
 
-        X_out = np.zeros(X.shape)
-        # Loop through each categorical
+        if effective_n_jobs(self.n_jobs) == 1:
+            parallel, fn = list, _encode_level
+        else:
+            parallel = Parallel(n_jobs=self.n_jobs)
+            fn = delayed(_encode_level)
+        
+        encoded = []
         for idx, cat in enumerate(self.categories_):
-            # Loop through each level and sample or evaluate the mean from the posterior
-            for levelno in range(cat.shape[0]):
-                mask = (X_int[:, idx] == levelno) & (X_mask[:, idx])
-                rv = _POSTERIOR_DISPATCHER[self.dist](*self.posterior_params_[idx][levelno])
-                if self.sample:
-                    X_out[mask, idx] = rv.rvs(size=np.sum(mask))
-                else:
-                    X_out[mask, idx] = rv.moment(n=1)
-            # Capture any new levels
-            mask = (~X_mask[:, idx])
-            rv = _POSTERIOR_DISPATCHER[self.dist](*self.prior_params_)
-            if self.sample:
-                X_out[mask, idx] = rv.rvs(size=np.sum(mask))
-            else:
-                X_out[mask, idx] = rv.moment(n=1)
+            # Get the masked array for each level
+            varencoded = parallel(
+                fn(
+                    (X_int[:, idx] == levelno) & (X_mask[:, idx]),
+                    self.dist,
+                    self.sample,
+                    self.posterior_params_[idx][levelno]
+                )
+                for levelno in range(cat.shape[0])
+            )
+            # Add new categorical encodings
+            varencoded.append(
+                _encode_level((~X_mask[:, idx]), self.dist, self.sample, self.prior_params_)
+            )
+            stacked = np.ma.stack(varencoded, axis=2).sum(axis=2)
+            encoded.append(stacked.data)
+        
 
-        return X_out
+        return np.hstack(encoded)
