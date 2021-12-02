@@ -13,6 +13,7 @@ from bayte.encoder import (
     BayesianTargetEncoder,
     _init_prior
 )
+from bayte.utility import make_categorical_regressor
 
 def test_encoder_validity():
     """Test the validity against the scikit-learn API."""
@@ -247,25 +248,7 @@ def test_transform_multinomial():
 def test_transform_exponential():
     """Test transforming with an exponential likelihood."""
     np.random.seed(42)
-
-    rv = scipy.stats.expon(3)
-    y = rv.rvs(size=10000)
-    # Create an empty array
-    x = np.zeros(10000)
-    # Favour categoricals based on range of the target
-    quantiles_to_get = np.linspace(0, 1, num=3, endpoint=False)
-    quantiles = np.quantile(y, quantiles_to_get[1:])
-
-    x[y < quantiles[0]] = np.random.choice(
-        [0, 1, 2], p=[0.6, 0.2, 0.2], size=(y < quantiles[0]).sum()
-    )
-    x[(y >= quantiles[0]) & (y < quantiles[1])] = np.random.choice(
-        [0, 1, 2], p=[0.2, 0.6, 0.2], size=((y >= quantiles[0]) & (y < quantiles[1])).sum()
-    )
-    x[(y >= quantiles[1])] = np.random.choice(
-        [0, 1, 2], p=[0.2, 0.2, 0.6], size=(y >= quantiles[1]).sum()
-    )
-    X = x.reshape((10000,1))
+    X, y = make_categorical_regressor("exponential", (1,), n_samples=10000, n_levels=3)
 
     encoder = BayesianTargetEncoder(dist="exponential")
     encoder.fit(X, y)
@@ -274,13 +257,11 @@ def test_transform_exponential():
     assert len(encoder.posterior_params_[0]) == 3
 
     for index, params in enumerate(encoder.posterior_params_[0]):
-        # Assert the first parameter, which is related to sample size
-        assert np.isclose((params[0] - 10000)/10000, 0.33, rtol=0.05)
         assert params[1] == 0
-        assert params[2] == (np.sum(y)/(1 + np.sum(y) * np.sum(y[x == index])))
+        assert params[2] == (np.sum(y)/(1 + np.sum(y) * np.sum(y[X[:, 0] == index])))
 
         # Mean of posterior is params[0] * params[2]
-        assert np.unique(out[x == index]) == np.array([params[0] * params[2]])
+        assert np.unique(out[X[:, 0] == index]) == np.array([params[0] * params[2]])
 
     # Test parallel transform
     encoder.set_params(n_jobs=2)
@@ -292,31 +273,7 @@ def test_transform_exponential():
 def test_transform_gamma():
     """Test transforming with a gamma likelihood."""
     np.random.seed(42)
-
-    rv = scipy.stats.gamma(2)
-    y = rv.rvs(size=10000)
-    # Create empty array
-    x = np.zeros(10000)
-    # Favour categoricals based on range of target
-    qtg = np.linspace(0, 1, num=4, endpoint=False)
-    q = np.quantile(y, qtg[1:])
-
-    prob_vector = deque([0.55, 0.15, 0.15, 0.15])
-    x[y < q[0]] = np.random.choice(
-        [0, 1, 2, 3], size=(y < q[0]).sum(), p=prob_vector
-    )
-    for i in range(1, 3):
-        prob_vector.rotate()
-        x[(y >= q[i - 1]) & (y < q[i])] = np.random.choice(
-            [0, 1, 2, 3], size=((y >= q[i - 1]) & (y < q[i])).sum(), p=prob_vector
-        )
-    
-    prob_vector.rotate()
-    x[y >= q[2]] = np.random.choice(
-        [0, 1, 2, 3], size=(y >= q[2]).sum(), p=prob_vector
-    )
-
-    X = x.reshape((10000, 1))
+    X, y = make_categorical_regressor("gamma", (1,), n_samples=10000, n_levels=4)
 
     encoder = BayesianTargetEncoder(dist="gamma")
     encoder.fit(X, y)
@@ -325,51 +282,7 @@ def test_transform_gamma():
     assert len(encoder.posterior_params_[0]) == 4
 
     for index, params in enumerate(encoder.posterior_params_[0]):
-        assert np.unique(out[x == index]) == np.array([params[0] * params[2]])
-
-    # Test parallel transform
-    encoder.set_params(n_jobs=2)
-    paraout = encoder.transform(X)
-
-    assert_array_equal(out, paraout)
-
-def test_transform_invgamma():
-    """Test transforming with an invgamma likelihood."""
-    np.random.seed(42)
-
-    rv = scipy.stats.invgamma(2)
-    y = rv.rvs(size=10000)
-    # Create empty array
-    x = np.zeros(10000)
-    # Favour categoricals based on range of target
-    qtg = np.linspace(0, 1, num=5, endpoint=False)
-    q = np.quantile(y, qtg[1:])
-
-    prob_vector = deque([0.5, 0.125, 0.125, 0.125, 0.125])
-    x[y < q[0]] = np.random.choice(
-        [0, 1, 2, 3, 4], size=(y < q[0]).sum(), p=prob_vector
-    )
-    for i in range(1, 3):
-        prob_vector.rotate()
-        x[(y >= q[i - 1]) & (y < q[i])] = np.random.choice(
-            [0, 1, 2, 3, 4], size=((y >= q[i - 1]) & (y < q[i])).sum(), p=prob_vector
-        )
-    
-    prob_vector.rotate()
-    x[y >= q[2]] = np.random.choice(
-        [0, 1, 2, 3, 4], size=(y >= q[2]).sum(), p=prob_vector
-    )
-
-    X = x.reshape((10000, 1))
-
-    encoder = BayesianTargetEncoder(dist="invgamma")
-    encoder.fit(X, y)
-    out = encoder.transform(X)
-
-    assert len(encoder.posterior_params_[0]) == 5
-
-    for index, params in enumerate(encoder.posterior_params_[0]):
-        assert np.unique(out[x == index]) == np.array([params[0] * params[2]])
+        assert np.unique(out[X[:, 0] == index]) == np.array([params[0] * params[2]])
 
     # Test parallel transform
     encoder.set_params(n_jobs=2)
