@@ -49,11 +49,11 @@ def make_categorical_regressor(
     # Create a probability vector and rotate it as we move through target
     # quantiles. This means one level in the categorical will be favoured
     # per quantile of the target.
-    prob_vector = deque([0.5] + [0.5/(n_levels - 1)] * (n_levels - 1))
+    prob_vector = deque([0.75] + [0.25/(n_levels - 1)] * (n_levels - 1))
     x[y < quantiles[0]] = np.random.choice(
         classes_, size=(y < quantiles[0]).sum(), p=prob_vector
     )
-    for n in range(1, n_levels - 2):
+    for n in range(1, n_levels - 1):
         prob_vector.rotate()
         x[(y >= quantiles[n - 1]) & (y < quantiles[n])] = np.random.choice(
             classes_,
@@ -65,6 +65,6 @@ def make_categorical_regressor(
         classes_, size=(y >= quantiles[-1]).sum(), p=prob_vector
     )
 
-    X = x.reshape((10000, 1))
+    X = x.reshape((n_samples, 1))
 
     return X, y

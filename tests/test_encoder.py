@@ -1,7 +1,5 @@
 """Test the encoder."""
 
-from collections import deque
-
 import numpy as np
 from numpy.testing import assert_allclose, assert_array_equal
 import pandas as pd
@@ -247,7 +245,6 @@ def test_transform_multinomial():
 
 def test_transform_exponential():
     """Test transforming with an exponential likelihood."""
-    np.random.seed(42)
     X, y = make_categorical_regressor("exponential", (1,), n_samples=10000, n_levels=3)
 
     encoder = BayesianTargetEncoder(dist="exponential")
@@ -272,7 +269,6 @@ def test_transform_exponential():
 
 def test_transform_gamma():
     """Test transforming with a gamma likelihood."""
-    np.random.seed(42)
     X, y = make_categorical_regressor("gamma", (1,), n_samples=10000, n_levels=4)
 
     encoder = BayesianTargetEncoder(dist="gamma")
