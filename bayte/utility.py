@@ -6,15 +6,16 @@ from typing import Tuple
 import numpy as np
 from sklearn.utils.validation import check_random_state
 
+
 def make_categorical_regressor(
     dist: str,
-    params : Tuple,
+    params: Tuple,
     n_samples: int = 100,
     n_levels: int = 2,
     random_state: int = 42,
 ) -> Tuple[np.ndarray, np.ndarray]:
     """Create a categorical column with a continuous target.
-    
+
     Parameters
     ----------
     dist : str
@@ -49,7 +50,7 @@ def make_categorical_regressor(
     # Create a probability vector and rotate it as we move through target
     # quantiles. This means one level in the categorical will be favoured
     # per quantile of the target.
-    prob_vector = deque([0.75] + [0.25/(n_levels - 1)] * (n_levels - 1))
+    prob_vector = deque([0.75] + [0.25 / (n_levels - 1)] * (n_levels - 1))
     x[y < quantiles[0]] = np.random.choice(
         classes_, size=(y < quantiles[0]).sum(), p=prob_vector
     )
@@ -58,7 +59,7 @@ def make_categorical_regressor(
         x[(y >= quantiles[n - 1]) & (y < quantiles[n])] = np.random.choice(
             classes_,
             size=((y >= quantiles[n - 1]) & (y < quantiles[n])).sum(),
-            p=prob_vector
+            p=prob_vector,
         )
     prob_vector.rotate()
     x[y >= quantiles[-1]] = np.random.choice(
