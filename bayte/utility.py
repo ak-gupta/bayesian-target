@@ -38,7 +38,7 @@ def make_categorical_regressor(
     np.ndarray of shape (n_samples,)
         The target.
     """
-    rng = check_random_state(42)
+    rng = check_random_state(random_state)
     y = getattr(rng, dist)(*params, size=n_samples)
 
     x = np.zeros(n_samples)
