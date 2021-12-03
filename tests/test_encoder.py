@@ -245,43 +245,47 @@ def test_transform_multinomial():
 
 def test_transform_exponential():
     """Test transforming with an exponential likelihood."""
-    X, y = make_regression("expon", (1,), n_samples=10000, n_levels=3)
+    X, y = make_regression(
+        "expon", (1,), n_samples=10000, n_features=10, n_levels=3, random_state=42
+    )
 
     encoder = BayesianTargetEncoder(dist="exponential")
-    encoder.fit(X, y)
-    out = encoder.transform(X)
+    encoder.fit(X[:, [9]], y)
+    out = encoder.transform(X[:, [9]])
 
     assert len(encoder.posterior_params_[0]) == 3
 
     for index, params in enumerate(encoder.posterior_params_[0]):
         assert params[1] == 0
-        assert params[2] == (np.sum(y)/(1 + np.sum(y) * np.sum(y[X[:, 0] == index + 1])))
+        assert params[2] == (np.sum(y)/(1 + np.sum(y) * np.sum(y[X[:, 9] == index + 1])))
 
         # Mean of posterior is params[0] * params[2]
-        assert np.unique(out[X[:, 0] == index + 1]) == np.array([params[0] * params[2]])
+        assert np.unique(out[X[:, 9] == index + 1]) == np.array([params[0] * params[2]])
 
     # Test parallel transform
     encoder.set_params(n_jobs=2)
-    paraout = encoder.transform(X)
+    paraout = encoder.transform(X[:, [9]])
 
     assert_array_equal(out, paraout)
 
 
 def test_transform_gamma():
     """Test transforming with a gamma likelihood."""
-    X, y = make_regression("gamma", (1,), n_samples=10000, n_levels=4)
+    X, y = make_regression(
+        "gamma", (1,), n_samples=10000, n_features=10, n_levels=4, random_state=42
+    )
 
     encoder = BayesianTargetEncoder(dist="gamma")
-    encoder.fit(X, y)
-    out = encoder.transform(X)
+    encoder.fit(X[:, [9]], y)
+    out = encoder.transform(X[:, [9]])
 
     assert len(encoder.posterior_params_[0]) == 4
 
     for index, params in enumerate(encoder.posterior_params_[0]):
-        assert np.unique(out[X[:, 0] == index + 1]) == np.array([params[0] * params[2]])
+        assert np.unique(out[X[:, 9] == index + 1]) == np.array([params[0] * params[2]])
 
     # Test parallel transform
     encoder.set_params(n_jobs=2)
-    paraout = encoder.transform(X)
+    paraout = encoder.transform(X[:, [9]])
 
     assert_array_equal(out, paraout)

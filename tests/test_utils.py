@@ -39,9 +39,10 @@ def test_reg_gen(dist, n_samples, n_levels):
         dist=dist,
         params=(1,),
         n_samples=n_samples,
+        n_features=10,
         n_levels=n_levels,
         random_state=42
     )
 
-    assert_array_equal(np.unique(X[:, 0]), np.arange(1, n_levels + 1))    
-    assert np.corrcoef(X[:, 0], y)[1, 0] > 0.7
+    assert_array_equal(np.unique(X[:, 9]), np.arange(1, n_levels + 1))    
+    assert np.corrcoef(X[:, 9], y[:, 0])[1, 0] > 0.7

@@ -6,6 +6,7 @@ NOTE: Since we can't control the ``categorical_feature`` input to ``fit`` in the
 """
 
 import numpy as np
+from numpy.testing import assert_array_equal
 import pandas as pd
 import pytest
 from sklearn.svm import SVR
@@ -18,7 +19,12 @@ from bayte.utils import make_regression, make_classification
 @pytest.fixture
 def regdf():
     """Test regression dataset."""
-    return make_regression("gamma", (1,))
+    return make_regression(
+        dist="gamma",
+        params=(1,),
+        n_samples=100,
+        n_features=10,
+    )
 
 @pytest.fixture
 def clfdf():
@@ -32,11 +38,11 @@ def test_estimator_reg_fit(regdf):
         encoder=bt.BayesianTargetEncoder(dist="gamma"),
         n_estimators=2
     )
-    estimator.fit(*regdf)
+    estimator.fit(*regdf, categorical_feature=[9,])
 
     assert hasattr(estimator, "estimators_")
     assert len(estimator.estimators_) == 2
-    assert estimator.estimators_[0].coef_ != estimator.estimators_[1].coef_
+    assert not np.array_equal(estimator.estimators_[0].coef_, estimator.estimators_[1].coef_)
 
 
 def test_estimator_clf_fit(clfdf):
@@ -50,7 +56,7 @@ def test_estimator_clf_fit(clfdf):
 
     assert hasattr(estimator, "estimators_")
     assert len(estimator.estimators_) == 2
-    assert estimator.estimators_[0].coef_ != estimator.estimators_[1].coef_
+    assert not np.array_equal(estimator.estimators_[0].coef_, estimator.estimators_[1].coef_)
 
 def test_estimator_fit_pandas(regdf):
     """Test a basic fit with a pandas DataFrame."""
@@ -61,31 +67,41 @@ def test_estimator_fit_pandas(regdf):
     )
     X, y = regdf
     X = pd.DataFrame(X)
-    X[0] = X[0].astype("category")
+    X[9] = X[9].astype("category")
 
     estimator.fit(X, y)
 
-    assert estimator.categorical_ == np.array([True])
+    assert_array_equal(
+        estimator.categorical_, 
+        np.array([False, False, False, False, False, False, False, False, False, True])
+    )
     assert hasattr(estimator, "estimators_")
     assert len(estimator.estimators_) == 2
-    assert estimator.estimators_[0].coef_ != estimator.estimators_[1].coef_
+    assert not np.array_equal(
+        estimator.estimators_[0].coef_,
+        estimator.estimators_[1].coef_
+    )
 
 
 def test_estimator_reg_prefit(regdf):
     """Test a basic fit with a pre-fitted encoder."""
+    X, y = regdf
     encoder = bt.BayesianTargetEncoder(dist="gamma")
-    encoder.fit(*regdf)
+    encoder.fit(X[:, [9]], y)
 
     estimator = bt.BayesianTargetEstimator(
         base_estimator=SVR(kernel="linear"),
         encoder=encoder,
         n_estimators=2,
     )
-    estimator.fit(*regdf)
+    estimator.fit(*regdf, categorical_feature=[9,])
 
     assert hasattr(estimator, "estimators_")
     assert len(estimator.estimators_) == 2
-    assert estimator.estimators_[0].coef_ != estimator.estimators_[1].coef_
+    assert not np.array_equal(
+        estimator.estimators_[0].coef_,
+        estimator.estimators_[1].coef_
+    )
 
 
 def test_estimator_reg_predict(regdf):
@@ -95,7 +111,7 @@ def test_estimator_reg_predict(regdf):
         encoder=bt.BayesianTargetEncoder(dist="gamma"),
         n_estimators=2
     )
-    estimator.fit(*regdf)
+    estimator.fit(*regdf, categorical_feature=[9,])
 
     y = estimator.predict(regdf[0])
 
