@@ -7,7 +7,7 @@ import numpy as np
 import scipy.stats
 
 
-def make_categorical_regressor(
+def make_regression(
     dist: str,
     params: Tuple,
     n_samples: int = 100,
@@ -71,7 +71,7 @@ def make_categorical_regressor(
     return X, y
 
 
-def make_categorical_classifier(
+def make_classification(
     n_samples: int = 100,
     n_levels: int = 2,
     n_classes: int = 2,

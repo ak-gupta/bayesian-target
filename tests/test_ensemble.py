@@ -12,18 +12,18 @@ from sklearn.svm import SVR
 from sklearn.linear_model import LogisticRegression
 
 import bayte as bt
-from bayte.utils import make_categorical_regressor, make_categorical_classifier
+from bayte.utils import make_regression, make_classification
 
 
 @pytest.fixture
 def regdf():
     """Test regression dataset."""
-    return make_categorical_regressor("gamma", (1,))
+    return make_regression("gamma", (1,))
 
 @pytest.fixture
 def clfdf():
     """Test classification dataset."""
-    return make_categorical_classifier()
+    return make_classification()
 
 def test_estimator_reg_fit(regdf):
     """Test a basic fit."""

@@ -11,7 +11,7 @@ from bayte.encoder import (
     BayesianTargetEncoder,
     _init_prior
 )
-from bayte.utils import make_categorical_regressor
+from bayte.utils import make_regression
 
 def test_encoder_validity():
     """Test the validity against the scikit-learn API."""
@@ -245,7 +245,7 @@ def test_transform_multinomial():
 
 def test_transform_exponential():
     """Test transforming with an exponential likelihood."""
-    X, y = make_categorical_regressor("expon", (1,), n_samples=10000, n_levels=3)
+    X, y = make_regression("expon", (1,), n_samples=10000, n_levels=3)
 
     encoder = BayesianTargetEncoder(dist="exponential")
     encoder.fit(X, y)
@@ -269,7 +269,7 @@ def test_transform_exponential():
 
 def test_transform_gamma():
     """Test transforming with a gamma likelihood."""
-    X, y = make_categorical_regressor("gamma", (1,), n_samples=10000, n_levels=4)
+    X, y = make_regression("gamma", (1,), n_samples=10000, n_levels=4)
 
     encoder = BayesianTargetEncoder(dist="gamma")
     encoder.fit(X, y)

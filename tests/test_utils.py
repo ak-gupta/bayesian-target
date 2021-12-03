@@ -3,9 +3,8 @@
 import numpy as np
 from numpy.testing import assert_array_equal
 import pytest
-import scipy.stats
 
-from bayte.utils import make_categorical_regressor
+from bayte.utils import make_regression
 
 
 @pytest.mark.parametrize(
@@ -35,7 +34,8 @@ def test_reg_gen(dist, n_samples, n_levels):
     created a categorical variable that's correlated with the target (i.e.
     we have an inherent ordinal categorical that we will treat as nominal).
     """
-    X, y = make_categorical_regressor(
+    np.random.seed(42)
+    X, y = make_regression(
         dist=dist,
         params=(1,),
         n_samples=n_samples,
@@ -43,13 +43,5 @@ def test_reg_gen(dist, n_samples, n_levels):
         random_state=42
     )
 
-    assert_array_equal(np.unique(X[:, 0]), np.arange(1, n_levels + 1))
-
-    avgs = []
-    for l in range(1, n_levels + 1):
-        # Fit the dist
-        rv = getattr(scipy.stats, dist)
-        curr_params = rv.fit(y[X[:, 0] == l])
-        avgs.append(rv(*curr_params).mean())
-    
-    assert np.corrcoef(avgs) > 0.8
+    assert_array_equal(np.unique(X[:, 0]), np.arange(1, n_levels + 1))    
+    assert np.corrcoef(X[:, 0], y)[1, 0] > 0.7
