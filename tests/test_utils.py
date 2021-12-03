@@ -5,7 +5,7 @@ from numpy.testing import assert_array_equal
 import pytest
 import scipy.stats
 
-from bayte.utility import make_categorical_regressor
+from bayte.utils import make_categorical_regressor
 
 
 @pytest.mark.parametrize(

@@ -11,7 +11,7 @@ from bayte.encoder import (
     BayesianTargetEncoder,
     _init_prior
 )
-from bayte.utility import make_categorical_regressor
+from bayte.utils import make_categorical_regressor
 
 def test_encoder_validity():
     """Test the validity against the scikit-learn API."""

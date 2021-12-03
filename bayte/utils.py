@@ -69,3 +69,47 @@ def make_categorical_regressor(
     X = catvar.reshape((n_samples, 1))
 
     return X, y
+
+
+def make_categorical_classifier(
+    n_samples: int = 100,
+    n_levels: int = 2,
+    n_classes: int = 2,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Create a categorical column with a discrete target.
+    
+    Parameters
+    ----------
+    n_samples : int, optional (default 100)
+        The number of samples to generate.
+    n_levels : int, optional (default 2)
+        The number of levels for the categorical column.
+    n_classes: int, optional (default 2)
+        The number of classes in the target variable.
+    
+    Returns
+    -------
+    np.ndarray of shape (n_samples,)
+        The categorical column.
+    np.ndarray of shape (n_samples,)
+        The target.
+    """
+    y = np.random.choice(np.arange(n_classes), size=n_samples)
+
+    # Create a probability vector and rotate it as we move through the
+    # target classes. This means one level in the categorical will be favoured
+    # per class in the target.
+    catvar = np.zeros(n_samples)
+    levels_ = np.arange(1, n_levels + 1)
+    rv = scipy.stats.expon(1)
+    raw_ = np.linspace(rv.ppf(0.01), rv.ppf(0.99), num=n_levels)
+    prob_vector = deque(rv.pdf(raw_) / rv.pdf(raw_).sum())
+    for n in range(1, n_classes + 1):
+        catvar[y == n - 1] = np.random.choice(
+            levels_, size=(y == n - 1).sum(), p=prob_vector
+        )
+        prob_vector.rotate()
+    
+    X = catvar.reshape((n_samples, 1))
+
+    return X, y

@@ -13,25 +13,10 @@ from pandas.api.types import is_categorical_dtype
 from sklearn.base import BaseEstimator, clone
 from sklearn.ensemble._base import BaseEnsemble
 from sklearn.utils.fixes import delayed
-from sklearn.utils.metaestimators import available_if
+from sklearn.utils.metaestimators import if_delegate_has_method
 from sklearn.utils.validation import check_array, check_is_fitted
 
 LOG = logging.getLogger(__name__)
-
-
-def _estimator_has(attr):
-    """Check if we can delegate a method to the underlying estimator."""
-
-    def check(self):
-        if hasattr(self, "base_estimator"):
-            getattr(self.base_estimator, attr)
-
-            return True
-        getattr(self.base_estimator, attr)
-
-        return True
-
-    return check
 
 
 def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params):
@@ -205,7 +190,7 @@ class BayesianTargetEstimator(BaseEnsemble):
 
         return self
 
-    @available_if(_estimator_has("predict"))
+    @if_delegate_has_method(delegate="base_estimator")
     def predict(self, X):
         """Call predict on the estimators.
 
@@ -234,10 +219,11 @@ class BayesianTargetEstimator(BaseEnsemble):
         parallel = Parallel(n_jobs=self.n_jobs)
 
         out = parallel(delayed(model.predict)(X_predict) for model in self.estimators_)
+        out = np.asarray(out)
 
-        return np.average(np.vstack(out), axis=0)
+        return np.average(out, axis=0)
 
-    @available_if(_estimator_has("predict"))
+    @if_delegate_has_method(delegate="base_estimator")
     def predict_proba(self, X):
         """Call predict_proba on the estimators.
 
@@ -268,5 +254,6 @@ class BayesianTargetEstimator(BaseEnsemble):
         out = parallel(
             delayed(model.predict_proba)(X_predict) for model in self.estimators_
         )
+        out = np.asarray(out)
 
-        return np.average(np.vstack(out), axis=0)
+        return np.average(out, axis=0)
