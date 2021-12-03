@@ -68,7 +68,7 @@ def make_regression(
                 support_[idx] = np.max(y[:, 0])
             elif np.isneginf(support_[idx]):
                 support_[idx] = np.min(y[:, 0])
-        
+
         scaler = MinMaxScaler(feature_range=support_)
         y = scaler.fit_transform(y)
 
@@ -89,7 +89,9 @@ def make_regression(
     )
     for n in range(1, n_levels - 1):
         prob_vector.rotate()
-        catvar[(y[:, 0] >= quantiles[n - 1]) & (y[:, 0] < quantiles[n])] = np.random.choice(
+        catvar[
+            (y[:, 0] >= quantiles[n - 1]) & (y[:, 0] < quantiles[n])
+        ] = np.random.choice(
             levels_,
             size=((y[:, 0] >= quantiles[n - 1]) & (y[:, 0] < quantiles[n])).sum(),
             p=prob_vector,
@@ -110,7 +112,7 @@ def make_classification(
     n_classes: int = 2,
 ) -> Tuple[np.ndarray, np.ndarray]:
     """Create a categorical column with a discrete target.
-    
+
     Parameters
     ----------
     n_samples : int, optional (default 100)
@@ -119,7 +121,7 @@ def make_classification(
         The number of levels for the categorical column.
     n_classes: int, optional (default 2)
         The number of classes in the target variable.
-    
+
     Returns
     -------
     np.ndarray of shape (n_samples,)
@@ -142,7 +144,7 @@ def make_classification(
             levels_, size=(y == n - 1).sum(), p=prob_vector
         )
         prob_vector.rotate()
-    
+
     X = catvar.reshape((n_samples, 1))
 
     return X, y
