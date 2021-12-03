@@ -245,7 +245,7 @@ def test_transform_multinomial():
 
 def test_transform_exponential():
     """Test transforming with an exponential likelihood."""
-    X, y = make_categorical_regressor("exponential", (1,), n_samples=10000, n_levels=3)
+    X, y = make_categorical_regressor("expon", (1,), n_samples=10000, n_levels=3)
 
     encoder = BayesianTargetEncoder(dist="exponential")
     encoder.fit(X, y)
@@ -255,10 +255,10 @@ def test_transform_exponential():
 
     for index, params in enumerate(encoder.posterior_params_[0]):
         assert params[1] == 0
-        assert params[2] == (np.sum(y)/(1 + np.sum(y) * np.sum(y[X[:, 0] == index])))
+        assert params[2] == (np.sum(y)/(1 + np.sum(y) * np.sum(y[X[:, 0] == index + 1])))
 
         # Mean of posterior is params[0] * params[2]
-        assert np.unique(out[X[:, 0] == index]) == np.array([params[0] * params[2]])
+        assert np.unique(out[X[:, 0] == index + 1]) == np.array([params[0] * params[2]])
 
     # Test parallel transform
     encoder.set_params(n_jobs=2)
@@ -278,7 +278,7 @@ def test_transform_gamma():
     assert len(encoder.posterior_params_[0]) == 4
 
     for index, params in enumerate(encoder.posterior_params_[0]):
-        assert np.unique(out[X[:, 0] == index]) == np.array([params[0] * params[2]])
+        assert np.unique(out[X[:, 0] == index + 1]) == np.array([params[0] * params[2]])
 
     # Test parallel transform
     encoder.set_params(n_jobs=2)

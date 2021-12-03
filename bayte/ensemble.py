@@ -3,6 +3,7 @@
 Ensemble estimator that creates multiple models through sampling.
 """
 
+from copy import deepcopy
 import logging
 from typing import List, Optional, Tuple, Union
 
@@ -176,11 +177,16 @@ class BayesianTargetEstimator(BaseEnsemble):
                     self.categorical_[col] = True
 
         # Fit the encoder
-        self.encoder_ = clone(self.encoder)
-        self.encoder_.set_params(sample=True)
-        self.encoder_.fit(
-            X[:, self.categorical_], y
-        )  # Need to filter the columns to categoricals
+        if hasattr(self.encoder, "posterior_params_"):
+            LOG.warning("Supplied with a fitted encoder. Not re-fitting.")
+            self.encoder_ = deepcopy(self.encoder)
+            self.encoder_.set_params(sample=True)
+        else:
+            self.encoder_ = clone(self.encoder)
+            self.encoder_.set_params(sample=True)
+            self.encoder_.fit(
+                X[:, self.categorical_], y
+            )  # Need to filter the columns to categoricals
 
         self._validate_estimator()
         self.estimators_: List[BaseEstimator] = []
