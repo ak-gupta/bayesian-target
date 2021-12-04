@@ -38,24 +38,25 @@ methodologies. Suppose you have :math:`n` training observations, with
 :math:`Y = (y_{1}, ..., y_{n})` representing the target and categorical variable
 :math:`X_{1} = (x_{1}, ..., x_{n})` with distinct values :math:`V = (v_{1}, ..., v_{l})`.
 
-+-------------+--------------------------------------------------------------+
-| Encoding    | Description                                                  |
-|             |                                                              |
-+=============+==============================================================+
-| Ordinal     | Randomly mapping observed levels to integers.                |
-+-------------+--------------------------------------------------------------+
-| Frequency   | | Map the categorical level to the observed frequency of the |
-|             | | level in the training set.                                 |
-+-------------+--------------------------------------------------------------+
-| One-hot     | | Transform the categorical column into :math:`l` binary     |
-|             | | indicator columns.                                         |
-+-------------+--------------------------------------------------------------+
-| Target      | | Map the categorical level to the conditional mean of the   |
-|             | | target variable.                                           |
-+-------------+--------------------------------------------------------------+
-| James-Stein | | Map the categorical level to a weighted conditional mean   |
-|             | | of the target variable.                                    |
-+-------------+--------------------------------------------------------------+
+:footcite:t:`pargent` provide a description for each encoding methodology listed
+below.
+
++--------------------------------+-------------+-----------------------------------------+
+| Encoding                       | Supervised? | Implementation                          |
+|                                |             |                                         |
++================================+=============+=========================================+
+| Frequency                      | N           | ``category_encoders.CountEncoder``      |
++--------------------------------+-------------+-----------------------------------------+
+| Generalized Linear Mixed Model | Y           | ``category_encoders.GLLMEncoder``       |
++--------------------------------+-------------+-----------------------------------------+
+| James-Stein                    | Y           | ``category_encoders.JamesSteinEncoder`` |
++--------------------------------+-------------+-----------------------------------------+
+| One-hot                        | N           | ``sklearn.preprocessing.OneHotEncoder`` |
++--------------------------------+-------------+-----------------------------------------+
+| Integer                        | N           | ``sklearn.preprocessingOrdinalEncoder`` |
++--------------------------------+-------------+-----------------------------------------+
+| Target                         | Y           | ``category_encoders.TargetEncoder``     |
++--------------------------------+-------------+-----------------------------------------+
 
 Modelling algorithms
 --------------------
