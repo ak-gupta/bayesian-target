@@ -18,7 +18,7 @@ def _init_prior(dist: str, y) -> Tuple:
 
     Parameters
     ----------
-    dist : {"bernoulli", "exponential", "gamma", "invgamma"}
+    dist : {"bernoulli", "exponential", "gamma", "invgamma", "normal"}
         The likelihood for the target.
     y : array-like of shape (n_samples,)
         Target values.
@@ -36,6 +36,11 @@ def _init_prior(dist: str, y) -> Tuple:
         return tuple(counts)
     elif dist == "exponential":
         return y.shape[0] + 1, np.sum(y)
+    elif dist == "normal":
+        # First parameter is the sample mean
+        mean = np.average(y)
+
+        return mean, 1/np.sum(1/np.square(y - mean))
     elif dist in ("gamma", "invgamma"):
         fitter = getattr(scipy.stats, dist)
         alpha, _, _ = fitter.fit(y)
@@ -90,6 +95,13 @@ def _update_posterior(y, mask, dist, params) -> Tuple:
             0,
             params[1] / (1 + params[1] * np.sum(y[mask])),
         )
+    elif dist == "normal":
+        # Known variance is the non-sample variance from the training data
+        var = np.var(y)
+
+        factor = 1/((1/params[1]) + (np.sum(mask)/var))
+
+        return factor * ((params[0]/params[1]) + (np.sum(y[mask])/var)), np.sqrt(factor)
     elif dist in ("gamma", "invgamma"):
         fitter = getattr(scipy.stats, dist)
         alpha, _, _ = fitter.fit(y)
@@ -126,6 +138,8 @@ def _encode_level(mask, dist, sample, params):
         random_var = scipy.stats.beta(*params)
     elif dist == "multinomial":
         random_var = scipy.stats.dirichlet(params)
+    elif dist == "normal":
+        random_var = scipy.stats.norm(*params)
     elif dist in ("exponential", "gamma", "invgamma"):
         random_var = scipy.stats.gamma(*params)
     else:
@@ -169,8 +183,15 @@ class BayesianTargetEncoder(_BaseEncoder):
 
     Parameters
     ----------
-    dist : {"bernoulli", "multinomial", "exponential", "gamma", "invgamma"}
+    dist : {"bernoulli", "multinomial", "exponential", "gamma", "invgamma", "normal"}
         The likelihood for the target.
+
+        .. important::
+
+            For the gamma distribution, we assume a *known* shape parameter alpha. For the
+            normal distribution, we assume a *known* variance. Both are estimated directly
+            from the training data.
+
     sample : bool, optional (default False)
         Whether or not to encode the categorical values as a sample from the posterior
         distribution or the mean.

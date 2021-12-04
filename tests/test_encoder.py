@@ -1,5 +1,6 @@
 """Test the encoder."""
 
+from logging import _nameToLevel
 import numpy as np
 from numpy.testing import assert_allclose, assert_array_equal
 import pandas as pd
@@ -34,6 +35,14 @@ def test_init_prior_multinomial():
     assert out == (2, 5, 3)
 
 
+def test_init_prior_normal():
+    """Test initializing the prior distribution with a normal likelihood."""
+    y = np.array([-2, -1, 1, 2], dtype=np.float64)
+    out = _init_prior("normal", y)
+
+    assert out == (0.0, 0.4)
+
+
 def test_init_prior_exponential():
     """Test initializing the prior distribution with an exponential likelihood."""
     y = scipy.stats.expon(2).rvs(size=100)
@@ -62,6 +71,7 @@ def test_init_prior_invgamma():
     assert np.abs(out[0]/1000 - 5) <= 1
     assert out[1] == 0
     assert out[2] == np.sum(y)
+
 
 def test_fit_invalid_dist():
     """Test raising an error with an invalid likelihood."""
@@ -267,6 +277,31 @@ def test_transform_exponential():
     paraout = encoder.transform(X[:, [9]])
 
     assert_array_equal(out, paraout)
+
+
+def test_transform_normal():
+    """Test transforming with a normal likelihood."""
+    X, y = make_regression(
+        "norm", (1, 2), n_samples=10000, n_features=10, n_levels=3, random_state=42
+    )
+
+    encoder = BayesianTargetEncoder(dist="normal")
+    encoder.fit(X[:, [9]], y)
+    out = encoder.transform(X[:, [9]])
+
+    assert len(encoder.posterior_params_[0]) == 3
+
+    var = np.var(y)
+    mean = np.mean(y)
+    hypervar = 1/np.sum(1/np.square(y - mean))
+    for index, params in enumerate(encoder.posterior_params_[0]):
+        nlevel = np.sum(X[:, 9] == index + 1)
+        lvlsum = np.sum(y[X[:, 9] == index + 1])
+        assert params[0] == np.square(params[1]) * ((mean/hypervar) + (lvlsum/var))
+        assert params[1] == np.sqrt(1/((1/hypervar) + (nlevel/var)))
+        assert_allclose(
+            np.unique(out[X[:, 9] == index + 1]), np.array(params[0])
+        )
 
 
 def test_transform_gamma():
