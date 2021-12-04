@@ -10,7 +10,13 @@ from typing import List, Optional, Tuple, Union
 from joblib import Parallel, effective_n_jobs
 import numpy as np
 from pandas.api.types import is_categorical_dtype
-from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin, clone, is_classifier
+from sklearn.base import (
+    BaseEstimator,
+    ClassifierMixin,
+    RegressorMixin,
+    clone,
+    is_classifier,
+)
 from sklearn.ensemble._base import BaseEnsemble
 from sklearn.utils.fixes import delayed
 from sklearn.utils.metaestimators import if_delegate_has_method
@@ -320,16 +326,16 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         self.encoder = encoder
         self.n_jobs = n_jobs
         self.estimator_params = estimator_params
-    
+
     @if_delegate_has_method(delegate="base_estimator")
     def predict(self, X):
         """Predict class labels for X.
-        
+
         Parameters
         ----------
         X : indexable, length (n_samples,)
             Must fulfill the assumptions of ``fit``.
-        
+
         Returns
         -------
         np.ndarray of shape (n_samples,)
@@ -361,9 +367,8 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
             vote = np.apply_along_axis(
                 lambda x: np.argmax(np.bincount(x)), axis=0, arr=out
             )
-        
-        return vote
 
+        return vote
 
     @if_delegate_has_method(delegate="base_estimator")
     def predict_proba(self, X):

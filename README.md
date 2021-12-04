@@ -1,6 +1,8 @@
 
 [![codecov](https://codecov.io/github/ak-gupta/bayte/branch/main/graph/badge.svg?token=S8BUVKF37O)](https://codecov.io/github/ak-gupta/bayte)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/5c0b77d0e9b8f899ee95/maintainability)](https://codeclimate.com/github/ak-gupta/bayte/maintainability)
+
 # Overview
 
 This package is a lightweight implementation of bayesian target encoding. This implementation is taken
