@@ -86,7 +86,7 @@ from sklearn.svm import SVC
 
 import bayte as bt
 
-ensemble = bt.BayesianTargetEstimator(
+ensemble = bt.BayesianTargetClassifier(
     base_estimator=SVC(kernel="linear"),
     encoder=bt.BayesianTargetEncoder(dist="bernoulli")
 )

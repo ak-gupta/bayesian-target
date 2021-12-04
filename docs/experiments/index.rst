@@ -2,11 +2,97 @@
 When should you use this package?
 =================================
 
-Check back later! I will be conducting several experiments using synthetic and
-popular datasets to understand when (and if) this package offers a useful method
-for encoding high cardinality nominal categorical data. Future experiments include
+Coming soon.
 
-* How many categorical levels do you need before this becomes useful?
-* Marginal bayesian target encoding: do you see lift if you use the output of an
-  initial model with no categorical variables as the target for encoding?
-* Using ensemble sampling vs using the mean of the posterior distribution: does it matter?
+The plan is to leverage the experimental framework discussed by :footcite:t:`pargent`
+to analyze bayesian target encoding (BTE) and answer the following questions:
+
+- How does the effectiveness of BTE change with the number of categorical levels?
+
+  - Since it's hard to compare effectiveness of encoding approaches across
+    different datasets, I will likely need to use synthetic data to answer
+    this question.
+
+- **Marginal BTE**: Is there lift from a staged approach:
+
+  #. Fit a submodel [*]_ that uses all non-categorical columns to predict the target.
+  #. Fit the encoder using the submodel output as the target [*]_.
+  #. Use the encoding and the raw input non-categorical data to fit the final model.
+
+- Ensemble methodology\ :footcite:p:`larionov`
+
+  - How much does repeated sampling help?
+  - How many samples do you need?
+
+.. [*] Does the submodel algorithm matter?
+.. [*]
+
+    What if the encoder is fitted using the residuals from the submodel as the
+    target?
+
+Comparative encoding methodology
+--------------------------------
+
+When conducting these experiments, we'll compare BTE to the following encoding
+methodologies. Suppose you have :math:`n` training observations, with
+:math:`Y = (y_{1}, ..., y_{n})` representing the target and categorical variable
+:math:`X_{1} = (x_{1}, ..., x_{n})` with distinct values :math:`V = (v_{1}, ..., v_{l})`.
+
++-------------+--------------------------------------------------------------+
+| Encoding    | Description                                                  |
+|             |                                                              |
++=============+==============================================================+
+| Ordinal     | Randomly mapping observed levels to integers.                |
++-------------+--------------------------------------------------------------+
+| Frequency   | | Map the categorical level to the observed frequency of the |
+|             | | level in the training set.                                 |
++-------------+--------------------------------------------------------------+
+| One-hot     | | Transform the categorical column into :math:`l` binary     |
+|             | | indicator columns.                                         |
++-------------+--------------------------------------------------------------+
+| Target      | | Map the categorical level to the conditional mean of the   |
+|             | | target variable.                                           |
++-------------+--------------------------------------------------------------+
+| James-Stein | | Map the categorical level to a weighted conditional mean   |
+|             | | of the target variable.                                    |
++-------------+--------------------------------------------------------------+
+
+Modelling algorithms
+--------------------
+
+The following modelling implementations will be tested:
+
++------------------------------------------+------------------------+
+| Package                                  | Class                  |
+|                                          |                        |
++==========================================+========================+
+| LightGBM\ :footcite:p:`lightgbm`         | ``LGBClassifier``      |
++------------------------------------------+------------------------+
+|                                          | ``LGBRegressor``       |
++------------------------------------------+------------------------+
+| Scikit-Learn\ :footcite:p:`scikit-learn` | ``LinearRegression``   |
++------------------------------------------+------------------------+
+|                                          | ``LogisticRegression`` |
++------------------------------------------+------------------------+
+| XGBoost\ :footcite:p:`xgboost`           | ``XGBClassifier``      |
++------------------------------------------+------------------------+
+|                                          | ``XGBRegressor``       |
++------------------------------------------+------------------------+
+
+Performance evaluation
+----------------------
+
+:footcite:t:`pargent` discussed a three-phase approach for creating a baseline
+assessment of model performance. We'll adapt that here and use something slightly
+different: 
+
+  **baseline performance** is the holdout score for a model fitted with
+  **no categorical features**.
+
+Similar to :footcite:t:`pargent`, we will use root mean squared error (RMSE) for
+evaluating the performance of regression models and the area under the receiver
+operating characteristic (AUROC) for classification problems. Both metrics are
+available in ``scikit-learn``\ :footcite:p:`scikit-learn` under the strings
+``neg_root_mean_squared_error`` and ``roc_auc``, respectively.
+
+.. footbibliography::

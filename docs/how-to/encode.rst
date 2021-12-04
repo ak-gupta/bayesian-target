@@ -46,7 +46,7 @@ To sample, set ``sample=True`` on encoder initialization.
 
     The encoder has support for `joblib <https://scikit-learn.org/stable/computing/parallelism.html>`_.
     Since the encoding procedure involves generating posterior parameters for every categorical level in
-    every supplied variable, it can be computationally inefficient.
+    every supplied variable, it can be computationally inefficient if executed serially.
 
 Changing hyperparameter initialization
 --------------------------------------
