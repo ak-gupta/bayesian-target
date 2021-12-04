@@ -34,7 +34,8 @@ extensions = [
     'sphinx.ext.viewcode',
     'myst_nb',
     'sphinx.ext.mathjax',
-    'sphinxcontrib.bibtex'
+    'sphinxcontrib.bibtex',
+    'sphinx_tabs.tabs',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
