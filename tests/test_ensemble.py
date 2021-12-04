@@ -33,7 +33,7 @@ def clfdf():
 
 def test_estimator_reg_fit(regdf):
     """Test a basic fit."""
-    estimator = bt.BayesianTargetEstimator(
+    estimator = bt.BayesianTargetRegressor(
         base_estimator=SVR(kernel="linear"),
         encoder=bt.BayesianTargetEncoder(dist="gamma"),
         n_estimators=2
@@ -47,7 +47,7 @@ def test_estimator_reg_fit(regdf):
 
 def test_estimator_clf_fit(clfdf):
     """Test a basic fit with a classification task."""
-    estimator = bt.BayesianTargetEstimator(
+    estimator = bt.BayesianTargetClassifier(
         base_estimator=LogisticRegression(),
         encoder=bt.BayesianTargetEncoder(dist="bernoulli"),
         n_estimators=2
@@ -60,7 +60,7 @@ def test_estimator_clf_fit(clfdf):
 
 def test_estimator_fit_pandas(regdf):
     """Test a basic fit with a pandas DataFrame."""
-    estimator = bt.BayesianTargetEstimator(
+    estimator = bt.BayesianTargetRegressor(
         base_estimator=SVR(kernel="linear"),
         encoder=bt.BayesianTargetEncoder(dist="gamma"),
         n_estimators=2
@@ -89,7 +89,7 @@ def test_estimator_reg_prefit(regdf):
     encoder = bt.BayesianTargetEncoder(dist="gamma")
     encoder.fit(X[:, [9]], y)
 
-    estimator = bt.BayesianTargetEstimator(
+    estimator = bt.BayesianTargetRegressor(
         base_estimator=SVR(kernel="linear"),
         encoder=encoder,
         n_estimators=2,
@@ -106,7 +106,7 @@ def test_estimator_reg_prefit(regdf):
 
 def test_estimator_reg_predict(regdf):
     """Test basic prediction with a regression dataset."""
-    estimator = bt.BayesianTargetEstimator(
+    estimator = bt.BayesianTargetRegressor(
         base_estimator=SVR(kernel="linear"),
         encoder=bt.BayesianTargetEncoder(dist="gamma"),
         n_estimators=2
@@ -120,7 +120,7 @@ def test_estimator_reg_predict(regdf):
 
 def test_estimator_clf_predict(clfdf):
     """Test basic prediction with a classification target."""
-    estimator = bt.BayesianTargetEstimator(
+    estimator = bt.BayesianTargetClassifier(
         base_estimator=LogisticRegression(),
         encoder=bt.BayesianTargetEncoder(dist="bernoulli"),
         n_estimators=10
@@ -131,5 +131,13 @@ def test_estimator_clf_predict(clfdf):
     yprob = estimator.predict_proba(clfdf[0])
 
     assert y.shape == (100,)
+    assert_array_equal(np.unique(y), np.arange(2))
     assert yprob.shape == (100,2)
     assert ((yprob > 1) & (yprob < 0)).sum() == 0
+
+    estimator.set_params(voting="soft")
+
+    y = estimator.predict(clfdf[0])
+
+    assert y.shape == (100,)
+    assert_array_equal(np.unique(y), np.arange(2))
