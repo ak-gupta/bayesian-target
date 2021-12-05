@@ -38,6 +38,9 @@ wheels/
 pip-log.txt
 pip-delete-this-directory.txt
 
+# Experiments
+experiments/data/*/*.csv
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
