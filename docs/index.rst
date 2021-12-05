@@ -40,4 +40,10 @@ Contents
 
     explanation/algorithm
 
+.. toctree::
+    :maxdepth: 2
+    :caption: Reference
+    
+    GitHub repository <https://github.com/ak-gupta/bayte>
+
 .. footbibliography::

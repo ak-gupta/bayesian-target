@@ -41,8 +41,10 @@ def visualize_target_dist(y: np.ndarray) -> Figure:
     tracedf = pd.concat(dflist, ignore_index=True)
 
     plt.ioff()
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(12, 8))
     sns.histplot(y, stat="density", ax=ax)
-    sns.lineplot(x="x", y="y", hue="dist", data=tracedf, ax=ax)
+    sns.lineplot(x="x", y="y", hue="dist", data=tracedf, palette="flare", ax=ax)
+
+    fig.tight_layout()
 
     return fig
