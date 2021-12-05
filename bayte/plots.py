@@ -22,6 +22,8 @@ def visualize_target_dist(y: np.ndarray) -> Figure:
 
     Returns
     -------
+    Figure
+        The figure object to persist or display
     """
     candidates_ = {
         "expon": "exponential",

@@ -11,7 +11,6 @@ from joblib import Parallel, effective_n_jobs
 import numpy as np
 from pandas.api.types import is_categorical_dtype
 from sklearn.base import (
-    BaseEstimator,
     ClassifierMixin,
     RegressorMixin,
     clone,
@@ -189,7 +188,12 @@ class BaseSamplingEstimator(BaseEnsemble):
 
         self.estimators_ = parallel(
             fn(
-                clone(self.base_estimator), self.encoder_, X, y, self.categorical_, **fit_params
+                clone(self.base_estimator),
+                self.encoder_,
+                X,
+                y,
+                self.categorical_,
+                **fit_params
             )
             for _ in range(self.n_estimators)
         )
