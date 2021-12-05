@@ -1,6 +1,5 @@
 """Test the encoder."""
 
-from logging import _nameToLevel
 import numpy as np
 from numpy.testing import assert_allclose, assert_array_equal
 import pandas as pd
@@ -12,7 +11,6 @@ from bayte.encoder import (
     BayesianTargetEncoder,
     _init_prior
 )
-from bayte.utils import make_regression
 
 def test_encoder_validity():
     """Test the validity against the scikit-learn API."""
@@ -253,11 +251,11 @@ def test_transform_multinomial():
     assert_allclose(out, expected, rtol=1e-5)
 
 
-def test_transform_exponential():
+def test_transform_exponential(toy_regression_dataset):
     """Test transforming with an exponential likelihood."""
-    X, y = make_regression(
-        "expon", (1,), n_samples=10000, n_features=10, n_levels=3, random_state=42
-    )
+    X, _ = toy_regression_dataset
+    # Create a new y vector that's sampled from the exponential distribution
+    y = scipy.stats.expon.rvs(1, size=1000)
 
     encoder = BayesianTargetEncoder(dist="exponential")
     encoder.fit(X[:, [9]], y)
@@ -267,10 +265,10 @@ def test_transform_exponential():
 
     for index, params in enumerate(encoder.posterior_params_[0]):
         assert params[1] == 0
-        assert params[2] == (np.sum(y)/(1 + np.sum(y) * np.sum(y[X[:, 9] == index + 1])))
+        assert params[2] == (np.sum(y)/(1 + np.sum(y) * np.sum(y[X[:, 9] == index])))
 
         # Mean of posterior is params[0] * params[2]
-        assert np.unique(out[X[:, 9] == index + 1]) == np.array([params[0] * params[2]])
+        assert np.unique(out[X[:, 9] == index]) == np.array([params[0] * params[2]])
 
     # Test parallel transform
     encoder.set_params(n_jobs=2)
@@ -279,11 +277,9 @@ def test_transform_exponential():
     assert_array_equal(out, paraout)
 
 
-def test_transform_normal():
+def test_transform_normal(toy_regression_dataset):
     """Test transforming with a normal likelihood."""
-    X, y = make_regression(
-        "norm", (1, 2), n_samples=10000, n_features=10, n_levels=3, random_state=42
-    )
+    X, y = toy_regression_dataset
 
     encoder = BayesianTargetEncoder(dist="normal")
     encoder.fit(X[:, [9]], y)
@@ -295,29 +291,29 @@ def test_transform_normal():
     mean = np.mean(y)
     hypervar = 1/np.sum(1/np.square(y - mean))
     for index, params in enumerate(encoder.posterior_params_[0]):
-        nlevel = np.sum(X[:, 9] == index + 1)
-        lvlsum = np.sum(y[X[:, 9] == index + 1])
-        assert params[0] == np.square(params[1]) * ((mean/hypervar) + (lvlsum/var))
+        nlevel = np.sum(X[:, 9] == index)
+        lvlsum = np.sum(y[X[:, 9] == index])
+        assert params[0] == 1/((1/hypervar) + (nlevel/var)) * ((mean/hypervar) + (lvlsum/var))
         assert params[1] == np.sqrt(1/((1/hypervar) + (nlevel/var)))
         assert_allclose(
-            np.unique(out[X[:, 9] == index + 1]), np.array(params[0])
+            np.unique(out[X[:, 9] == index]), np.array(params[0])
         )
 
 
-def test_transform_gamma():
+def test_transform_gamma(toy_regression_dataset):
     """Test transforming with a gamma likelihood."""
-    X, y = make_regression(
-        "gamma", (1,), n_samples=10000, n_features=10, n_levels=4, random_state=42
-    )
+    X, _ = toy_regression_dataset
+    # Create a new y vector that's sampled from the exponential distribution
+    y = scipy.stats.gamma.rvs(1, size=1000)
 
     encoder = BayesianTargetEncoder(dist="gamma")
     encoder.fit(X[:, [9]], y)
     out = encoder.transform(X[:, [9]])
 
-    assert len(encoder.posterior_params_[0]) == 4
+    assert len(encoder.posterior_params_[0]) == 3
 
     for index, params in enumerate(encoder.posterior_params_[0]):
-        assert np.unique(out[X[:, 9] == index + 1]) == np.array([params[0] * params[2]])
+        assert np.unique(out[X[:, 9] == index]) == np.array([params[0] * params[2]])
 
     # Test parallel transform
     encoder.set_params(n_jobs=2)

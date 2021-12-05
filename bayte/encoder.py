@@ -40,7 +40,7 @@ def _init_prior(dist: str, y) -> Tuple:
         # First parameter is the sample mean
         mean = np.average(y)
 
-        return mean, 1/np.sum(1/np.square(y - mean))
+        return mean, 1 / np.sum(1 / np.square(y - mean))
     elif dist in ("gamma", "invgamma"):
         fitter = getattr(scipy.stats, dist)
         alpha, _, _ = fitter.fit(y)
@@ -99,9 +99,11 @@ def _update_posterior(y, mask, dist, params) -> Tuple:
         # Known variance is the non-sample variance from the training data
         var = np.var(y)
 
-        factor = 1/((1/params[1]) + (np.sum(mask)/var))
+        factor = 1 / ((1 / params[1]) + (np.sum(mask) / var))
 
-        return factor * ((params[0]/params[1]) + (np.sum(y[mask])/var)), np.sqrt(factor)
+        return factor * ((params[0] / params[1]) + (np.sum(y[mask]) / var)), np.sqrt(
+            factor
+        )
     elif dist in ("gamma", "invgamma"):
         fitter = getattr(scipy.stats, dist)
         alpha, _, _ = fitter.fit(y)
