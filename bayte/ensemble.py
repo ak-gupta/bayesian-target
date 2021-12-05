@@ -181,18 +181,17 @@ class BaseSamplingEstimator(BaseEnsemble):
             )  # Need to filter the columns to categoricals
 
         self._validate_estimator()
-        self.estimators_: List[BaseEstimator] = []
-        estimators = [self._make_estimator() for _ in range(self.n_estimators)]
-
         if effective_n_jobs(self.n_jobs) == 1:
             parallel, fn = list, _sample_and_fit
         else:
             parallel = Parallel(n_jobs=self.n_jobs)
             fn = delayed(_sample_and_fit)
 
-        parallel(
-            fn(estimator, self.encoder_, X, y, self.categorical_, **fit_params)
-            for estimator in estimators
+        self.estimators_ = parallel(
+            fn(
+                clone(self.base_estimator), self.encoder_, X, y, self.categorical_, **fit_params
+            )
+            for _ in range(self.n_estimators)
         )
 
         return self

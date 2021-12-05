@@ -10,6 +10,7 @@ from numpy.testing import assert_array_equal
 import pandas as pd
 from sklearn.svm import SVR
 from sklearn.linear_model import LogisticRegression
+from sklearn.utils.validation import check_is_fitted
 
 import bayte as bt
 
@@ -29,6 +30,25 @@ def test_estimator_reg_fit(toy_regression_dataset):
     assert not np.array_equal(estimator.estimators_[0].coef_, estimator.estimators_[1].coef_)
 
 
+def test_estimator_parallel_fit(toy_regression_dataset):
+    """Test a parallel fit."""
+    X, y = toy_regression_dataset
+    estimator = bt.BayesianTargetRegressor(
+        base_estimator=SVR(kernel="linear"),
+        encoder=bt.BayesianTargetEncoder(dist="normal"),
+        n_estimators=2,
+        n_jobs=2
+    )
+    estimator.fit(X, y, categorical_feature=[9,])
+
+    assert hasattr(estimator, "estimators_")
+    assert len(estimator.estimators_) == 2
+    for est in estimator.estimators_:
+        check_is_fitted(est)
+
+    assert not np.array_equal(estimator.estimators_[0].coef_, estimator.estimators_[1].coef_)
+
+
 def test_estimator_clf_fit(toy_classification_dataset):
     """Test a basic fit with a classification task."""
     X, y = toy_classification_dataset
@@ -41,6 +61,8 @@ def test_estimator_clf_fit(toy_classification_dataset):
 
     assert hasattr(estimator, "estimators_")
     assert len(estimator.estimators_) == 2
+    for est in estimator.estimators_:
+        check_is_fitted(est)
     assert not np.array_equal(estimator.estimators_[0].coef_, estimator.estimators_[1].coef_)
 
 def test_estimator_fit_pandas(toy_regression_dataset):
