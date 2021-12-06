@@ -1,0 +1,14 @@
+{
+    "source": "https://www.openml.org/d/41444",
+    "dataset_type": "regression",
+    "local_file": "medical_charges.csv",
+    "target": "Average.Medicare.Payments",
+    "numeric": ["Total.Discharges"],
+    "nominal": [
+        "DRG.Definition",
+        "Provider.Name",
+        "Provider.City",
+        "Provider.State",
+        "Hospital.Referral.Region..HRR..Description"
+    ]
+}

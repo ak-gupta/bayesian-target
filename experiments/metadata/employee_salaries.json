@@ -1,0 +1,16 @@
+{
+    "source": "https://www.openml.org/d/41445",
+    "dataset_type": "regression",
+    "local_file": "employee_salaries.csv",
+    "target": "Current_Annual_Salary",
+    "numeric": [
+        "Gender",
+        "Assignment_Category",
+        "Year_First_Hired"
+    ],
+    "nominal": [
+        "Department_Name",
+        "Division",
+        "Employee_Position_Title"
+    ]
+}

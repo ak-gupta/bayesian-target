@@ -1,0 +1,21 @@
+{
+    "source": "https://www.openml.org/d/41210",
+    "dataset_type": "regression",
+    "local_file": "avocado-sales.csv",
+    "target": "AveragePrice",
+    "numeric": [
+        "Total Volume",
+        "4046",
+        "4225",
+        "4770",
+        "Total Bags",
+        "Small Bags",
+        "Large Bags",
+        "XLarge Bags",
+        "type"
+    ],
+    "nominal": [
+        "year",
+        "region"
+    ]
+}
