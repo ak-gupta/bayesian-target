@@ -1,8 +1,9 @@
 {
     "source": "https://www.openml.org/d/41267",
+    "dataset_name": "particulate-matter-ukair-2017",
     "dataset_type": "regression",
     "local_file": "particulate-matter-ukair-2017.csv",
-    "target": "PM.sub.10..sub..particulate..Hourly.measured.",
+    "target": "PM.sub.10..sub..particulate.matter..Hourly.measured.",
     "numeric": [
         "Hour",
         "Latitude",

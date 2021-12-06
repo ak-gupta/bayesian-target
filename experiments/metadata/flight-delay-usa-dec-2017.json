@@ -1,5 +1,6 @@
 {
     "source": "https://www.openml.org/d/41251",
+    "dataset_name": "flight-delay-usa-dec-2017",
     "dataset_type": "regression",
     "local_file": "flight-delay-usa-dec-2017.csv",
     "target": "ARR_DELAY",

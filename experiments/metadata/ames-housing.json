@@ -1,5 +1,6 @@
 {
     "source": "https://www.openml.org/d/41211",
+    "dataset_name": "ames-housing",
     "dataset_type": "regression",
     "local_file": "ames-housing.csv",
     "target": "Sale_Price",

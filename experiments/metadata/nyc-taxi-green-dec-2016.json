@@ -1,5 +1,6 @@
 {
     "source": "https://www.openml.org/d/41255",
+    "dataset_name": "nyc-taxi-green-dec-2016",
     "dataset_type": "regression",
     "local_file": "nyc-taxi-green-dec-2016.csv",
     "target": "tip_amount",

@@ -1,5 +1,6 @@
 {
     "source": "https://www.openml.org/d/41210",
+    "dataset_name": "avocado-sales",
     "dataset_type": "regression",
     "local_file": "avocado-sales.csv",
     "target": "AveragePrice",

@@ -1,5 +1,6 @@
 {
     "source": "https://www.openml.org/d/41444",
+    "dataset_name": "medical_charges",
     "dataset_type": "regression",
     "local_file": "medical_charges.csv",
     "target": "Average.Medicare.Payments",

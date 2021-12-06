@@ -1,5 +1,6 @@
 {
     "source": "https://www.openml.org/d/41275",
+    "dataset_name": "wine-reviews",
     "dataset_type": "regression",
     "local_file": "wine-reviews.csv",
     "target": "points",

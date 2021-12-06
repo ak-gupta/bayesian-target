@@ -1,5 +1,6 @@
 {
     "source": "https://www.openml.org/d/41445",
+    "dataset_name": "employee_salaries",
     "dataset_type": "regression",
     "local_file": "employee_salaries.csv",
     "target": "Current_Annual_Salary",
