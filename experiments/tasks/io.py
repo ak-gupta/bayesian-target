@@ -5,6 +5,7 @@ from typing import Dict
 
 import pandas as pd
 from prefect import task
+from scipy.io.arff import loadarff
 
 from .. import DATA_DIR, METADATA_DIR
 
@@ -44,4 +45,13 @@ def read_data(metadata: Dict) -> pd.DataFrame:
     pd.DataFrame
         The output dataset.
     """
-    return pd.read_csv(DATA_DIR / metadata["dataset_type"] / metadata["local_file"])
+    fpath = DATA_DIR / metadata["dataset_type"] / metadata["local_file"]
+    if fpath.suffix == ".arff":
+        raw = loadarff(fpath)
+        data = pd.DataFrame(raw[0])
+    elif fpath.suffix == ".csv":
+        data = pd.read_csv(fpath)
+    else:
+        raise NotImplementedError(f"File type `{fpath.suffix}` not supported.")
+    
+    return data
