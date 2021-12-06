@@ -3,6 +3,12 @@
     "dataset_name": "avocado-sales",
     "dataset_type": "regression",
     "local_file": "avocado-sales.csv",
+    "candidate_dists": [
+        "exponential",
+        "gamma",
+        "invgamma",
+        "normal"
+    ],
     "target": "AveragePrice",
     "numeric": [
         "Total Volume",

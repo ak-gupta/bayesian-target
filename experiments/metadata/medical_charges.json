@@ -3,6 +3,12 @@
     "dataset_name": "medical_charges",
     "dataset_type": "regression",
     "local_file": "medical_charges.csv",
+    "candidate_dists": [
+        "exponential",
+        "gamma",
+        "invgamma",
+        "normal"
+    ],
     "target": "Average.Medicare.Payments",
     "numeric": ["Total.Discharges"],
     "nominal": [

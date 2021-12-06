@@ -3,6 +3,12 @@
     "dataset_name": "wine-reviews",
     "dataset_type": "regression",
     "local_file": "wine-reviews.csv",
+    "candidate_dists": [
+        "exponential",
+        "gamma",
+        "invgamma",
+        "normal"
+    ],
     "target": "points",
     "numeric": [
         "price"

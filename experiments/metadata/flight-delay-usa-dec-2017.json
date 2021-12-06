@@ -3,6 +3,11 @@
     "dataset_name": "flight-delay-usa-dec-2017",
     "dataset_type": "regression",
     "local_file": "flight-delay-usa-dec-2017.csv",
+    "candidate_dists": [
+        "exponential",
+        "invgamma",
+        "normal"
+    ],
     "target": "ARR_DELAY",
     "numeric": ["CRS_DEP_TIME", "DISTANCE"],
     "nominal": [

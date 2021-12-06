@@ -22,7 +22,7 @@ def render_dist_plot(data: pd.DataFrame, metadata: Dict):
         The metadata dictionary.
     """
     with sns.axes_style("dark"):
-        fig = visualize_target_dist(data[metadata["target"]])
+        fig = visualize_target_dist(data[metadata["target"]], metadata["candidate_dists"])
         fig.suptitle(f"{metadata['dataset_name']} target density")
 
     fig.savefig(OUTPUT_DIR / f"{metadata['dataset_name']}.png")

@@ -3,6 +3,12 @@
     "dataset_name": "particulate-matter-ukair-2017",
     "dataset_type": "regression",
     "local_file": "particulate-matter-ukair-2017.csv",
+    "candidate_dists": [
+        "exponential",
+        "gamma",
+        "invgamma",
+        "normal"
+    ],
     "target": "PM.sub.10..sub..particulate.matter..Hourly.measured.",
     "numeric": [
         "Hour",

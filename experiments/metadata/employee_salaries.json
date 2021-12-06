@@ -3,6 +3,12 @@
     "dataset_name": "employee_salaries",
     "dataset_type": "regression",
     "local_file": "employee_salaries.csv",
+    "candidate_dists": [
+        "exponential",
+        "gamma",
+        "invgamma",
+        "normal"
+    ],
     "target": "Current_Annual_Salary",
     "numeric": [
         "Gender",

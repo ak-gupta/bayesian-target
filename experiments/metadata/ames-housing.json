@@ -3,6 +3,12 @@
     "dataset_name": "ames-housing",
     "dataset_type": "regression",
     "local_file": "ames-housing.csv",
+    "candidate_dists": [
+        "exponential",
+        "gamma",
+        "invgamma",
+        "normal"
+    ],
     "target": "Sale_Price",
     "numeric": [
         "Lot_Frontage",
