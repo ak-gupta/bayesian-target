@@ -87,8 +87,8 @@ Performance evaluation
 assessment of model performance. We'll adapt that here and use something slightly
 different: 
 
-  **baseline performance** is the holdout score for a model fitted with
-  **no categorical features**.
+  **baseline performance** is the average test score for a model fitted with
+  **no categorical features** using 5-fold cross-validation.
 
 Similar to :footcite:t:`pargent`, we will use root mean squared error (RMSE) for
 evaluating the performance of regression models and the area under the receiver
