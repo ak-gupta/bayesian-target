@@ -14,5 +14,5 @@ __all__: List[str] = [
     "init_model",
     "render_dist_plot",
     "fit_and_score_model",
-    "split_data"
+    "split_data",
 ]

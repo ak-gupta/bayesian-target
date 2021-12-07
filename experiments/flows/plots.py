@@ -2,16 +2,12 @@
 
 from prefect import Flow, Parameter
 
-from ..tasks import (
-    read_data,
-    read_metadata,
-    render_dist_plot
-)
+from ..tasks import read_data, read_metadata, render_dist_plot
 
 
 def gen_visualization_flow() -> Flow:
     """Generate a flow to render distribution visualizations.
-    
+
     Returns
     -------
     Flow
@@ -22,5 +18,5 @@ def gen_visualization_flow() -> Flow:
         meta = read_metadata(dataset=dataset)
         data = read_data(metadata=meta)
         _ = render_dist_plot(data=data, metadata=meta)
-    
+
     return flow

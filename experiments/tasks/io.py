@@ -13,12 +13,12 @@ from .. import DATA_DIR, METADATA_DIR
 @task(name="Read Metadata")
 def read_metadata(dataset: str) -> Dict:
     """Read dataset metadata.
-    
+
     Parameters
     ----------
     dataset : str
         The name of the dataset
-    
+
     Returns
     -------
     Dict
@@ -34,12 +34,12 @@ def read_metadata(dataset: str) -> Dict:
 @task(name="Read dataset")
 def read_data(metadata: Dict) -> pd.DataFrame:
     """Read the dataset file.
-    
+
     Parameters
     ----------
     metadata : Dict
         The output from ``read_metadata``.
-    
+
     Returns
     -------
     pd.DataFrame
@@ -53,5 +53,5 @@ def read_data(metadata: Dict) -> pd.DataFrame:
         data = pd.read_csv(fpath)
     else:
         raise NotImplementedError(f"File type `{fpath.suffix}` not supported.")
-    
+
     return data

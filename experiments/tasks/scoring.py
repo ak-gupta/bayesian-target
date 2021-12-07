@@ -11,16 +11,13 @@ from sklearn.metrics._scorer import check_scoring
 from sklearn.model_selection._split import check_cv
 from sklearn.utils.metaestimators import _safe_split
 
-SCORER = {
-    "regression": "neg_root_mean_squared_error",
-    "classification": "roc_auc"
-}
+SCORER = {"regression": "neg_root_mean_squared_error", "classification": "roc_auc"}
 
 
 @task(name="Split data")
 def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
     """Split the dataset into 5 folds for cross-validation.
-    
+
     Parameters
     ----------
     data : pd.DataFrame
@@ -29,7 +26,7 @@ def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
         The metadata dictionary.
     estimator : object
         The estimator object for this experiment.
-    
+
     Returns
     -------
     List
@@ -37,18 +34,21 @@ def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
     """
     cv = check_cv(5, data[metadata["target"]], classifier=is_classifier(estimator))
 
-    return list(cv.split(data[metadata["numeric"] + metadata["nominal"]], data[metadata["target"]], None))
+    return list(
+        cv.split(
+            data[metadata["numeric"] + metadata["nominal"]],
+            data[metadata["target"]],
+            None,
+        )
+    )
+
 
 @task(name="Cross-validated scoring")
 def fit_and_score_model(
-    data: pd.DataFrame,
-    metadata: Dict,
-    estimator,
-    splits: Tuple,
-    encoder=None
+    data: pd.DataFrame, metadata: Dict, estimator, splits: Tuple, encoder=None
 ) -> Tuple[float, float]:
     """Fit and score a model fold.
-    
+
     Parameters
     ----------
     data : pd.DataFrame
@@ -61,7 +61,7 @@ def fit_and_score_model(
         The train/test split for this iteration
     encoder : object, optional (default None)
         The categorical encoder, if required.
-    
+
     Returns
     -------
     float
@@ -74,13 +74,13 @@ def fit_and_score_model(
         estimator,
         data[metadata["numeric"] + metadata["nominal"]],
         data[metadata["target"]],
-        splits[0]
+        splits[0],
     )
     X_test, y_test = _safe_split(
         estimator,
         data[metadata["numeric"] + metadata["nominal"]],
         data[metadata["target"]],
-        splits[1]
+        splits[1],
     )
     start_time = time.time()
     if encoder is not None:
@@ -88,14 +88,14 @@ def fit_and_score_model(
         for idx, col in enumerate(data.columns):
             if col in metadata["nominal"]:
                 categorical_[idx] = True
-        
+
         X_train_encoded = encoder.fit_transform(X_train[:, categorical_], y_train)
         X_train = np.hstack((X_train[:, ~categorical_], X_train_encoded))
 
         X_test_encoded = encoder.transform(X_test[:, categorical_])
         X_test = np.hstack((X_test[:, ~categorical_], X_test_encoded))
 
-    estimator.fit(X_train, y_train)    
+    estimator.fit(X_train, y_train)
     fit_time = time.time() - start_time
 
     return scorers(estimator, X_test, y_test), fit_time

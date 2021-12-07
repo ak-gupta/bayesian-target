@@ -2,7 +2,12 @@
 
 from typing import Dict
 
-from category_encoders import CountEncoder, GLLMEncoder, JamesSteinEncoder, TargetEncoder
+from category_encoders import (
+    CountEncoder,
+    GLLMEncoder,
+    JamesSteinEncoder,
+    TargetEncoder,
+)
 from prefect import task
 from lightgbm import LGBClassifier, LGBRegressor
 from sklearn.linear_model import LinearRegression, LogisticRegression
@@ -15,14 +20,14 @@ from bayte import BayesianTargetEncoder
 @task(name="Initialize model")
 def init_model(algorithm: str, metadata: Dict):
     """Initialize a model object.
-    
+
     Parameters
     ----------
     algorithm : {"linear", "xgboost", "lightgbm"}
         The modelling package to use.
     metadata : dict
         The metadata configuration for the dataset.
-    
+
     Returns
     -------
     object
@@ -51,14 +56,14 @@ def init_model(algorithm: str, metadata: Dict):
 @task(name="Initialize encoder")
 def init_encoder(algorithm: str, metadata: Dict):
     """Initialize a categorical encoder.
-    
+
     Parameters
     ----------
     algorithm : {"frequency", "gllm", "james-stein", "one-hot", "integer", "target", "bayes"}
         The type of categorical encoder.
     metadata : dict
         The metadata configuration for the dataset.
-    
+
     Returns
     -------
     object
