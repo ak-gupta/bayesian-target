@@ -12,13 +12,13 @@
     "dist": "invgamma",
     "target": "Current_Annual_Salary",
     "numeric": [
-        "Gender",
-        "Assignment_Category",
         "Year_First_Hired"
     ],
     "nominal": [
+        "Gender",
         "Department_Name",
         "Division",
+        "Assignment_Category",
         "Employee_Position_Title"
     ]
 }

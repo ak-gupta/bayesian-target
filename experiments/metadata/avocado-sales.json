@@ -19,11 +19,11 @@
         "Total Bags",
         "Small Bags",
         "Large Bags",
-        "XLarge Bags",
-        "type"
+        "XLarge Bags"
     ],
     "nominal": [
         "year",
+        "type",
         "region"
     ]
 }

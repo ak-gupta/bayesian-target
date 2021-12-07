@@ -14,7 +14,6 @@
     "numeric": [
         "Lot_Frontage",
         "Lot_Area",
-        "Street",
         "Year_Built",
         "Year_Remod_Add",
         "Mas_Vnr_Area",
@@ -22,7 +21,6 @@
         "BsmtFin_SF_2",
         "Bsmt_Unf_SF",
         "Total_Bsmt_SF",
-        "Central_Air",
         "First_Flr_SF",
         "Second_Flr_SF",
         "Low_Qual_Fin_SF",
@@ -52,6 +50,7 @@
     "nominal": [
         "MS_SubClass",
         "MS_Zoning",
+        "Street",
         "Alley",
         "Lot_Shape",
         "Land_Contour",
@@ -80,6 +79,7 @@
         "BsmtFin_Type_2",
         "Heating",
         "Heating_QC",
+        "Central_Air",
         "Electrical",
         "Kitchen_Qual",
         "Functional",

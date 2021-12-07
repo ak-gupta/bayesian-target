@@ -13,7 +13,6 @@
     "target": "tip_amount",
     "numeric": [
         "VendorID",
-        "store_and_fwd_flag",
         "passenger_count",
         "trip_distance",
         "fare_amount",
@@ -21,6 +20,7 @@
         "trip_type"
     ],
     "nominal": [
+        "store_and_fwd_flag",
         "RatecodeID",
         "PULocationID",
         "DOLocationID",
