@@ -1,6 +1,6 @@
 """Flows for evaluating base model performance."""
 
-from prefect import Flow, Parameter
+from prefect import Flow, Parameter, unmapped
 
 from rubicon_ml.workflow.prefect import (
     get_or_create_project_task,
@@ -13,6 +13,7 @@ from .. import OUTPUT_DIR
 from ..tasks import (
     read_data,
     read_metadata,
+    init_model,
     fit_and_score_model,
     split_data
 )
@@ -37,12 +38,18 @@ def gen_base_performance_flow() -> Flow:
         )
 
         dataset = Parameter("dataset", None)
+        algorithm = Parameter("algorithm", None)
         meta = read_metadata(dataset=dataset)
         data = read_data(metadata=meta)
-        # Initialize the model
+        model = init_model(algorithm=algorithm, metadata=meta)
         # Score the model
+        splits = split_data(data=data, metadata=meta, estimator=model)
+        scores = fit_and_score_model.map(
+            data=unmapped(data), metadata=unmapped(meta), estimator=unmapped(model), splits=splits
+        )
         log_parameter_task(experiment, "dataset", dataset)
-        # Log the scores
+        log_parameter_task(experiment, "algorithm", algorithm)
+        # Log scores
 
     return flow
 

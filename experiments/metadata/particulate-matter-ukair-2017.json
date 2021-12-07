@@ -9,6 +9,7 @@
         "invgamma",
         "normal"
     ],
+    "dist": "invgamma",
     "target": "PM.sub.10..sub..particulate.matter..Hourly.measured.",
     "numeric": [
         "Hour",

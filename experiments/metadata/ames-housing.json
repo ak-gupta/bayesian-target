@@ -9,6 +9,7 @@
         "invgamma",
         "normal"
     ],
+    "dist": "invgamma",
     "target": "Sale_Price",
     "numeric": [
         "Lot_Frontage",

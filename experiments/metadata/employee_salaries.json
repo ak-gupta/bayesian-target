@@ -9,6 +9,7 @@
         "invgamma",
         "normal"
     ],
+    "dist": "invgamma",
     "target": "Current_Annual_Salary",
     "numeric": [
         "Gender",

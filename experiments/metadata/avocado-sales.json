@@ -9,6 +9,7 @@
         "invgamma",
         "normal"
     ],
+    "dist": "gamma",
     "target": "AveragePrice",
     "numeric": [
         "Total Volume",

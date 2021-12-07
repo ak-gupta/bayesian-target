@@ -9,6 +9,7 @@
         "invgamma",
         "normal"
     ],
+    "dist": "invgamma",
     "target": "tip_amount",
     "numeric": [
         "VendorID",

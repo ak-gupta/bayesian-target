@@ -41,22 +41,22 @@ methodologies. Suppose you have :math:`n` training observations, with
 :footcite:t:`pargent` provide a description for each encoding methodology listed
 below.
 
-+--------------------------------+-------------+-----------------------------------------+
-| Encoding                       | Supervised? | Implementation                          |
-|                                |             |                                         |
-+================================+=============+=========================================+
-| Frequency                      | N           | ``category_encoders.CountEncoder``      |
-+--------------------------------+-------------+-----------------------------------------+
-| Generalized Linear Mixed Model | Y           | ``category_encoders.GLLMEncoder``       |
-+--------------------------------+-------------+-----------------------------------------+
-| James-Stein                    | Y           | ``category_encoders.JamesSteinEncoder`` |
-+--------------------------------+-------------+-----------------------------------------+
-| One-hot                        | N           | ``sklearn.preprocessing.OneHotEncoder`` |
-+--------------------------------+-------------+-----------------------------------------+
-| Integer                        | N           | ``sklearn.preprocessingOrdinalEncoder`` |
-+--------------------------------+-------------+-----------------------------------------+
-| Target                         | Y           | ``category_encoders.TargetEncoder``     |
-+--------------------------------+-------------+-----------------------------------------+
++--------------------------------+-------------+------------------------------------------+
+| Encoding                       | Supervised? | Implementation                           |
+|                                |             |                                          |
++================================+=============+==========================================+
+| Frequency                      | N           | ``category_encoders.CountEncoder``       |
++--------------------------------+-------------+------------------------------------------+
+| Generalized Linear Mixed Model | Y           | ``category_encoders.GLLMEncoder``        |
++--------------------------------+-------------+------------------------------------------+
+| James-Stein                    | Y           | ``category_encoders.JamesSteinEncoder``  |
++--------------------------------+-------------+------------------------------------------+
+| One-hot                        | N           | ``sklearn.preprocessing.OneHotEncoder``  |
++--------------------------------+-------------+------------------------------------------+
+| Integer                        | N           | ``sklearn.preprocessing.OrdinalEncoder`` |
++--------------------------------+-------------+------------------------------------------+
+| Target                         | Y           | ``category_encoders.TargetEncoder``      |
++--------------------------------+-------------+------------------------------------------+
 
 Modelling algorithms
 --------------------
