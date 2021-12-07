@@ -4,12 +4,12 @@ from typing import Dict
 
 from category_encoders import (
     CountEncoder,
-    GLLMEncoder,
+    GLMMEncoder,
     JamesSteinEncoder,
     TargetEncoder,
 )
 from prefect import task
-from lightgbm import LGBClassifier, LGBRegressor
+from lightgbm import LGBMClassifier, LGBMRegressor
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 from xgboost import XGBClassifier, XGBRegressor
@@ -39,7 +39,7 @@ def init_model(algorithm: str, metadata: Dict):
         elif algorithm == "xgboost":
             return XGBRegressor()
         elif algorithm == "lightgbm":
-            return LGBRegressor()
+            return LGBMRegressor()
         else:
             raise NotImplementedError(f"{algorithm} is not a valid algorithm type.")
     elif metadata["dataset_type"] == "classification":
@@ -48,7 +48,7 @@ def init_model(algorithm: str, metadata: Dict):
         elif algorithm == "xgboost":
             return XGBClassifier()
         elif algorithm == "lightgbm":
-            return LGBClassifier()
+            return LGBMClassifier()
         else:
             raise NotImplementedError(f"{algorithm} is not a valid algorithm type.")
 
@@ -72,7 +72,7 @@ def init_encoder(algorithm: str, metadata: Dict):
     if algorithm == "frequency":
         return CountEncoder()
     elif algorithm == "gllm":
-        return GLLMEncoder()
+        return GLMMEncoder()
     elif algorithm == "james-stein":
         return JamesSteinEncoder()
     elif algorithm == "one-hot":

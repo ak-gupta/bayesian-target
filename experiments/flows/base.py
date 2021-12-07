@@ -14,6 +14,8 @@ from ..tasks import (
     read_data,
     read_metadata,
     init_model,
+    avg_fit_time,
+    avg_score,
     fit_and_score_model,
     split_data,
 )
@@ -29,7 +31,7 @@ def gen_base_performance_flow() -> Flow:
     """
     with Flow(name="Evaluate base model performance") as flow:
         project = get_or_create_project_task(
-            "filesystem", OUTPUT_DIR, "Bayesian Target Encoding"
+            "filesystem", str(OUTPUT_DIR), "Bayesian Target Encoding"
         )
         experiment = create_experiment_task(project, name="Base model performance")
 
@@ -49,5 +51,9 @@ def gen_base_performance_flow() -> Flow:
         log_parameter_task(experiment, "dataset", dataset)
         log_parameter_task(experiment, "algorithm", algorithm)
         # Log scores
+        final_score = avg_score(scoring_out=scores)
+        final_fit_time = avg_fit_time(scoring_out=scores)
+        log_metric_task(experiment, "score", final_score)
+        log_metric_task(experiment, "fit-time", final_fit_time)
 
     return flow

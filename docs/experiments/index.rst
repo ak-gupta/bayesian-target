@@ -47,7 +47,7 @@ below.
 +================================+=============+==========================================+
 | Frequency                      | N           | ``category_encoders.CountEncoder``       |
 +--------------------------------+-------------+------------------------------------------+
-| Generalized Linear Mixed Model | Y           | ``category_encoders.GLLMEncoder``        |
+| Generalized Linear Mixed Model | Y           | ``category_encoders.GLMMEncoder``        |
 +--------------------------------+-------------+------------------------------------------+
 | James-Stein                    | Y           | ``category_encoders.JamesSteinEncoder``  |
 +--------------------------------+-------------+------------------------------------------+
@@ -67,9 +67,9 @@ The following modelling implementations will be tested:
 | Package                                  | Class                  |
 |                                          |                        |
 +==========================================+========================+
-| LightGBM\ :footcite:p:`lightgbm`         | ``LGBClassifier``      |
+| LightGBM\ :footcite:p:`lightgbm`         | ``LGBMClassifier``     |
 +------------------------------------------+------------------------+
-|                                          | ``LGBRegressor``       |
+|                                          | ``LGBMRegressor``      |
 +------------------------------------------+------------------------+
 | Scikit-Learn\ :footcite:p:`scikit-learn` | ``LinearRegression``   |
 +------------------------------------------+------------------------+

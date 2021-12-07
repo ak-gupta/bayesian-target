@@ -70,32 +70,67 @@ def fit_and_score_model(
         The fitting time, in seconds.
     """
     scorers = check_scoring(estimator, SCORER[metadata["dataset_type"]])
+    columns = metadata["numeric"] + metadata["nominal"]
     X_train, y_train = _safe_split(
-        estimator,
-        data[metadata["numeric"] + metadata["nominal"]],
-        data[metadata["target"]],
-        splits[0],
+        estimator, data[columns].to_numpy(), data[metadata["target"]].to_numpy(), splits[0],
     )
     X_test, y_test = _safe_split(
         estimator,
-        data[metadata["numeric"] + metadata["nominal"]],
-        data[metadata["target"]],
+        data[columns].to_numpy(),
+        data[metadata["target"]].to_numpy(),
         splits[1],
     )
     start_time = time.time()
-    if encoder is not None:
-        categorical_ = np.zeros(data.shape[0], dtype=bool)
-        for idx, col in enumerate(data.columns):
-            if col in metadata["nominal"]:
-                categorical_[idx] = True
+    categorical_ = np.zeros(X_train.shape[1], dtype=bool)
+    for idx, col in enumerate(columns):
+        if col in metadata["nominal"]:
+            categorical_[idx] = True
 
+    if encoder is not None:
         X_train_encoded = encoder.fit_transform(X_train[:, categorical_], y_train)
         X_train = np.hstack((X_train[:, ~categorical_], X_train_encoded))
 
         X_test_encoded = encoder.transform(X_test[:, categorical_])
         X_test = np.hstack((X_test[:, ~categorical_], X_test_encoded))
+    else:
+        X_train = X_train[:, ~categorical_]
+        X_test = X_test[:, ~categorical_]
 
     estimator.fit(X_train, y_train)
     fit_time = time.time() - start_time
 
     return scorers(estimator, X_test, y_test), fit_time
+
+
+@task(name="Average score")
+def avg_score(scoring_out: List[Tuple]) -> float:
+    """Get the average score.
+    
+    Parameters
+    ----------
+    scoring_out : List
+        The test score and training time from each fold.
+    
+    Returns
+    -------
+    float
+        The average score.
+    """
+    return np.average([out[0] for out in scoring_out])
+
+
+@task(name="Average fit time")
+def avg_fit_time(scoring_out: List[Tuple]) -> float:
+    """Get the average fit time.
+    
+    Parameters
+    ----------
+    scoring_out : list
+        The test score and training time for each fold.
+    
+    Returns
+    -------
+    float
+        The average fit time.
+    """
+    return np.average([out[1] for out in scoring_out])
