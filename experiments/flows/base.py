@@ -1,6 +1,6 @@
 """Flows for evaluating base model performance."""
 
-from prefect import Flow, Parameter, unmapped
+from prefect import Flow, unmapped
 
 from rubicon_ml.workflow.prefect import (
     get_or_create_project_task,
@@ -14,15 +14,22 @@ from ..tasks import (
     read_data,
     read_metadata,
     init_model,
-    avg_fit_time,
-    avg_score,
+    final_fit_times,
+    final_scores,
     fit_and_score_model,
     split_data,
 )
 
 
-def gen_base_performance_flow() -> Flow:
+def gen_base_performance_flow(dataset: str, algorithm: str) -> Flow:
     """Generate a flow to evaluate base model performance.
+
+    Parameters
+    ----------
+    dataset : str
+        The name of the dataset.
+    algorithm : {"linear", "xgboost", "lightgbm"}
+        The modelling algorithm.
 
     Returns
     -------
@@ -31,12 +38,9 @@ def gen_base_performance_flow() -> Flow:
     """
     with Flow(name="Evaluate base model performance") as flow:
         project = get_or_create_project_task(
-            "filesystem", str(OUTPUT_DIR), "Bayesian Target Encoding"
+            "filesystem", str(OUTPUT_DIR), "Base Performance"
         )
-        experiment = create_experiment_task(project, name="Base model performance")
-
-        dataset = Parameter("dataset", None)
-        algorithm = Parameter("algorithm", None)
+        experiment = create_experiment_task(project, name=f"{dataset}-{algorithm}")
         meta = read_metadata(dataset=dataset)
         data = read_data(metadata=meta)
         model = init_model(algorithm=algorithm, metadata=meta)
@@ -51,9 +55,17 @@ def gen_base_performance_flow() -> Flow:
         log_parameter_task(experiment, "dataset", dataset)
         log_parameter_task(experiment, "algorithm", algorithm)
         # Log scores
-        final_score = avg_score(scoring_out=scores)
-        final_fit_time = avg_fit_time(scoring_out=scores)
-        log_metric_task(experiment, "score", final_score)
-        log_metric_task(experiment, "fit-time", final_fit_time)
+        final_score = final_scores(scoring_out=scores)
+        final_fit_time = final_fit_times(scoring_out=scores)
+        log_metric_task.map(
+            unmapped(experiment),
+            [f"score-{i}" for i in range(1, 6)],
+            final_score
+        )
+        log_metric_task.map(
+            unmapped(experiment),
+            [f"fit-time-{i}" for i in range(1, 6)],
+            final_fit_time
+        )
 
     return flow

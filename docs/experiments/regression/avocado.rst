@@ -9,3 +9,5 @@ avocado-sales
 
 .. image:: ../../../experiments/output/avocado-sales.png
     :align: center
+
+For this dataset, we will use the ``gamma`` likelihood.

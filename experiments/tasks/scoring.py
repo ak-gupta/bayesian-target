@@ -103,8 +103,8 @@ def fit_and_score_model(
 
 
 @task(name="Average score")
-def avg_score(scoring_out: List[Tuple]) -> float:
-    """Get the average score.
+def final_scores(scoring_out: List[Tuple]) -> List[float]:
+    """Get the fold scores.
     
     Parameters
     ----------
@@ -113,15 +113,15 @@ def avg_score(scoring_out: List[Tuple]) -> float:
     
     Returns
     -------
-    float
-        The average score.
+    list
+        The fold scores
     """
-    return np.average([out[0] for out in scoring_out])
+    return [out[0] for out in scoring_out]
 
 
 @task(name="Average fit time")
-def avg_fit_time(scoring_out: List[Tuple]) -> float:
-    """Get the average fit time.
+def final_fit_times(scoring_out: List[Tuple]) -> List[float]:
+    """Get the fit times.
     
     Parameters
     ----------
@@ -130,7 +130,7 @@ def avg_fit_time(scoring_out: List[Tuple]) -> float:
     
     Returns
     -------
-    float
-        The average fit time.
+    list
+        The fold scores.
     """
-    return np.average([out[1] for out in scoring_out])
+    return [out[1] for out in scoring_out]

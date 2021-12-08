@@ -41,6 +41,7 @@ pip-delete-this-directory.txt
 # Experiments
 experiments/data/*/*.arff
 experiments/data/*/*.csv
+experiments/output/base-performance/*
 
 # Unit test / coverage reports
 htmlcov/

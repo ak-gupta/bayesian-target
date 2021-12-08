@@ -119,4 +119,7 @@ operating characteristic (AUROC) for classification problems. Both metrics are
 available in ``scikit-learn``\ :footcite:p:`scikit-learn` under the strings
 ``neg_root_mean_squared_error`` and ``roc_auc``, respectively.
 
+Since we will *not* be doing any hyperparameter optimization, we will express the
+change in performance using a percentage increase in the stated metric.
+
 .. footbibliography::

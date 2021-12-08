@@ -9,3 +9,5 @@ flight-delay-usa-dec-2017
 
 .. image:: ../../../experiments/output/flight-delay-usa-dec-2017.png
     :align: center
+
+For this dataset, we will use the ``invgamma`` likelihood.

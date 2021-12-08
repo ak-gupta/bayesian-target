@@ -9,3 +9,5 @@ nyc-taxi-green-dec-2016
 
 .. image:: ../../../experiments/output/nyc-taxi-green-dec-2016.png
     :align: center
+
+For this dataset, we will use the ``invgamma`` likelihood.
