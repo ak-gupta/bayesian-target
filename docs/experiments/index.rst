@@ -7,12 +7,6 @@ Coming soon.
 The plan is to leverage the experimental framework discussed by :footcite:t:`pargent`
 to analyze bayesian target encoding (BTE) and answer the following questions:
 
-- How does the effectiveness of BTE change with the number of categorical levels?
-
-  - Since it's hard to compare effectiveness of encoding approaches across
-    different datasets, I will likely need to use synthetic data to answer
-    this question.
-
 - **Marginal BTE**: Is there lift from a staged approach:
 
   #. Fit a submodel [*]_ that uses all non-categorical columns to predict the target.
