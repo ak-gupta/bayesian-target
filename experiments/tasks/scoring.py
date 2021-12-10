@@ -160,8 +160,7 @@ def fit_and_score_ensemble_model(
         ensemble = BayesianTargetRegressor(
             base_estimator=estimator,
             encoder=encoder,
-            n_estimators=n_estimators,
-            n_jobs=-1,
+            n_estimators=n_estimators
         )
     else:
         raise NotImplementedError("Not implemented yet.")

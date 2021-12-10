@@ -173,6 +173,7 @@ class BaseSamplingEstimator(BaseEnsemble):
             self.encoder_ = deepcopy(self.encoder)
             self.encoder_.set_params(sample=True)
         else:
+            LOG.info("Fitting the target encoder.")
             self.encoder_ = clone(self.encoder)
             self.encoder_.set_params(sample=True)
             self.encoder_.fit(
@@ -186,6 +187,7 @@ class BaseSamplingEstimator(BaseEnsemble):
             parallel = Parallel(n_jobs=self.n_jobs)
             fn = delayed(_sample_and_fit)
 
+        LOG.info("Training the estimator(s).")
         self.estimators_ = parallel(
             fn(
                 clone(self.base_estimator),
