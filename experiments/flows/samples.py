@@ -6,7 +6,7 @@ from rubicon_ml.workflow.prefect import (
     get_or_create_project_task,
     create_experiment_task,
     log_metric_task,
-    log_parameter_task
+    log_parameter_task,
 )
 
 from .. import OUTPUT_DIR
@@ -19,13 +19,15 @@ from ..tasks import (
     final_fit_times,
     final_scores,
     fit_and_score_ensemble_model,
-    split_data
+    split_data,
 )
 
 
-def gen_sampling_performance_flow(dataset: str, algorithm: str, n_estimators: int) -> Flow:
+def gen_sampling_performance_flow(
+    dataset: str, algorithm: str, n_estimators: int
+) -> Flow:
     """Generate a flow to evaluate the effect of the number of samples on performance.
-    
+
     Parameters
     ----------
     dataset : str
@@ -34,7 +36,7 @@ def gen_sampling_performance_flow(dataset: str, algorithm: str, n_estimators: in
         The modelling algorithm.
     n_estimators : int
         The number of samples to use in the ensemble model.
-    
+
     Returns
     -------
     Flow
@@ -44,7 +46,9 @@ def gen_sampling_performance_flow(dataset: str, algorithm: str, n_estimators: in
         project = get_or_create_project_task(
             "filesystem", str(OUTPUT_DIR), "Number of samples"
         )
-        experiment = create_experiment_task(project, name=f"{dataset}-{algorithm}-{n_estimators}")
+        experiment = create_experiment_task(
+            project, name=f"{dataset}-{algorithm}-{n_estimators}"
+        )
         meta = read_metadata(dataset=dataset)
         data = read_data(metadata=meta)
         finaldata = positive_target(data=data, metadata=meta)
@@ -58,7 +62,7 @@ def gen_sampling_performance_flow(dataset: str, algorithm: str, n_estimators: in
             estimator=unmapped(model),
             splits=splits,
             encoder=unmapped(encoder),
-            n_estimators=unmapped(n_estimators)
+            n_estimators=unmapped(n_estimators),
         )
         log_parameter_task(experiment, "dataset", dataset)
         log_parameter_task(experiment, "algorithm", algorithm)
@@ -67,14 +71,10 @@ def gen_sampling_performance_flow(dataset: str, algorithm: str, n_estimators: in
         final_score = final_scores(scoring_out=scores)
         final_fit_time = final_fit_times(scoring_out=scores)
         log_metric_task.map(
-            unmapped(experiment),
-            [f"score-{i}" for i in range(1, 6)],
-            final_score
+            unmapped(experiment), [f"score-{i}" for i in range(1, 6)], final_score
         )
         log_metric_task.map(
-            unmapped(experiment),
-            [f"fit-time-{i}" for i in range(1, 6)],
-            final_fit_time
+            unmapped(experiment), [f"fit-time-{i}" for i in range(1, 6)], final_fit_time
         )
-    
+
     return flow

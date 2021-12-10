@@ -11,17 +11,18 @@ import numpy as np
 import pandas as pd
 from prefect import task
 
+
 @task(name="Create positive target")
 def positive_target(data: pd.DataFrame, metadata: Dict) -> pd.DataFrame:
     """Create a positive target and drop nulls.
-    
+
     Parameters
     ----------
     data : pd.DataFrame
         The input dataset.
     metadata : Dict
         The dataset metadata.
-    
+
     Returns
     -------
     pd.DataFrame

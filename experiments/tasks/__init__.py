@@ -12,7 +12,7 @@ from .scoring import (
     final_scores,
     fit_and_score_ensemble_model,
     fit_and_score_model,
-    split_data
+    split_data,
 )
 
 __all__: List[str] = [

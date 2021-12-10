@@ -74,7 +74,10 @@ def fit_and_score_model(
     scorers = check_scoring(estimator, SCORER[metadata["dataset_type"]])
     columns = metadata["numeric"] + metadata["nominal"]
     X_train, y_train = _safe_split(
-        estimator, data[columns].to_numpy(), data[metadata["target"]].to_numpy(), splits[0],
+        estimator,
+        data[columns].to_numpy(),
+        data[metadata["target"]].to_numpy(),
+        splits[0],
     )
     X_test, y_test = _safe_split(
         estimator,
@@ -111,10 +114,10 @@ def fit_and_score_ensemble_model(
     estimator,
     splits: Tuple,
     encoder: BayesianTargetEncoder,
-    n_estimators: int
+    n_estimators: int,
 ) -> Tuple[float, float]:
     """Fit and score an ensemble model with BTE.
-    
+
     Parameters
     ----------
     data : pd.DataFrame
@@ -129,7 +132,7 @@ def fit_and_score_ensemble_model(
         The bayesian target encoder instance.
     n_estimators : int
         The number of samples to draw.
-    
+
     Returns
     -------
     float
@@ -140,7 +143,10 @@ def fit_and_score_ensemble_model(
     scorers = check_scoring(estimator, SCORER[metadata["dataset_type"]])
     columns = metadata["numeric"] + metadata["nominal"]
     X_train, y_train = _safe_split(
-        estimator, data[columns].to_numpy(), data[metadata["target"]].to_numpy(), splits[0],
+        estimator,
+        data[columns].to_numpy(),
+        data[metadata["target"]].to_numpy(),
+        splits[0],
     )
     X_test, y_test = _safe_split(
         estimator,
@@ -154,17 +160,18 @@ def fit_and_score_ensemble_model(
         ensemble = BayesianTargetRegressor(
             base_estimator=estimator,
             encoder=encoder,
-            n_estimators=n_estimators
+            n_estimators=n_estimators,
+            n_jobs=-1,
         )
     else:
         raise NotImplementedError("Not implemented yet.")
-    
+
     ensemble.fit(
         X_train,
         y_train,
         categorical_feature=[
             idx for idx, col in enumerate(columns) if col in metadata["nominal"]
-        ]
+        ],
     )
     fit_time = time.time() - start_time
 
@@ -174,12 +181,12 @@ def fit_and_score_ensemble_model(
 @task(name="Average score")
 def final_scores(scoring_out: List[Tuple]) -> List[float]:
     """Get the fold scores.
-    
+
     Parameters
     ----------
     scoring_out : List
         The test score and training time from each fold.
-    
+
     Returns
     -------
     list
@@ -191,12 +198,12 @@ def final_scores(scoring_out: List[Tuple]) -> List[float]:
 @task(name="Average fit time")
 def final_fit_times(scoring_out: List[Tuple]) -> List[float]:
     """Get the fit times.
-    
+
     Parameters
     ----------
     scoring_out : list
         The test score and training time for each fold.
-    
+
     Returns
     -------
     list
