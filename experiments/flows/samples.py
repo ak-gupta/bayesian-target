@@ -1,6 +1,7 @@
 """Flow for evaluating the effect of samples on performance."""
 
-from prefect import Flow, unmapped
+from prefect import Flow, case, task, unmapped
+from prefect.tasks.control_flow import merge
 
 from rubicon_ml.workflow.prefect import (
     get_or_create_project_task,
@@ -18,10 +19,15 @@ from ..tasks import (
     init_model,
     final_fit_times,
     final_scores,
+    fit_and_score_model,
     fit_and_score_ensemble_model,
     split_data,
 )
 
+@task
+def check_n_estimators(n_estimators: int) -> bool:
+    """Check if the number of estimators is 0."""
+    return n_estimators == 0
 
 def gen_sampling_performance_flow(
     dataset: str, algorithm: str, n_estimators: int
@@ -56,14 +62,25 @@ def gen_sampling_performance_flow(
         encoder = init_encoder(algorithm="bayes", metadata=meta)
         # Score the model
         splits = split_data(data=finaldata, metadata=meta, estimator=model)
-        scores = fit_and_score_ensemble_model.map(
-            data=unmapped(finaldata),
-            metadata=unmapped(meta),
-            estimator=unmapped(model),
-            splits=splits,
-            encoder=unmapped(encoder),
-            n_estimators=unmapped(n_estimators),
-        )
+        cond = check_n_estimators(n_estimators)
+        with case(cond, True):
+            single_scores = fit_and_score_model.map(
+                data=unmapped(data),
+                metadata=unmapped(meta),
+                estimator=unmapped(model),
+                splits=splits,
+                encoder=unmapped(encoder)
+            )
+        with case(cond, False):
+            ensemble_scores = fit_and_score_ensemble_model.map(
+                data=unmapped(finaldata),
+                metadata=unmapped(meta),
+                estimator=unmapped(model),
+                splits=splits,
+                encoder=unmapped(encoder),
+                n_estimators=unmapped(n_estimators),
+            )
+        scores = merge(single_scores, ensemble_scores)
         log_parameter_task(experiment, "dataset", dataset)
         log_parameter_task(experiment, "algorithm", algorithm)
         log_parameter_task(experiment, "n_estimators", n_estimators)
