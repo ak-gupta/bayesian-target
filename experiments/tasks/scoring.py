@@ -11,6 +11,8 @@ from sklearn.metrics._scorer import check_scoring
 from sklearn.model_selection._split import check_cv
 from sklearn.utils.metaestimators import _safe_split
 
+from bayte import BayesianTargetEncoder, BayesianTargetRegressor
+
 SCORER = {"regression": "neg_root_mean_squared_error", "classification": "roc_auc"}
 
 
@@ -100,6 +102,73 @@ def fit_and_score_model(
     fit_time = time.time() - start_time
 
     return scorers(estimator, X_test, y_test), fit_time
+
+
+@task(name="Cross-validated ensemble scoring")
+def fit_and_score_ensemble_model(
+    data: pd.DataFrame,
+    metadata: Dict,
+    estimator,
+    splits: Tuple,
+    encoder: BayesianTargetEncoder,
+    n_estimators: int
+) -> Tuple[float, float]:
+    """Fit and score an ensemble model with BTE.
+    
+    Parameters
+    ----------
+    data : pd.DataFrame
+        The input dataset.
+    metadata : dict
+        Themetadata dictionary.
+    estimator : object
+        The scikit-learn compatible estimator object for the experiment.
+    splits : tuple
+        The train/test split for this fold.
+    encoder : BayesianTargetEncoder
+        The bayesian target encoder instance.
+    n_estimators : int
+        The number of samples to draw.
+    
+    Returns
+    -------
+    float
+        The fold score.
+    float
+        The fit time, in seconds.
+    """
+    scorers = check_scoring(estimator, SCORER[metadata["dataset_type"]])
+    columns = metadata["numeric"] + metadata["nominal"]
+    X_train, y_train = _safe_split(
+        estimator, data[columns].to_numpy(), data[metadata["target"]].to_numpy(), splits[0],
+    )
+    X_test, y_test = _safe_split(
+        estimator,
+        data[columns].to_numpy(),
+        data[metadata["target"]].to_numpy(),
+        splits[1],
+    )
+    start_time = time.time()
+
+    if metadata["dataset_type"] == "regression":
+        ensemble = BayesianTargetRegressor(
+            base_estimator=estimator,
+            encoder=encoder,
+            n_estimators=n_estimators
+        )
+    else:
+        raise NotImplementedError("Not implemented yet.")
+    
+    ensemble.fit(
+        X_train,
+        y_train,
+        categorical_feature=[
+            idx for idx, col in enumerate(columns) if col in metadata["nominal"]
+        ]
+    )
+    fit_time = time.time() - start_time
+
+    return scorers(ensemble, X_test, y_test), fit_time
 
 
 @task(name="Average score")

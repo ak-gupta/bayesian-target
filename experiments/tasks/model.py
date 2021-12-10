@@ -82,4 +82,4 @@ def init_encoder(algorithm: str, metadata: Dict):
     elif algorithm == "target":
         return TargetEncoder()
     elif algorithm == "bayes":
-        return BayesianTargetEncoder(dist=metadata["dist"])
+        return BayesianTargetEncoder(dist=metadata["dist"], n_jobs=-1)
