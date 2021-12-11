@@ -25,7 +25,9 @@ from sklearn.utils.validation import check_array, check_is_fitted
 LOG = logging.getLogger(__name__)
 
 
-def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params):
+def _sample_and_fit(
+    estimator, encoder, X, y, categorical_feature, random_state, **fit_params
+):
     """Sample and fit the estimator.
 
     Parameters
@@ -41,6 +43,8 @@ def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params)
         Target values.
     categorical_feature : list
         A boolean mask indicating which columns are categorical
+    random_state : int or None
+        An optional random state for the sampling
     **fit_params
         Parameters to be passed to the underlying estimator.
 
@@ -49,6 +53,8 @@ def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params)
     estimator
         The trained estimator.
     """
+    if random_state is not None:
+        encoder.set_params(random_state=random_state)
     X_encoded = encoder.transform(X[:, categorical_feature])
     X_sample = np.hstack((X[:, ~categorical_feature], X_encoded))
 
@@ -75,6 +81,8 @@ class BaseSamplingEstimator(BaseEnsemble):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
+    random_states : list of int, optional (default None)
+        A list of random seeds to use for each sampling iteration.
     estimator_params : list of str, optional (default tuple())
         The list of attributes to use as parameters when instantiating a
         new base estimator. If none are given, default parameters are used.
@@ -97,6 +105,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         encoder,
         n_estimators: int = 10,
         n_jobs: Optional[int] = None,
+        random_states: Optional[List[int]] = None,
         estimator_params: Union[List[str], Tuple] = tuple(),
     ):
         """Init method."""
@@ -105,6 +114,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         self.estimator_params = estimator_params
         self.encoder = encoder
         self.n_jobs = n_jobs
+        self.random_states = random_states
 
     def fit(
         self,
@@ -142,6 +152,18 @@ class BaseSamplingEstimator(BaseEnsemble):
         self
             The trained estimator.
         """
+        # Check random state
+        if self.random_states is not None:
+            if isinstance(self.random_states, int):
+                raise ValueError("Cannot reuse same seed for all sampling.")
+            elif len(self.random_states) != self.n_estimators:
+                raise ValueError(
+                    "Please provide the same number of seeds as estimators."
+                )
+            else:
+                self.rstates_ = np.array(self.random_states)
+        else:
+            self.rstates_ = np.random.randint(self.n_estimators * 10, size=self.n_estimators)
         # Get the categorical columns
         if hasattr(X, "columns"):
             self.categorical_ = np.zeros(X.shape[1], dtype=bool)
@@ -191,13 +213,14 @@ class BaseSamplingEstimator(BaseEnsemble):
         self.estimators_ = parallel(
             fn(
                 clone(self.base_estimator),
-                self.encoder_,
+                deepcopy(self.encoder_),
                 X,
                 y,
                 self.categorical_,
+                self.rstates_[idx],
                 **fit_params
             )
-            for _ in range(self.n_estimators)
+            for idx in range(self.n_estimators)
         )
 
         return self
@@ -299,6 +322,8 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
+    random_states : list of int, optional (default None)
+        A list of random seeds to use for each sampling iteration.
     estimator_params : list of str, optional (default tuple())
         The list of attributes to use as parameters when instantiating a
         new base estimator. If none are given, default parameters are used.
@@ -322,6 +347,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         n_estimators: int = 10,
         voting: str = "hard",
         n_jobs: Optional[int] = None,
+        random_states: Optional[List[int]] = None,
         estimator_params: Union[List[str], Tuple] = tuple(),
     ):
         """Init method."""
@@ -330,6 +356,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         self.voting = voting
         self.encoder = encoder
         self.n_jobs = n_jobs
+        self.random_states = random_states
         self.estimator_params = estimator_params
 
     @if_delegate_has_method(delegate="base_estimator")

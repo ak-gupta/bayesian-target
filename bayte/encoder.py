@@ -113,7 +113,7 @@ def _update_posterior(y, mask, dist, params) -> Tuple:
         raise NotImplementedError(f"Likelihood {dist} has not been implemented.")
 
 
-def _encode_level(mask, dist, sample, params):
+def _encode_level(mask, dist, sample, params, random_state):
     """Encode a given level.
 
     Parameters
@@ -128,6 +128,8 @@ def _encode_level(mask, dist, sample, params):
         Whether to sample or take the first moment from the posterior distribution.
     params : tuple
         Posterior parameters.
+    random_state : int or None
+        An optional random state for reproducible results
 
     Returns
     -------
@@ -148,6 +150,8 @@ def _encode_level(mask, dist, sample, params):
         raise NotImplementedError(f"Likelihood {dist} has not been implemented")
 
     if sample:
+        if random_state is not None:
+            random_var.random_state = np.random.Generator(np.random.PCG64(random_state))
         encoding = random_var.rvs(size=1).ravel()
     else:
         avg = random_var.mean()
@@ -221,6 +225,8 @@ class BayesianTargetEncoder(_BaseEncoder):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
+    random_state : int, optional (default None)
+        An optional random state for scipy sampling.
 
     Attributes
     ----------
@@ -243,6 +249,7 @@ class BayesianTargetEncoder(_BaseEncoder):
         dtype=np.float64,
         handle_unknown: str = "ignore",
         n_jobs: Optional[int] = None,
+        random_state: Optional[int] = None,
     ):
         """Init method."""
         self.dist = dist
@@ -252,6 +259,7 @@ class BayesianTargetEncoder(_BaseEncoder):
         self.dtype = dtype
         self.handle_unknown = handle_unknown
         self.n_jobs = n_jobs
+        self.random_state = random_state
 
     def fit(self, X, y):
         """Fit the bayesian target encoder.
@@ -329,13 +337,18 @@ class BayesianTargetEncoder(_BaseEncoder):
                     self.dist,
                     self.sample,
                     self.posterior_params_[idx][levelno],
+                    self.random_state,
                 )
                 for levelno in range(cat.shape[0])
             )
             # Add new categorical encodings
             varencoded.append(
                 _encode_level(
-                    (~X_mask[:, idx]), self.dist, self.sample, self.prior_params_
+                    (~X_mask[:, idx]),
+                    self.dist,
+                    self.sample,
+                    self.prior_params_,
+                    self.random_state
                 )
             )
             stacked = np.ma.stack(varencoded, axis=2).sum(axis=2)
