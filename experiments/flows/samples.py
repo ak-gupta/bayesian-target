@@ -12,7 +12,7 @@ from rubicon_ml.workflow.prefect import (
 
 from .. import OUTPUT_DIR
 from ..tasks import (
-    positive_target,
+    drop_nulls,
     read_data,
     read_metadata,
     init_encoder,
@@ -57,7 +57,7 @@ def gen_sampling_performance_flow(
         )
         meta = read_metadata(dataset=dataset)
         data = read_data(metadata=meta)
-        finaldata = positive_target(data=data, metadata=meta)
+        finaldata = drop_nulls(data=data, metadata=meta)
         model = init_model(algorithm=algorithm, metadata=meta)
         encoder = init_encoder(algorithm="bayes", metadata=meta)
         # Score the model
@@ -88,10 +88,10 @@ def gen_sampling_performance_flow(
         final_score = final_scores(scoring_out=scores)
         final_fit_time = final_fit_times(scoring_out=scores)
         log_metric_task.map(
-            unmapped(experiment), [f"score-{i}" for i in range(1, 6)], final_score
+            unmapped(experiment), [f"score-{i}" for i in range(1, 11)], final_score
         )
         log_metric_task.map(
-            unmapped(experiment), [f"fit-time-{i}" for i in range(1, 6)], final_fit_time
+            unmapped(experiment), [f"fit-time-{i}" for i in range(1, 11)], final_fit_time
         )
 
     return flow

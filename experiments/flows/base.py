@@ -58,10 +58,10 @@ def gen_base_performance_flow(dataset: str, algorithm: str) -> Flow:
         final_score = final_scores(scoring_out=scores)
         final_fit_time = final_fit_times(scoring_out=scores)
         log_metric_task.map(
-            unmapped(experiment), [f"score-{i}" for i in range(1, 6)], final_score
+            unmapped(experiment), [f"score-{i}" for i in range(1, 11)], final_score
         )
         log_metric_task.map(
-            unmapped(experiment), [f"fit-time-{i}" for i in range(1, 6)], final_fit_time
+            unmapped(experiment), [f"fit-time-{i}" for i in range(1, 11)], final_fit_time
         )
 
     return flow

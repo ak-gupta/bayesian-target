@@ -30,7 +30,7 @@ def parse_base_performance(project: Project) -> pd.DataFrame:
                 data["score"].append(metric.value)
             elif metric.name.startswith("fit-time"):
                 data["fit-time"].append(metric.value)
-        dflist.append(data)
+        dflist.append(pd.DataFrame(data))
 
     return pd.concat(dflist, ignore_index=True)
 
@@ -60,6 +60,6 @@ def parse_sampling_performance(project: Project) -> pd.DataFrame:
                 data["score"].append(metric.value)
             elif metric.name.startswith("fit-time"):
                 data["fit-time"].append(metric.value)
-        dflist.append(data)
+        dflist.append(pd.DataFrame(data))
 
     return pd.concat(dflist, ignore_index=True)

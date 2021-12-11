@@ -13,8 +13,8 @@ from prefect import task
 
 
 @task(name="Create positive target")
-def positive_target(data: pd.DataFrame, metadata: Dict) -> pd.DataFrame:
-    """Create a positive target and drop nulls.
+def drop_nulls(data: pd.DataFrame, metadata: Dict) -> pd.DataFrame:
+    """Drop null rows.
 
     Parameters
     ----------
@@ -28,10 +28,4 @@ def positive_target(data: pd.DataFrame, metadata: Dict) -> pd.DataFrame:
     pd.DataFrame
         The updated dataframe.
     """
-    new = data.copy().dropna()
-    if metadata["dist"] in ("exponential", "gamma", "invgamma"):
-        if np.min(data[metadata["target"]]) < 0:
-            new[metadata["target"]] += np.min(new[metadata["target"]])
-            new[metadata["target"]] += 1e-5
-
-    return new
+    return data.dropna()

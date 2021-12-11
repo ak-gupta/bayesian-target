@@ -10,4 +10,4 @@ flight-delay-usa-dec-2017
 .. image:: ../../../experiments/output/flight-delay-usa-dec-2017.png
     :align: center
 
-For this dataset, we will use the ``invgamma`` likelihood.
+For this dataset, we will use the ``normal`` likelihood since the target is not always positive.

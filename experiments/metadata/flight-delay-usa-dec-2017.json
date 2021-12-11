@@ -8,7 +8,7 @@
         "invgamma",
         "normal"
     ],
-    "dist": "invgamma",
+    "dist": "normal",
     "target": "ARR_DELAY",
     "numeric": ["CRS_DEP_TIME", "DISTANCE"],
     "nominal": [

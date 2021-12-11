@@ -18,7 +18,7 @@ SCORER = {"regression": "neg_root_mean_squared_error", "classification": "roc_au
 
 @task(name="Split data")
 def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
-    """Split the dataset into 5 folds for cross-validation.
+    """Split the dataset into 10 folds for cross-validation.
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
     List
         A list of tuples, each index indicating a train-test split for scoring.
     """
-    cv = check_cv(5, data[metadata["target"]], classifier=is_classifier(estimator))
+    cv = check_cv(10, data[metadata["target"]], classifier=is_classifier(estimator))
 
     return list(
         cv.split(
