@@ -37,18 +37,18 @@ def init_model(algorithm: str, metadata: Dict):
         if algorithm == "linear":
             return LinearRegression()
         elif algorithm == "xgboost":
-            return XGBRegressor()
+            return XGBRegressor(random_state=42)
         elif algorithm == "lightgbm":
-            return LGBMRegressor()
+            return LGBMRegressor(random_state=42)
         else:
             raise NotImplementedError(f"{algorithm} is not a valid algorithm type.")
     elif metadata["dataset_type"] == "classification":
         if algorithm == "linear":
-            return LogisticRegression()
+            return LogisticRegression(random_state=42)
         elif algorithm == "xgboost":
-            return XGBClassifier()
+            return XGBClassifier(random_state=42)
         elif algorithm == "lightgbm":
-            return LGBMClassifier()
+            return LGBMClassifier(random_state=42)
         else:
             raise NotImplementedError(f"{algorithm} is not a valid algorithm type.")
 

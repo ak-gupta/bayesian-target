@@ -18,7 +18,7 @@ SCORER = {"regression": "neg_root_mean_squared_error", "classification": "roc_au
 
 @task(name="Split data")
 def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
-    """Split the dataset into 10 folds for cross-validation.
+    """Split the dataset into 5 folds for cross-validation.
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
     List
         A list of tuples, each index indicating a train-test split for scoring.
     """
-    cv = check_cv(10, data[metadata["target"]], classifier=is_classifier(estimator))
+    cv = check_cv(5, data[metadata["target"]], classifier=is_classifier(estimator))
 
     return list(
         cv.split(
@@ -45,6 +45,7 @@ def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
     )
 
 
+# TODO: Refactor to take in encoded X and y
 @task(name="Cross-validated scoring")
 def fit_and_score_model(
     data: pd.DataFrame, metadata: Dict, estimator, splits: Tuple, encoder=None
@@ -107,6 +108,7 @@ def fit_and_score_model(
     return scorers(estimator, X_test, y_test), fit_time
 
 
+# TODO: Delete and make new task to initialize ensemble model
 @task(name="Cross-validated ensemble scoring")
 def fit_and_score_ensemble_model(
     data: pd.DataFrame,
@@ -160,7 +162,8 @@ def fit_and_score_ensemble_model(
         ensemble = BayesianTargetRegressor(
             base_estimator=estimator,
             encoder=encoder,
-            n_estimators=n_estimators
+            n_estimators=n_estimators,
+            random_state=42
         )
     else:
         raise NotImplementedError("Not implemented yet.")

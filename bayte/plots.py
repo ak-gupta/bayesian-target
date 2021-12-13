@@ -17,9 +17,10 @@ DIST_MAPPING: Dict = {
     "normal": "norm",
 }
 
+
 def visualize_target_dist(
     y: np.ndarray,
-    candidates: List[str] = ["exponential", "gamma", "invgamma", "normal"]
+    candidates: List[str] = ["exponential", "gamma", "invgamma", "normal"],
 ) -> Figure:
     """Produce a histogram for the target variable with traces.
 

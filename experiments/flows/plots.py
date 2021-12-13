@@ -32,7 +32,7 @@ def gen_visualization_flow() -> Flow:
     return flow
 
 
-def gen_sample_performance_flow() -> Flow:
+def viz_sample_performance_flow() -> Flow:
     """Generate a flow to render performance plots for sampling.
     
     Returns

@@ -17,6 +17,7 @@ from sklearn.base import (
     is_classifier,
 )
 from sklearn.ensemble._base import BaseEnsemble
+from sklearn.utils import check_random_state
 from sklearn.utils.fixes import delayed
 from sklearn.utils.metaestimators import if_delegate_has_method
 from sklearn.utils.multiclass import check_classification_targets
@@ -81,8 +82,8 @@ class BaseSamplingEstimator(BaseEnsemble):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
-    random_states : list of int, optional (default None)
-        A list of random seeds to use for each sampling iteration.
+    random_state : int, optional (default None)
+        Random seed used for generating random seeds for sampling.
     estimator_params : list of str, optional (default tuple())
         The list of attributes to use as parameters when instantiating a
         new base estimator. If none are given, default parameters are used.
@@ -105,7 +106,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         encoder,
         n_estimators: int = 10,
         n_jobs: Optional[int] = None,
-        random_states: Optional[List[int]] = None,
+        random_state: int = None,
         estimator_params: Union[List[str], Tuple] = tuple(),
     ):
         """Init method."""
@@ -114,7 +115,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         self.estimator_params = estimator_params
         self.encoder = encoder
         self.n_jobs = n_jobs
-        self.random_states = random_states
+        self.random_state = random_state
 
     def fit(
         self,
@@ -152,18 +153,8 @@ class BaseSamplingEstimator(BaseEnsemble):
         self
             The trained estimator.
         """
-        # Check random state
-        if self.random_states is not None:
-            if isinstance(self.random_states, int):
-                raise ValueError("Cannot reuse same seed for all sampling.")
-            elif len(self.random_states) != self.n_estimators:
-                raise ValueError(
-                    "Please provide the same number of seeds as estimators."
-                )
-            else:
-                self.rstates_ = np.array(self.random_states)
-        else:
-            self.rstates_ = np.random.randint(self.n_estimators * 10, size=self.n_estimators)
+        rng = check_random_state(self.random_state)
+        self.rstates_ = rng.randint(self.n_estimators * 10, size=self.n_estimators)
         # Get the categorical columns
         if hasattr(X, "columns"):
             self.categorical_ = np.zeros(X.shape[1], dtype=bool)
@@ -322,8 +313,8 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
-    random_states : list of int, optional (default None)
-        A list of random seeds to use for each sampling iteration.
+    random_state : int, optional (default None)
+        Random seed used for generating random seeds for sampling.
     estimator_params : list of str, optional (default tuple())
         The list of attributes to use as parameters when instantiating a
         new base estimator. If none are given, default parameters are used.
@@ -347,7 +338,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         n_estimators: int = 10,
         voting: str = "hard",
         n_jobs: Optional[int] = None,
-        random_states: Optional[List[int]] = None,
+        random_state: int = None,
         estimator_params: Union[List[str], Tuple] = tuple(),
     ):
         """Init method."""
@@ -356,7 +347,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         self.voting = voting
         self.encoder = encoder
         self.n_jobs = n_jobs
-        self.random_states = random_states
+        self.random_state = random_state
         self.estimator_params = estimator_params
 
     @if_delegate_has_method(delegate="base_estimator")
