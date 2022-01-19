@@ -78,7 +78,7 @@ def render_sample_perf_plot(data: pd.DataFrame):
     data : pd.DataFrame
         The output from ``create_plot_df``.
     """
-    grouped = data.groupby("algorithm")
+    grouped = data.groupby("dataset")
 
     for name, group in grouped:
         with sns.axes_style("dark"):
@@ -86,8 +86,7 @@ def render_sample_perf_plot(data: pd.DataFrame):
             sns.pointplot(
                 x="n_estimators",
                 y="score-change",
-                hue="dataset",
-                ci=None,
+                hue="algorithm",
                 data=group,
                 palette="flare",
                 dodge=True,

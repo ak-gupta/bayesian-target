@@ -8,7 +8,7 @@ import pandas as pd
 from prefect import task
 from sklearn.base import is_classifier
 from sklearn.metrics._scorer import check_scoring
-from sklearn.model_selection._split import check_cv
+from sklearn.model_selection import StratifiedKFold, KFold
 from sklearn.utils.metaestimators import _safe_split
 
 from bayte import BayesianTargetEncoder, BayesianTargetRegressor
@@ -17,7 +17,7 @@ SCORER = {"regression": "neg_root_mean_squared_error", "classification": "roc_au
 
 
 @task(name="Split data")
-def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
+def split_data(data: pd.DataFrame, metadata: Dict, estimator, seed: int = 42) -> List[Tuple]:
     """Split the dataset into 5 folds for cross-validation.
 
     Parameters
@@ -28,13 +28,18 @@ def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
         The metadata dictionary.
     estimator : object
         The estimator object for this experiment.
+    seed : int, optional (default 42)
+        Random seed.
 
     Returns
     -------
     List
         A list of tuples, each index indicating a train-test split for scoring.
     """
-    cv = check_cv(5, data[metadata["target"]], classifier=is_classifier(estimator))
+    if is_classifier(estimator):
+        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
+    else:
+        cv = KFold(n_splits=5, shuffle=True, random_state=seed)
 
     return list(
         cv.split(
@@ -45,7 +50,6 @@ def split_data(data: pd.DataFrame, metadata: Dict, estimator) -> List[Tuple]:
     )
 
 
-# TODO: Refactor to take in encoded X and y
 @task(name="Cross-validated scoring")
 def fit_and_score_model(
     data: pd.DataFrame, metadata: Dict, estimator, splits: Tuple, encoder=None
@@ -108,7 +112,6 @@ def fit_and_score_model(
     return scorers(estimator, X_test, y_test), fit_time
 
 
-# TODO: Delete and make new task to initialize ensemble model
 @task(name="Cross-validated ensemble scoring")
 def fit_and_score_ensemble_model(
     data: pd.DataFrame,
@@ -117,6 +120,7 @@ def fit_and_score_ensemble_model(
     splits: Tuple,
     encoder: BayesianTargetEncoder,
     n_estimators: int,
+    seed: int = 42
 ) -> Tuple[float, float]:
     """Fit and score an ensemble model with BTE.
 
@@ -163,7 +167,7 @@ def fit_and_score_ensemble_model(
             base_estimator=estimator,
             encoder=encoder,
             n_estimators=n_estimators,
-            random_state=42
+            random_state=seed
         )
     else:
         raise NotImplementedError("Not implemented yet.")

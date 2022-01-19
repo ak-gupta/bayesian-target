@@ -10,7 +10,10 @@ from category_encoders import (
 )
 from prefect import task
 from lightgbm import LGBMClassifier, LGBMRegressor
-from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.ensemble import (
+    GradientBoostingClassifier,
+    GradientBoostingRegressor
+)
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 from xgboost import XGBClassifier, XGBRegressor
 
@@ -18,7 +21,7 @@ from bayte import BayesianTargetEncoder
 
 
 @task(name="Initialize model")
-def init_model(algorithm: str, metadata: Dict):
+def init_model(algorithm: str, metadata: Dict, seed: int = 42):
     """Initialize a model object.
 
     Parameters
@@ -27,6 +30,8 @@ def init_model(algorithm: str, metadata: Dict):
         The modelling package to use.
     metadata : dict
         The metadata configuration for the dataset.
+    seed : int, optional (default 42)
+        Random seed
 
     Returns
     -------
@@ -34,21 +39,21 @@ def init_model(algorithm: str, metadata: Dict):
         The initialized model.
     """
     if metadata["dataset_type"] == "regression":
-        if algorithm == "linear":
-            return LinearRegression()
-        elif algorithm == "xgboost":
-            return XGBRegressor(random_state=42)
+        if algorithm == "xgboost":
+            return XGBRegressor(random_state=seed)
         elif algorithm == "lightgbm":
-            return LGBMRegressor(random_state=42)
+            return LGBMRegressor(random_state=seed)
+        elif algorithm == "gbm":
+            return GradientBoostingRegressor(random_state=seed)
         else:
             raise NotImplementedError(f"{algorithm} is not a valid algorithm type.")
     elif metadata["dataset_type"] == "classification":
-        if algorithm == "linear":
-            return LogisticRegression(random_state=42)
-        elif algorithm == "xgboost":
-            return XGBClassifier(random_state=42)
+        if algorithm == "xgboost":
+            return XGBClassifier(random_state=seed)
         elif algorithm == "lightgbm":
-            return LGBMClassifier(random_state=42)
+            return LGBMClassifier(random_state=seed)
+        elif algorithm == "gbm":
+            return GradientBoostingClassifier(random_state=seed)
         else:
             raise NotImplementedError(f"{algorithm} is not a valid algorithm type.")
 
@@ -82,4 +87,4 @@ def init_encoder(algorithm: str, metadata: Dict):
     elif algorithm == "target":
         return TargetEncoder()
     elif algorithm == "bayes":
-        return BayesianTargetEncoder(dist=metadata["dist"], n_jobs=-1)
+        return BayesianTargetEncoder(dist=metadata["dist"])

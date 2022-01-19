@@ -30,7 +30,7 @@ def check_n_estimators(n_estimators: int) -> bool:
     return n_estimators == 0
 
 def gen_sampling_performance_flow(
-    dataset: str, algorithm: str, n_estimators: int
+    dataset: str, algorithm: str, n_estimators: int, seed: int = 42
 ) -> Flow:
     """Generate a flow to evaluate the effect of the number of samples on performance.
 
@@ -42,6 +42,8 @@ def gen_sampling_performance_flow(
         The modelling algorithm.
     n_estimators : int
         The number of samples to use in the ensemble model.
+    seed : int, optional (default 42)
+        Random seed.
 
     Returns
     -------
@@ -58,10 +60,10 @@ def gen_sampling_performance_flow(
         meta = read_metadata(dataset=dataset)
         data = read_data(metadata=meta)
         finaldata = drop_nulls(data=data, metadata=meta)
-        model = init_model(algorithm=algorithm, metadata=meta)
+        model = init_model(algorithm=algorithm, metadata=meta, seed=seed)
         encoder = init_encoder(algorithm="bayes", metadata=meta)
         # Score the model
-        splits = split_data(data=finaldata, metadata=meta, estimator=model)
+        splits = split_data(data=finaldata, metadata=meta, estimator=model, seed=seed)
         cond = check_n_estimators(n_estimators)
         with case(cond, True):
             single_scores = fit_and_score_model.map(
@@ -79,6 +81,7 @@ def gen_sampling_performance_flow(
                 splits=splits,
                 encoder=unmapped(encoder),
                 n_estimators=unmapped(n_estimators),
+                seed=unmapped(seed)
             )
         scores = merge(single_scores, ensemble_scores)
         log_parameter_task(experiment, "dataset", dataset)

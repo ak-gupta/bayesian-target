@@ -21,7 +21,7 @@ from ..tasks import (
 )
 
 
-def gen_base_performance_flow(dataset: str, algorithm: str) -> Flow:
+def gen_base_performance_flow(dataset: str, algorithm: str, seed: int = 42) -> Flow:
     """Generate a flow to evaluate base model performance.
 
     Parameters
@@ -30,6 +30,8 @@ def gen_base_performance_flow(dataset: str, algorithm: str) -> Flow:
         The name of the dataset.
     algorithm : {"linear", "xgboost", "lightgbm"}
         The modelling algorithm.
+    seed : int, optional (default 42)
+        Random seed.
 
     Returns
     -------
@@ -43,9 +45,9 @@ def gen_base_performance_flow(dataset: str, algorithm: str) -> Flow:
         experiment = create_experiment_task(project, name=f"{dataset}-{algorithm}")
         meta = read_metadata(dataset=dataset)
         data = read_data(metadata=meta)
-        model = init_model(algorithm=algorithm, metadata=meta)
+        model = init_model(algorithm=algorithm, metadata=meta, seed=seed)
         # Score the model
-        splits = split_data(data=data, metadata=meta, estimator=model)
+        splits = split_data(data=data, metadata=meta, estimator=model, seed=seed)
         scores = fit_and_score_model.map(
             data=unmapped(data),
             metadata=unmapped(meta),

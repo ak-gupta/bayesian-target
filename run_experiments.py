@@ -1,4 +1,12 @@
-"""Run experiments."""
+"""Run experiments.
+
+
+I recommend suppressing logging from Prefect.
+
+```console
+$ export PREFECT__LOGGING__LEVEL=ERROR
+```
+"""
 
 import click
 
@@ -25,16 +33,22 @@ def cli():
     ),
     help="The dataset"
 )
-@click.option(
-    "--algorithm",
-    type=click.Choice(["linear", "xgboost", "lightgbm"]),
-    help="The modelling algorithm"
-)
-def base(dataset, algorithm):
+def base(dataset):
     """Run the base performance experiment."""
-    flow = gen_base_performance_flow(dataset=dataset, algorithm=algorithm)
-    flow.run()
-
+    for algo in ["xgboost", "lightgbm", "gbm"]:
+        for seed in [5, 10, 16, 42, 44]:
+            click.echo(
+                click.style(
+                    f"Running experiment for {dataset} with algorithm {algo} and seed {seed}",
+                    fg="green"
+                )
+            )
+            flow = gen_base_performance_flow(dataset=dataset, algorithm=algo, seed=seed)
+            _ = flow.run()
+            if not _.is_successful():
+                click.echo(click.style("Experiment failed.", fg="red"))
+            else:
+                click.echo(click.style("Experiment finished.", fg="green"))
 
 @cli.command()
 @click.option(
@@ -53,20 +67,36 @@ def base(dataset, algorithm):
 )
 @click.option(
     "--algorithm",
-    type=click.Choice(["linear", "xgboost", "lightgbm"]),
-    help="The modelling algorithm"
+    type=click.Choice(["xgboost", "lightgbm", "gbm"]),
+    help="The algorithm"
 )
 @click.option(
     "--n-estimators",
     type=click.INT,
-    help="The number of estimators to use"
+    multiple=True,
+    default=[0, 25, 50, 75, 100, 125, 150, 175, 200]
 )
 def sample(dataset, algorithm, n_estimators):
     """Run the sampling experiment."""
-    flow = gen_sampling_performance_flow(
-        dataset=dataset, algorithm=algorithm, n_estimators=n_estimators
-    )
-    flow.run()
+    for n_est in n_estimators:
+        for seed in [5, 10, 16, 42, 44]:
+            click.echo(
+                click.style(
+                    (
+                        f"Running experiment for {dataset} with algorithm {algorithm}, "
+                        f"{n_est} estimators, and seed {seed}"
+                    ),
+                    fg="green"
+                )
+            )
+            flow = gen_sampling_performance_flow(
+                dataset=dataset, algorithm=algorithm, n_estimators=n_est, seed=seed
+            )
+            _ = flow.run()
+            if not _.is_successful():
+                click.echo(click.style("Experiment failed.", fg="red"))
+            else:
+                click.echo(click.style("Experiment finished.", fg="green"))
 
 if __name__ == "__main__":
     cli()
