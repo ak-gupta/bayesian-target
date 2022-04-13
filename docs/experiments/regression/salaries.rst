@@ -11,3 +11,9 @@ employee_salaries
     :align: center
 
 For this dataset, we will use the ``invgamma`` likelihood.
+
+Sampling experiment
+-------------------
+
+.. image:: ../../../experiments/output/employee_salaries-sampling.png
+    :align: center

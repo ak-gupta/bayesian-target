@@ -225,6 +225,10 @@ class BayesianTargetEncoder(_BaseEncoder):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
+    chunksize : int, optional (default 10)
+        The number of categorical levels to combine at one time when calling
+        ``transform``. Increasing the chunksize will increase memory usage. By
+        default, this will be set to 10.
     random_state : int, optional (default None)
         An optional random state for scipy sampling.
 
@@ -249,6 +253,7 @@ class BayesianTargetEncoder(_BaseEncoder):
         dtype=np.float64,
         handle_unknown: str = "ignore",
         n_jobs: Optional[int] = None,
+        chunksize: int = 10,
         random_state: Optional[int] = None,
     ):
         """Init method."""
@@ -259,6 +264,7 @@ class BayesianTargetEncoder(_BaseEncoder):
         self.dtype = dtype
         self.handle_unknown = handle_unknown
         self.n_jobs = n_jobs
+        self.chunksize = chunksize
         self.random_state = random_state
 
     def fit(self, X, y):
@@ -330,6 +336,7 @@ class BayesianTargetEncoder(_BaseEncoder):
 
         encoded = []
         for idx, cat in enumerate(self.categories_):
+            LOG.debug(f"Running transform for categorical {idx} with {cat.shape[0]} levels")
             # Get the masked array for each level
             varencoded = parallel(
                 fn(
@@ -339,19 +346,30 @@ class BayesianTargetEncoder(_BaseEncoder):
                     self.posterior_params_[idx][levelno],
                     self.random_state,
                 )
-                for levelno in range(cat.shape[0])
+                for levelno in range(cat.shape[0]) if np.sum(X_int[:, idx] == levelno) > 0
             )
             # Add new categorical encodings
-            varencoded.append(
-                _encode_level(
-                    (~X_mask[:, idx]),
-                    self.dist,
-                    self.sample,
-                    self.prior_params_,
-                    self.random_state
+            if np.sum(~X_mask[:, idx]) > 0:
+                LOG.warning(
+                    f"Found {np.sum(~X_mask[:, idx])} rows with novel levels for "
+                    f"categorical variable {idx}"
                 )
-            )
-            stacked = np.ma.stack(varencoded, axis=2).sum(axis=2)
-            encoded.append(stacked.data)
+
+                varencoded.append(
+                    _encode_level(
+                        (~X_mask[:, idx]),
+                        self.dist,
+                        self.sample,
+                        self.prior_params_,
+                        self.random_state
+                    )
+                )
+            n_chunks = np.ceil(len(varencoded) / self.chunksize)
+            chunks = np.array_split(np.arange(len(varencoded)), n_chunks)
+            combined = np.zeros(varencoded[0].shape)
+            for chunk in chunks:
+                combined = np.ma.stack((combined, *varencoded[chunk[0]:chunk[-1] + 1]), axis=2).sum(axis=2)
+
+            encoded.append(combined.data)
 
         return np.hstack(encoded)

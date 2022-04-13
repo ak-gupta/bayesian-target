@@ -10,7 +10,7 @@ to analyze bayesian target encoding (BTE) and answer the following questions:
 - **Marginal BTE**: Is there lift from a staged approach:
 
   #. Fit a submodel [*]_ that uses all non-categorical columns to predict the target.
-  #. Fit the encoder using the submodel output as the target [*]_.
+  #. Fit the encoder using the submodel output as the target.
   #. Use the encoding and the raw input non-categorical data to fit the final model.
 
 - Ensemble methodology\ :footcite:p:`larionov`
@@ -18,7 +18,6 @@ to analyze bayesian target encoding (BTE) and answer the following questions:
   - How much does repeated sampling help?
   - How many samples do you need?
 
-.. [*] Does the submodel algorithm matter?
 .. [*]
 
     What if the encoder is fitted using the residuals from the submodel as the
@@ -45,8 +44,6 @@ below.
 +--------------------------------+-------------+------------------------------------------+
 | James-Stein                    | Y           | ``category_encoders.JamesSteinEncoder``  |
 +--------------------------------+-------------+------------------------------------------+
-| One-hot                        | N           | ``sklearn.preprocessing.OneHotEncoder``  |
-+--------------------------------+-------------+------------------------------------------+
 | Integer                        | N           | ``sklearn.preprocessing.OrdinalEncoder`` |
 +--------------------------------+-------------+------------------------------------------+
 | Target                         | Y           | ``category_encoders.TargetEncoder``      |
@@ -57,25 +54,28 @@ Modeling algorithms
 
 The following modelling implementations will be tested:
 
-+------------------------------------------+------------------------+
-| Package                                  | Class                  |
-|                                          |                        |
-+==========================================+========================+
-| LightGBM\ :footcite:p:`lightgbm`         | ``LGBMClassifier``     |
-+------------------------------------------+------------------------+
-|                                          | ``LGBMRegressor``      |
-+------------------------------------------+------------------------+
-| Scikit-Learn\ :footcite:p:`scikit-learn` | ``LinearRegression``   |
-+------------------------------------------+------------------------+
-|                                          | ``LogisticRegression`` |
-+------------------------------------------+------------------------+
-| XGBoost\ :footcite:p:`xgboost`           | ``XGBClassifier``      |
-+------------------------------------------+------------------------+
-|                                          | ``XGBRegressor``       |
-+------------------------------------------+------------------------+
++------------------------------------------+---------------------------------+
+| Package                                  | Class                           |
+|                                          |                                 |
++==========================================+=================================+
+| LightGBM\ :footcite:p:`lightgbm`         | ``LGBMClassifier``              |
++------------------------------------------+---------------------------------+
+|                                          | ``LGBMRegressor``               |
++------------------------------------------+---------------------------------+
+| Scikit-Learn\ :footcite:p:`scikit-learn` | ``GradientBoostingRegressor``   |
++------------------------------------------+---------------------------------+
+|                                          | ``GradientBoostingClassifier``  |
++------------------------------------------+---------------------------------+
+| XGBoost\ :footcite:p:`xgboost`           | ``XGBClassifier``               |
++------------------------------------------+---------------------------------+
+|                                          | ``XGBRegressor``                |
++------------------------------------------+---------------------------------+
 
 Datasets
 --------
+
+Regression
+~~~~~~~~~~
 
 Below is a list of the regression datasets used for
 experimentation\ :footcite:p:`pargent`.
@@ -94,7 +94,15 @@ experimentation\ :footcite:p:`pargent`.
 +-------------------------------------------+---------------------------------------------------------------+
 | `41251 <https://www.openml.org/d/41251>`_ | :doc:`flight-delay-usa-dec-2017 <regression/flight>`          |
 +-------------------------------------------+---------------------------------------------------------------+
-| `41255 <https://www.openml.org/d/41255>`_ | :doc:`nyc-taxi-green-dec-2016 <regression/taxi>`              |
+
+Classification
+~~~~~~~~~~~~~~
+
++-------------------------------------------+---------------------------------------------------------------+
+| OpenML ID                                 | Dataset name                                                  |
+|                                           |                                                               |
++===========================================+===============================================================+
+| `40701 <https://www.openml.org/d/40701>`_ | :doc:`churn <classification/churn>`                           |
 +-------------------------------------------+---------------------------------------------------------------+
 
 Performance evaluation

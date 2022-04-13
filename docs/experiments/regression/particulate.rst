@@ -11,3 +11,9 @@ particulate-matter-ukair-2017
     :align: center
 
 For this dataset, we will use the ``invgamma`` likelihood.
+
+Sampling experiment
+-------------------
+
+.. image:: ../../../experiments/output/particulate-matter-ukair-2017-sampling.png
+    :align: center

@@ -2,33 +2,27 @@
 
 from typing import List
 
-from .data import drop_nulls
+from .data import drop_nulls, split
+from .encode import check_supervised, init_encoder, fit_encoder, transform
 from .io import read_data, read_metadata
-from .model import init_encoder, init_model
-from .plots import create_plot_df, render_dist_plot, render_sample_perf_plot
-from .projects import parse_base_performance, parse_sampling_performance
-from .scoring import (
-    final_fit_times,
-    final_scores,
-    fit_and_score_ensemble_model,
-    fit_and_score_model,
-    split_data,
-)
+from .model import check_ensemble, init_model, train
+from .plots import render_sample_perf_plot
+from .projects import project_to_df
+from .scoring import score_model
 
 __all__: List[str] = [
     "drop_nulls",
+    "split",
+    "check_supervised",
+    "init_encoder",
+    "fit_encoder",
+    "transform",
     "read_data",
     "read_metadata",
-    "init_encoder",
+    "check_ensemble",
     "init_model",
-    "create_plot_df",
-    "render_dist_plot",
+    "train",
     "render_sample_perf_plot",
-    "parse_base_performance",
-    "parse_sampling_performance",
-    "final_fit_times",
-    "final_scores",
-    "fit_and_score_ensemble_model",
-    "fit_and_score_model",
-    "split_data",
+    "project_to_df",
+    "score_model"
 ]

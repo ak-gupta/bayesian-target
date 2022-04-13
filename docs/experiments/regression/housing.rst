@@ -11,3 +11,9 @@ ames-housing
     :align: center
 
 For this dataset, we will use the ``invgamma`` likelihood.
+
+Sampling experiment
+-------------------
+
+.. image:: ../../../experiments/output/ames-housing-sampling.png
+    :align: center

@@ -2,22 +2,32 @@
 
 from typing import Dict
 
-from category_encoders import (
-    CountEncoder,
-    GLMMEncoder,
-    JamesSteinEncoder,
-    TargetEncoder,
-)
+import pandas as pd
 from prefect import task
 from lightgbm import LGBMClassifier, LGBMRegressor
 from sklearn.ensemble import (
     GradientBoostingClassifier,
     GradientBoostingRegressor
 )
-from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 from xgboost import XGBClassifier, XGBRegressor
 
-from bayte import BayesianTargetEncoder
+from bayte import BayesianTargetRegressor, BayesianTargetClassifier
+
+@task(name="Check if ensemble")
+def check_ensemble(n_estimators: int) -> bool:
+    """Check if the current experiment uses ensemble encoding.
+
+    Parameters
+    ----------
+    n_estimators : int
+        The number of estimators. If 0, the experiment does not use sampling.
+
+    Returns
+    -------
+    bool
+        Evaluates to ``True`` if the flow should use ensemble.
+    """
+    return n_estimators > 0
 
 
 @task(name="Initialize model")
@@ -49,7 +59,9 @@ def init_model(algorithm: str, metadata: Dict, seed: int = 42):
             raise NotImplementedError(f"{algorithm} is not a valid algorithm type.")
     elif metadata["dataset_type"] == "classification":
         if algorithm == "xgboost":
-            return XGBClassifier(random_state=seed)
+            return XGBClassifier(
+                random_state=seed, use_label_encoder=False, eval_metric="logloss"
+            )
         elif algorithm == "lightgbm":
             return LGBMClassifier(random_state=seed)
         elif algorithm == "gbm":
@@ -58,33 +70,60 @@ def init_model(algorithm: str, metadata: Dict, seed: int = 42):
             raise NotImplementedError(f"{algorithm} is not a valid algorithm type.")
 
 
-@task(name="Initialize encoder")
-def init_encoder(algorithm: str, metadata: Dict):
-    """Initialize a categorical encoder.
+@task(name="Fit model")
+def train(
+    data: pd.DataFrame,
+    metadata: Dict,
+    estimator,
+    encoder=None,
+    n_estimators: int = 0,
+    seed: int = 42
+):
+    """Fit the estimator.
 
     Parameters
     ----------
-    algorithm : {"frequency", "gllm", "james-stein", "one-hot", "integer", "target", "bayes"}
-        The type of categorical encoder.
-    metadata : dict
-        The metadata configuration for the dataset.
+    data : pd.DataFrame
+        The training data.
+    metadata : Dict
+        The metadata dictionary.
+    estimator : object
+        The scikit-learn compatible estimator object.
+    encoder : object, optional (default None)
+        A :py:class:`bayte.BayesianTargetEncoder` instance for ensemble modelling.
+    n_estimators : int, optional (default 0)
+        The number of samples to draw. If 0, no ensemble estimator will be used.
+    seed : int, optional (default 42)
+        The random state.
 
     Returns
     -------
     object
-        The initialized encoder.
+        Fitted estimator.
     """
-    if algorithm == "frequency":
-        return CountEncoder()
-    elif algorithm == "gllm":
-        return GLMMEncoder()
-    elif algorithm == "james-stein":
-        return JamesSteinEncoder()
-    elif algorithm == "one-hot":
-        return OneHotEncoder()
-    elif algorithm == "integer":
-        return OrdinalEncoder()
-    elif algorithm == "target":
-        return TargetEncoder()
-    elif algorithm == "bayes":
-        return BayesianTargetEncoder(dist=metadata["dist"])
+    features = [col for col in data.columns if col != metadata["target"]]
+    if n_estimators > 0:
+        if metadata["dataset_type"] == "regression":
+            estimator_ = BayesianTargetRegressor(
+                base_estimator=estimator,
+                encoder=encoder,
+                n_estimators=n_estimators,
+                random_state=seed
+            )
+        else:
+            estimator_ = BayesianTargetClassifier(
+                base_estimator=estimator,
+                encoder=encoder,
+                n_estimators=n_estimators,
+                random_state=seed
+            )
+
+        estimator_.fit(
+            data[features],
+            data[metadata["target"]],
+            categorical_feature=metadata["nominal"]
+        )
+    else:
+        estimator_ = estimator.fit(data[features], data[metadata["target"]])
+
+    return estimator_

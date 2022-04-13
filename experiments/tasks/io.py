@@ -54,4 +54,8 @@ def read_data(metadata: Dict) -> pd.DataFrame:
     else:
         raise NotImplementedError(f"File type `{fpath.suffix}` not supported.")
 
+    if metadata["dataset_type"] == "classification":
+        if pd.api.types.infer_dtype(data[metadata["target"]]) == "bytes":
+            data[metadata["target"]] = data[metadata["target"]].astype(int)
+
     return data

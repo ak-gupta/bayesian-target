@@ -167,6 +167,8 @@ class BaseSamplingEstimator(BaseEnsemble):
 
         if is_classifier(self.base_estimator):
             check_classification_targets(y)
+            self.classes_ = np.unique(y)
+
         X, y = self._validate_data(X, y, dtype=None)
 
         if not hasattr(self, "categorical_"):

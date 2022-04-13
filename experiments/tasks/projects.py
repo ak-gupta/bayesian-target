@@ -1,65 +1,26 @@
-"""Parsing rubicon project data."""
+"""Parsing lazyscribe project data."""
+
+from typing import List
 
 import pandas as pd
 from prefect import task
-from rubicon_ml.client.project import Project
 
 
-@task(name="Parse base performance data")
-def parse_base_performance(project: Project) -> pd.DataFrame:
-    """Parse base performance data into a DataFrame.
+@task(name="Create plotting dataframe")
+def project_to_df(data: List) -> pd.DataFrame:
+    """Convert experimental data to a dataframe.
 
     Parameters
     ----------
-    project : Project
-        The rubicon project.
+    data : List
+        The project data.
 
     Returns
     -------
     pd.DataFrame
-        A dataframe with experiment data.
+        The dataframe.
     """
-    dflist = []
-    for experiment in project.experiments():
-        data = {"fit-time": [], "score": []}
-        for parameter in experiment.parameters():
-            if parameter.name in ("dataset", "algorithm"):
-                data[parameter.name] = parameter.value
-        for metric in experiment.metrics():
-            if metric.name.startswith("score"):
-                data["score"].append(metric.value)
-            elif metric.name.startswith("fit-time"):
-                data["fit-time"].append(metric.value)
-        dflist.append(pd.DataFrame(data))
+    df = pd.DataFrame(data)
+    df.columns = pd.MultiIndex.from_tuples(df.columns)
 
-    return pd.concat(dflist, ignore_index=True)
-
-
-@task(name="Parse sampling performance data")
-def parse_sampling_performance(project: Project) -> pd.DataFrame:
-    """Parse sampling performance data into a DataFrame.
-
-    Parameters
-    ----------
-    project : Project
-        The rubicon project.
-
-    Returns
-    -------
-    pd.DataFrame
-        A dataframe with experiment data.
-    """
-    dflist = []
-    for experiment in project.experiments():
-        data = {"fit-time": [], "score": []}
-        for parameter in experiment.parameters():
-            if parameter.name in ("dataset", "algorithm", "n_estimators"):
-                data[parameter.name] = parameter.value
-        for metric in experiment.metrics():
-            if metric.name.startswith("score"):
-                data["score"].append(metric.value)
-            elif metric.name.startswith("fit-time"):
-                data["fit-time"].append(metric.value)
-        dflist.append(pd.DataFrame(data))
-
-    return pd.concat(dflist, ignore_index=True)
+    return df

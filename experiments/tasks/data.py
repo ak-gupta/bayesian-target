@@ -1,19 +1,14 @@
-"""Basic data parsing.
+"""Basic data parsing."""
 
-Most of the regression datasets use an inverse gamma or gamma distribution.
-Since these distributions are limited to a strictly positive domain, we will
-offset the target variable by the minimum observed value and a buffer of 1e-5.
-"""
+from typing import Dict, Tuple
 
-from typing import Dict
-
-import numpy as np
 import pandas as pd
 from prefect import task
+from sklearn.model_selection import train_test_split
 
 
-@task(name="Create positive target")
-def drop_nulls(data: pd.DataFrame, metadata: Dict) -> pd.DataFrame:
+@task(name="Drop nulls")
+def drop_nulls(data: pd.DataFrame) -> pd.DataFrame:
     """Drop null rows.
 
     Parameters
@@ -29,3 +24,32 @@ def drop_nulls(data: pd.DataFrame, metadata: Dict) -> pd.DataFrame:
         The updated dataframe.
     """
     return data.dropna()
+
+
+@task(name="Split data", nout=2)
+def split(
+    data: pd.DataFrame, metadata: Dict, seed: int = 42
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """Split the data into train and test splits.
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        The input dataset.
+    metadata : Dict
+        The dataset metadata.
+    seed : int, optional (default 42)
+        Random seed.
+
+    Returns
+    -------
+    pd.DataFrame
+        Training set.
+    pd.DataFrame
+        Test set.
+    """
+    return train_test_split(
+        data[metadata["numeric"] + metadata["nominal"] + [metadata["target"]]],
+        test_size=0.2,
+        random_state=seed
+    )

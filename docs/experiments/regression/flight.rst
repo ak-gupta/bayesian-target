@@ -11,3 +11,9 @@ flight-delay-usa-dec-2017
     :align: center
 
 For this dataset, we will use the ``normal`` likelihood since the target is not always positive.
+
+Sampling experiment
+-------------------
+
+.. image:: ../../../experiments/output/flight-delay-usa-dec-2017-sampling.png
+    :align: center

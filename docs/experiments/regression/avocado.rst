@@ -11,3 +11,9 @@ avocado-sales
     :align: center
 
 For this dataset, we will use the ``gamma`` likelihood.
+
+Sampling experiment
+-------------------
+
+.. image:: ../../../experiments/output/avocado-sales-sampling.png
+    :align: center
