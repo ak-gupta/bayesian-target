@@ -225,10 +225,10 @@ class BayesianTargetEncoder(_BaseEncoder):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
-    chunksize : int, optional (default 10)
+    chunksize : int, optional (default None)
         The number of categorical levels to combine at one time when calling
         ``transform``. Increasing the chunksize will increase memory usage. By
-        default, this will be set to 10.
+        default, all categoricals will be combined in a single step.
     random_state : int, optional (default None)
         An optional random state for scipy sampling.
 
@@ -364,12 +364,20 @@ class BayesianTargetEncoder(_BaseEncoder):
                         self.random_state
                     )
                 )
-            n_chunks = np.ceil(len(varencoded) / self.chunksize)
-            chunks = np.array_split(np.arange(len(varencoded)), n_chunks)
-            combined = np.zeros(varencoded[0].shape)
-            for chunk in chunks:
-                combined = np.ma.stack((combined, *varencoded[chunk[0]:chunk[-1] + 1]), axis=2).sum(axis=2)
 
+            # Combine each chunk before combining everything at the end
+            while len(varencoded) > 2:
+                if self.chunksize is None:
+                    n_chunks = 1
+                else:
+                    n_chunks = np.ceil(len(varencoded) / self.chunksize)
+                chunks = np.array_split(np.arange(len(varencoded)), n_chunks)
+
+                varencoded = list(
+                    np.ma.stack(varencoded[chunk[0]:chunk[-1] + 1], axis=2).sum(axis=2) for chunk in chunks
+                )
+
+            combined = np.ma.stack(varencoded, axis=2).sum(axis=2)
             encoded.append(combined.data)
 
         return np.hstack(encoded)

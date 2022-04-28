@@ -19318,5 +19318,2420 @@
         "short_slug": "click-prediction-small-bayes-xgboost-125-44",
         "slug": "click-prediction-small-bayes-xgboost-125-44-20220414213219",
         "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-15T03:51:02",
+        "dependencies": [],
+        "last_updated": "2022-04-15T07:37:31",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.650240735950333
+        },
+        "name": "click_prediction_small-bayes-xgboost-150-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-150-5",
+        "slug": "click-prediction-small-bayes-xgboost-150-5-20220415035102",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-15T07:37:46",
+        "dependencies": [],
+        "last_updated": "2022-04-15T11:23:44",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6540794989249699
+        },
+        "name": "click_prediction_small-bayes-xgboost-150-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-150-10",
+        "slug": "click-prediction-small-bayes-xgboost-150-10-20220415073746",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-15T11:23:44",
+        "dependencies": [],
+        "last_updated": "2022-04-15T15:11:57",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6419568631892665
+        },
+        "name": "click_prediction_small-bayes-xgboost-150-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-150-16",
+        "slug": "click-prediction-small-bayes-xgboost-150-16-20220415112344",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-15T15:11:57",
+        "dependencies": [],
+        "last_updated": "2022-04-15T19:00:33",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.647621584607458
+        },
+        "name": "click_prediction_small-bayes-xgboost-150-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-150-42",
+        "slug": "click-prediction-small-bayes-xgboost-150-42-20220415151157",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-15T19:00:33",
+        "dependencies": [],
+        "last_updated": "2022-04-15T22:49:12",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.628460159410948
+        },
+        "name": "click_prediction_small-bayes-xgboost-150-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-150-44",
+        "slug": "click-prediction-small-bayes-xgboost-150-44-20220415190033",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-15T22:49:28",
+        "dependencies": [],
+        "last_updated": "2022-04-16T03:16:01",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6504492983250341
+        },
+        "name": "click_prediction_small-bayes-xgboost-175-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-175-5",
+        "slug": "click-prediction-small-bayes-xgboost-175-5-20220415224928",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-16T03:16:01",
+        "dependencies": [],
+        "last_updated": "2022-04-16T07:41:40",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6542172932172017
+        },
+        "name": "click_prediction_small-bayes-xgboost-175-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-175-10",
+        "slug": "click-prediction-small-bayes-xgboost-175-10-20220416031601",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-16T07:41:56",
+        "dependencies": [],
+        "last_updated": "2022-04-16T12:09:04",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6426952330396684
+        },
+        "name": "click_prediction_small-bayes-xgboost-175-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-175-16",
+        "slug": "click-prediction-small-bayes-xgboost-175-16-20220416074156",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-16T12:09:05",
+        "dependencies": [],
+        "last_updated": "2022-04-16T16:35:29",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6459237884934124
+        },
+        "name": "click_prediction_small-bayes-xgboost-175-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-175-42",
+        "slug": "click-prediction-small-bayes-xgboost-175-42-20220416120905",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-16T16:35:45",
+        "dependencies": [],
+        "last_updated": "2022-04-16T21:03:03",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6290339653658686
+        },
+        "name": "click_prediction_small-bayes-xgboost-175-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-175-44",
+        "slug": "click-prediction-small-bayes-xgboost-175-44-20220416163545",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-16T21:03:19",
+        "dependencies": [],
+        "last_updated": "2022-04-17T02:08:09",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6502472030007114
+        },
+        "name": "click_prediction_small-bayes-xgboost-200-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-200-5",
+        "slug": "click-prediction-small-bayes-xgboost-200-5-20220416210319",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-17T02:08:25",
+        "dependencies": [],
+        "last_updated": "2022-04-17T07:12:00",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6528215812012377
+        },
+        "name": "click_prediction_small-bayes-xgboost-200-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-200-10",
+        "slug": "click-prediction-small-bayes-xgboost-200-10-20220417020825",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-17T07:12:00",
+        "dependencies": [],
+        "last_updated": "2022-04-17T12:16:45",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6424949759464051
+        },
+        "name": "click_prediction_small-bayes-xgboost-200-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-200-16",
+        "slug": "click-prediction-small-bayes-xgboost-200-16-20220417071200",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-17T12:17:01",
+        "dependencies": [],
+        "last_updated": "2022-04-17T17:20:54",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6454041180830575
+        },
+        "name": "click_prediction_small-bayes-xgboost-200-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-200-42",
+        "slug": "click-prediction-small-bayes-xgboost-200-42-20220417121701",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-17T17:21:10",
+        "dependencies": [],
+        "last_updated": "2022-04-17T22:25:50",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6289153373580927
+        },
+        "name": "click_prediction_small-bayes-xgboost-200-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "xgboost",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-xgboost-200-44",
+        "slug": "click-prediction-small-bayes-xgboost-200-44-20220417172110",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T01:40:51",
+        "dependencies": [],
+        "last_updated": "2022-04-18T01:43:16",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.5315084183984181
+        },
+        "name": "click_prediction_small-bayes-lightgbm-0-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 0,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-0-5",
+        "slug": "click-prediction-small-bayes-lightgbm-0-5-20220418014051",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T01:43:16",
+        "dependencies": [],
+        "last_updated": "2022-04-18T01:45:52",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.5066363748417243
+        },
+        "name": "click_prediction_small-bayes-lightgbm-0-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 0,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-0-10",
+        "slug": "click-prediction-small-bayes-lightgbm-0-10-20220418014316",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T01:46:08",
+        "dependencies": [],
+        "last_updated": "2022-04-18T01:48:29",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.5139856464224021
+        },
+        "name": "click_prediction_small-bayes-lightgbm-0-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 0,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-0-16",
+        "slug": "click-prediction-small-bayes-lightgbm-0-16-20220418014608",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T01:48:29",
+        "dependencies": [],
+        "last_updated": "2022-04-18T01:51:05",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.5077474914341654
+        },
+        "name": "click_prediction_small-bayes-lightgbm-0-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 0,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-0-42",
+        "slug": "click-prediction-small-bayes-lightgbm-0-42-20220418014829",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T01:51:05",
+        "dependencies": [],
+        "last_updated": "2022-04-18T01:53:41",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.4835473938088325
+        },
+        "name": "click_prediction_small-bayes-lightgbm-0-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 0,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-0-44",
+        "slug": "click-prediction-small-bayes-lightgbm-0-44-20220418015105",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T01:53:41",
+        "dependencies": [],
+        "last_updated": "2022-04-18T02:32:23",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6249403953523465
+        },
+        "name": "click_prediction_small-bayes-lightgbm-25-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 25,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-25-5",
+        "slug": "click-prediction-small-bayes-lightgbm-25-5-20220418015341",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T02:32:39",
+        "dependencies": [],
+        "last_updated": "2022-04-18T03:11:07",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.644587841402681
+        },
+        "name": "click_prediction_small-bayes-lightgbm-25-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 25,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-25-10",
+        "slug": "click-prediction-small-bayes-lightgbm-25-10-20220418023239",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T03:11:23",
+        "dependencies": [],
+        "last_updated": "2022-04-18T03:50:05",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6364636666994172
+        },
+        "name": "click_prediction_small-bayes-lightgbm-25-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 25,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-25-16",
+        "slug": "click-prediction-small-bayes-lightgbm-25-16-20220418031123",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T03:50:21",
+        "dependencies": [],
+        "last_updated": "2022-04-18T04:29:00",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6282996822618754
+        },
+        "name": "click_prediction_small-bayes-lightgbm-25-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 25,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-25-42",
+        "slug": "click-prediction-small-bayes-lightgbm-25-42-20220418035021",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T04:29:16",
+        "dependencies": [],
+        "last_updated": "2022-04-18T05:07:54",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6285920760369029
+        },
+        "name": "click_prediction_small-bayes-lightgbm-25-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 25,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-25-44",
+        "slug": "click-prediction-small-bayes-lightgbm-25-44-20220418042916",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T05:08:10",
+        "dependencies": [],
+        "last_updated": "2022-04-18T06:24:55",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6471058871715277
+        },
+        "name": "click_prediction_small-bayes-lightgbm-50-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 50,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-50-5",
+        "slug": "click-prediction-small-bayes-lightgbm-50-5-20220418050810",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T06:25:11",
+        "dependencies": [],
+        "last_updated": "2022-04-18T07:41:29",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.651614847407629
+        },
+        "name": "click_prediction_small-bayes-lightgbm-50-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 50,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-50-10",
+        "slug": "click-prediction-small-bayes-lightgbm-50-10-20220418062511",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T07:41:29",
+        "dependencies": [],
+        "last_updated": "2022-04-18T08:58:08",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6417588235936289
+        },
+        "name": "click_prediction_small-bayes-lightgbm-50-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 50,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-50-16",
+        "slug": "click-prediction-small-bayes-lightgbm-50-16-20220418074129",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T08:58:25",
+        "dependencies": [],
+        "last_updated": "2022-04-18T10:14:10",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.630759474274544
+        },
+        "name": "click_prediction_small-bayes-lightgbm-50-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 50,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-50-42",
+        "slug": "click-prediction-small-bayes-lightgbm-50-42-20220418085825",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T10:14:11",
+        "dependencies": [],
+        "last_updated": "2022-04-18T11:29:58",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6395941393657804
+        },
+        "name": "click_prediction_small-bayes-lightgbm-50-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 50,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-50-44",
+        "slug": "click-prediction-small-bayes-lightgbm-50-44-20220418101411",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T11:30:13",
+        "dependencies": [],
+        "last_updated": "2022-04-18T13:23:33",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6433358123693117
+        },
+        "name": "click_prediction_small-bayes-lightgbm-75-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 75,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-75-5",
+        "slug": "click-prediction-small-bayes-lightgbm-75-5-20220418113013",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T13:23:33",
+        "dependencies": [],
+        "last_updated": "2022-04-18T15:16:40",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6483153278772158
+        },
+        "name": "click_prediction_small-bayes-lightgbm-75-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 75,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-75-10",
+        "slug": "click-prediction-small-bayes-lightgbm-75-10-20220418132333",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T15:16:40",
+        "dependencies": [],
+        "last_updated": "2022-04-18T17:10:56",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6459815645207658
+        },
+        "name": "click_prediction_small-bayes-lightgbm-75-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 75,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-75-16",
+        "slug": "click-prediction-small-bayes-lightgbm-75-16-20220418151640",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T17:10:56",
+        "dependencies": [],
+        "last_updated": "2022-04-18T19:04:39",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6453737079487144
+        },
+        "name": "click_prediction_small-bayes-lightgbm-75-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 75,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-75-42",
+        "slug": "click-prediction-small-bayes-lightgbm-75-42-20220418171056",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T19:04:39",
+        "dependencies": [],
+        "last_updated": "2022-04-18T20:58:25",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6358745239623442
+        },
+        "name": "click_prediction_small-bayes-lightgbm-75-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 75,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-75-44",
+        "slug": "click-prediction-small-bayes-lightgbm-75-44-20220418190439",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T20:58:25",
+        "dependencies": [],
+        "last_updated": "2022-04-18T23:30:09",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6470472525814308
+        },
+        "name": "click_prediction_small-bayes-lightgbm-100-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 100,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-100-5",
+        "slug": "click-prediction-small-bayes-lightgbm-100-5-20220418205825",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-18T23:30:09",
+        "dependencies": [],
+        "last_updated": "2022-04-19T02:00:28",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6498447551167447
+        },
+        "name": "click_prediction_small-bayes-lightgbm-100-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 100,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-100-10",
+        "slug": "click-prediction-small-bayes-lightgbm-100-10-20220418233009",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-19T02:00:44",
+        "dependencies": [],
+        "last_updated": "2022-04-19T04:32:06",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6442314471639684
+        },
+        "name": "click_prediction_small-bayes-lightgbm-100-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 100,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-100-16",
+        "slug": "click-prediction-small-bayes-lightgbm-100-16-20220419020044",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-19T04:32:22",
+        "dependencies": [],
+        "last_updated": "2022-04-19T07:03:46",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6467241202730369
+        },
+        "name": "click_prediction_small-bayes-lightgbm-100-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 100,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-100-42",
+        "slug": "click-prediction-small-bayes-lightgbm-100-42-20220419043222",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-19T07:04:02",
+        "dependencies": [],
+        "last_updated": "2022-04-19T09:34:24",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6350040909552874
+        },
+        "name": "click_prediction_small-bayes-lightgbm-100-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 100,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-100-44",
+        "slug": "click-prediction-small-bayes-lightgbm-100-44-20220419070402",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-19T09:34:24",
+        "dependencies": [],
+        "last_updated": "2022-04-19T12:44:11",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6464079307594474
+        },
+        "name": "click_prediction_small-bayes-lightgbm-125-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 125,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-125-5",
+        "slug": "click-prediction-small-bayes-lightgbm-125-5-20220419093424",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-19T12:44:11",
+        "dependencies": [],
+        "last_updated": "2022-04-19T15:53:19",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6511889479366674
+        },
+        "name": "click_prediction_small-bayes-lightgbm-125-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 125,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-125-10",
+        "slug": "click-prediction-small-bayes-lightgbm-125-10-20220419124411",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-19T15:53:19",
+        "dependencies": [],
+        "last_updated": "2022-04-19T19:03:41",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6403968820391335
+        },
+        "name": "click_prediction_small-bayes-lightgbm-125-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 125,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-125-16",
+        "slug": "click-prediction-small-bayes-lightgbm-125-16-20220419155319",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-19T19:03:57",
+        "dependencies": [],
+        "last_updated": "2022-04-19T22:13:31",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6439332456517162
+        },
+        "name": "click_prediction_small-bayes-lightgbm-125-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 125,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-125-42",
+        "slug": "click-prediction-small-bayes-lightgbm-125-42-20220419190357",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-19T22:13:31",
+        "dependencies": [],
+        "last_updated": "2022-04-20T01:22:45",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6322864829886867
+        },
+        "name": "click_prediction_small-bayes-lightgbm-125-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 125,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-125-44",
+        "slug": "click-prediction-small-bayes-lightgbm-125-44-20220419221331",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-20T02:02:42",
+        "dependencies": [],
+        "last_updated": "2022-04-20T05:49:15",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6483269201750415
+        },
+        "name": "click_prediction_small-bayes-lightgbm-150-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-150-5",
+        "slug": "click-prediction-small-bayes-lightgbm-150-5-20220420020242",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-20T05:50:15",
+        "dependencies": [],
+        "last_updated": "2022-04-20T09:35:49",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.652727036212407
+        },
+        "name": "click_prediction_small-bayes-lightgbm-150-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-150-10",
+        "slug": "click-prediction-small-bayes-lightgbm-150-10-20220420055015",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-20T09:35:50",
+        "dependencies": [],
+        "last_updated": "2022-04-20T13:22:15",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6391453604946089
+        },
+        "name": "click_prediction_small-bayes-lightgbm-150-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-150-16",
+        "slug": "click-prediction-small-bayes-lightgbm-150-16-20220420093550",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-20T13:22:15",
+        "dependencies": [],
+        "last_updated": "2022-04-20T17:09:18",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6444090152951171
+        },
+        "name": "click_prediction_small-bayes-lightgbm-150-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-150-42",
+        "slug": "click-prediction-small-bayes-lightgbm-150-42-20220420132215",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-20T17:09:18",
+        "dependencies": [],
+        "last_updated": "2022-04-20T20:56:16",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6295679624989492
+        },
+        "name": "click_prediction_small-bayes-lightgbm-150-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-150-44",
+        "slug": "click-prediction-small-bayes-lightgbm-150-44-20220420170918",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-20T20:56:32",
+        "dependencies": [],
+        "last_updated": "2022-04-21T01:21:52",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6485165664273858
+        },
+        "name": "click_prediction_small-bayes-lightgbm-175-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-175-5",
+        "slug": "click-prediction-small-bayes-lightgbm-175-5-20220420205632",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-21T01:21:52",
+        "dependencies": [],
+        "last_updated": "2022-04-21T05:47:34",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6531822155735266
+        },
+        "name": "click_prediction_small-bayes-lightgbm-175-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-175-10",
+        "slug": "click-prediction-small-bayes-lightgbm-175-10-20220421012152",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-21T05:47:50",
+        "dependencies": [],
+        "last_updated": "2022-04-21T10:12:35",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6405094058289029
+        },
+        "name": "click_prediction_small-bayes-lightgbm-175-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-175-16",
+        "slug": "click-prediction-small-bayes-lightgbm-175-16-20220421054750",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-21T10:12:51",
+        "dependencies": [],
+        "last_updated": "2022-04-21T14:38:36",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.643066697350361
+        },
+        "name": "click_prediction_small-bayes-lightgbm-175-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-175-42",
+        "slug": "click-prediction-small-bayes-lightgbm-175-42-20220421101251",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-21T14:39:36",
+        "dependencies": [],
+        "last_updated": "2022-04-21T19:02:56",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6305411684242813
+        },
+        "name": "click_prediction_small-bayes-lightgbm-175-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-175-44",
+        "slug": "click-prediction-small-bayes-lightgbm-175-44-20220421143936",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-21T19:02:56",
+        "dependencies": [],
+        "last_updated": "2022-04-22T00:05:13",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6474069283666386
+        },
+        "name": "click_prediction_small-bayes-lightgbm-200-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-200-5",
+        "slug": "click-prediction-small-bayes-lightgbm-200-5-20220421190256",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-22T01:55:27",
+        "dependencies": [],
+        "last_updated": "2022-04-22T06:54:16",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6519320648435576
+        },
+        "name": "click_prediction_small-bayes-lightgbm-200-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-200-10",
+        "slug": "click-prediction-small-bayes-lightgbm-200-10-20220422015527",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-22T06:54:32",
+        "dependencies": [],
+        "last_updated": "2022-04-22T11:54:18",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6395994357776298
+        },
+        "name": "click_prediction_small-bayes-lightgbm-200-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-200-16",
+        "slug": "click-prediction-small-bayes-lightgbm-200-16-20220422065432",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-22T11:54:34",
+        "dependencies": [],
+        "last_updated": "2022-04-22T16:56:24",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6424961560128706
+        },
+        "name": "click_prediction_small-bayes-lightgbm-200-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-200-42",
+        "slug": "click-prediction-small-bayes-lightgbm-200-42-20220422115434",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-22T16:56:25",
+        "dependencies": [],
+        "last_updated": "2022-04-22T21:57:59",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6302445984048413
+        },
+        "name": "click_prediction_small-bayes-lightgbm-200-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "lightgbm",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-lightgbm-200-44",
+        "slug": "click-prediction-small-bayes-lightgbm-200-44-20220422165625",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T01:47:13",
+        "dependencies": [],
+        "last_updated": "2022-04-23T01:49:47",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.551094767557874
+        },
+        "name": "click_prediction_small-bayes-gbm-0-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 0,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-0-5",
+        "slug": "click-prediction-small-bayes-gbm-0-5-20220423014713",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T01:49:47",
+        "dependencies": [],
+        "last_updated": "2022-04-23T01:52:25",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.4941395963829096
+        },
+        "name": "click_prediction_small-bayes-gbm-0-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 0,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-0-10",
+        "slug": "click-prediction-small-bayes-gbm-0-10-20220423014947",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T01:52:25",
+        "dependencies": [],
+        "last_updated": "2022-04-23T01:55:05",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.48716644694972266
+        },
+        "name": "click_prediction_small-bayes-gbm-0-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 0,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-0-16",
+        "slug": "click-prediction-small-bayes-gbm-0-16-20220423015225",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T01:55:21",
+        "dependencies": [],
+        "last_updated": "2022-04-23T01:57:43",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.5005697809593734
+        },
+        "name": "click_prediction_small-bayes-gbm-0-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 0,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-0-42",
+        "slug": "click-prediction-small-bayes-gbm-0-42-20220423015521",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T01:57:43",
+        "dependencies": [],
+        "last_updated": "2022-04-23T02:00:21",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.4925142251674238
+        },
+        "name": "click_prediction_small-bayes-gbm-0-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 0,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-0-44",
+        "slug": "click-prediction-small-bayes-gbm-0-44-20220423015743",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T02:00:21",
+        "dependencies": [],
+        "last_updated": "2022-04-23T02:39:40",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6309527043048999
+        },
+        "name": "click_prediction_small-bayes-gbm-25-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 25,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-25-5",
+        "slug": "click-prediction-small-bayes-gbm-25-5-20220423020021",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T02:39:40",
+        "dependencies": [],
+        "last_updated": "2022-04-23T03:18:59",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6493781208367657
+        },
+        "name": "click_prediction_small-bayes-gbm-25-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 25,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-25-10",
+        "slug": "click-prediction-small-bayes-gbm-25-10-20220423023940",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T03:19:15",
+        "dependencies": [],
+        "last_updated": "2022-04-23T03:58:29",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6398298280950354
+        },
+        "name": "click_prediction_small-bayes-gbm-25-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 25,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-25-16",
+        "slug": "click-prediction-small-bayes-gbm-25-16-20220423031915",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T03:58:29",
+        "dependencies": [],
+        "last_updated": "2022-04-23T04:37:47",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6276325704792806
+        },
+        "name": "click_prediction_small-bayes-gbm-25-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 25,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-25-42",
+        "slug": "click-prediction-small-bayes-gbm-25-42-20220423035829",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T04:38:03",
+        "dependencies": [],
+        "last_updated": "2022-04-23T05:17:02",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6346188921261915
+        },
+        "name": "click_prediction_small-bayes-gbm-25-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 25,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-25-44",
+        "slug": "click-prediction-small-bayes-gbm-25-44-20220423043803",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T05:17:19",
+        "dependencies": [],
+        "last_updated": "2022-04-23T06:34:26",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6459414408588243
+        },
+        "name": "click_prediction_small-bayes-gbm-50-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 50,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-50-5",
+        "slug": "click-prediction-small-bayes-gbm-50-5-20220423051719",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T06:34:42",
+        "dependencies": [],
+        "last_updated": "2022-04-23T07:51:31",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6483254976100569
+        },
+        "name": "click_prediction_small-bayes-gbm-50-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 50,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-50-10",
+        "slug": "click-prediction-small-bayes-gbm-50-10-20220423063442",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T07:51:31",
+        "dependencies": [],
+        "last_updated": "2022-04-23T09:08:59",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6405104861482589
+        },
+        "name": "click_prediction_small-bayes-gbm-50-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 50,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-50-16",
+        "slug": "click-prediction-small-bayes-gbm-50-16-20220423075131",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T09:08:59",
+        "dependencies": [],
+        "last_updated": "2022-04-23T10:26:20",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6295684762589037
+        },
+        "name": "click_prediction_small-bayes-gbm-50-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 50,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-50-42",
+        "slug": "click-prediction-small-bayes-gbm-50-42-20220423090859",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T10:26:20",
+        "dependencies": [],
+        "last_updated": "2022-04-23T11:43:41",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6401997695650948
+        },
+        "name": "click_prediction_small-bayes-gbm-50-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 50,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-50-44",
+        "slug": "click-prediction-small-bayes-gbm-50-44-20220423102620",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T11:43:42",
+        "dependencies": [],
+        "last_updated": "2022-04-23T13:39:28",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6453362327275862
+        },
+        "name": "click_prediction_small-bayes-gbm-75-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 75,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-75-5",
+        "slug": "click-prediction-small-bayes-gbm-75-5-20220423114342",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T13:39:28",
+        "dependencies": [],
+        "last_updated": "2022-04-23T15:34:50",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6467320345802209
+        },
+        "name": "click_prediction_small-bayes-gbm-75-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 75,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-75-10",
+        "slug": "click-prediction-small-bayes-gbm-75-10-20220423133928",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T15:35:06",
+        "dependencies": [],
+        "last_updated": "2022-04-23T17:30:49",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.642340547137404
+        },
+        "name": "click_prediction_small-bayes-gbm-75-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 75,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-75-16",
+        "slug": "click-prediction-small-bayes-gbm-75-16-20220423153506",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T17:31:05",
+        "dependencies": [],
+        "last_updated": "2022-04-23T19:28:03",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6350280228544807
+        },
+        "name": "click_prediction_small-bayes-gbm-75-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 75,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-75-42",
+        "slug": "click-prediction-small-bayes-gbm-75-42-20220423173105",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T19:28:19",
+        "dependencies": [],
+        "last_updated": "2022-04-23T21:23:21",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.638069712433162
+        },
+        "name": "click_prediction_small-bayes-gbm-75-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 75,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-75-44",
+        "slug": "click-prediction-small-bayes-gbm-75-44-20220423192819",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T21:23:22",
+        "dependencies": [],
+        "last_updated": "2022-04-23T23:57:14",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.64850039880144
+        },
+        "name": "click_prediction_small-bayes-gbm-100-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 100,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-100-5",
+        "slug": "click-prediction-small-bayes-gbm-100-5-20220423212322",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-23T23:57:30",
+        "dependencies": [],
+        "last_updated": "2022-04-24T02:30:39",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6494540585671562
+        },
+        "name": "click_prediction_small-bayes-gbm-100-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 100,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-100-10",
+        "slug": "click-prediction-small-bayes-gbm-100-10-20220423235730",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-24T02:30:39",
+        "dependencies": [],
+        "last_updated": "2022-04-24T05:05:10",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6416002440839437
+        },
+        "name": "click_prediction_small-bayes-gbm-100-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 100,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-100-16",
+        "slug": "click-prediction-small-bayes-gbm-100-16-20220424023039",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-24T05:05:11",
+        "dependencies": [],
+        "last_updated": "2022-04-24T07:39:13",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6390241730776214
+        },
+        "name": "click_prediction_small-bayes-gbm-100-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 100,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-100-42",
+        "slug": "click-prediction-small-bayes-gbm-100-42-20220424050511",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-24T07:39:29",
+        "dependencies": [],
+        "last_updated": "2022-04-24T10:13:29",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6374621431221819
+        },
+        "name": "click_prediction_small-bayes-gbm-100-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 100,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-100-44",
+        "slug": "click-prediction-small-bayes-gbm-100-44-20220424073929",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-24T10:13:29",
+        "dependencies": [],
+        "last_updated": "2022-04-24T13:26:55",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6482666688223502
+        },
+        "name": "click_prediction_small-bayes-gbm-125-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 125,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-125-5",
+        "slug": "click-prediction-small-bayes-gbm-125-5-20220424101329",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-24T13:26:55",
+        "dependencies": [],
+        "last_updated": "2022-04-24T16:39:02",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6494466827169638
+        },
+        "name": "click_prediction_small-bayes-gbm-125-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 125,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-125-10",
+        "slug": "click-prediction-small-bayes-gbm-125-10-20220424132655",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-24T16:39:18",
+        "dependencies": [],
+        "last_updated": "2022-04-24T19:52:33",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6375239148590082
+        },
+        "name": "click_prediction_small-bayes-gbm-125-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 125,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-125-16",
+        "slug": "click-prediction-small-bayes-gbm-125-16-20220424163918",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-24T19:52:33",
+        "dependencies": [],
+        "last_updated": "2022-04-24T23:05:54",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6369106968462611
+        },
+        "name": "click_prediction_small-bayes-gbm-125-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 125,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-125-42",
+        "slug": "click-prediction-small-bayes-gbm-125-42-20220424195233",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-24T23:06:10",
+        "dependencies": [],
+        "last_updated": "2022-04-25T02:18:59",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6375332058614556
+        },
+        "name": "click_prediction_small-bayes-gbm-125-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 125,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-125-44",
+        "slug": "click-prediction-small-bayes-gbm-125-44-20220424230610",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-25T02:19:15",
+        "dependencies": [],
+        "last_updated": "2022-04-25T06:10:59",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6480780465196491
+        },
+        "name": "click_prediction_small-bayes-gbm-150-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-150-5",
+        "slug": "click-prediction-small-bayes-gbm-150-5-20220425021915",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-25T06:11:15",
+        "dependencies": [],
+        "last_updated": "2022-04-25T10:01:56",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6498693412840528
+        },
+        "name": "click_prediction_small-bayes-gbm-150-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-150-10",
+        "slug": "click-prediction-small-bayes-gbm-150-10-20220425061115",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-25T10:01:56",
+        "dependencies": [],
+        "last_updated": "2022-04-25T13:53:50",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6371888452818929
+        },
+        "name": "click_prediction_small-bayes-gbm-150-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-150-16",
+        "slug": "click-prediction-small-bayes-gbm-150-16-20220425100156",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-25T13:53:50",
+        "dependencies": [],
+        "last_updated": "2022-04-25T17:45:32",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6382538579555553
+        },
+        "name": "click_prediction_small-bayes-gbm-150-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-150-42",
+        "slug": "click-prediction-small-bayes-gbm-150-42-20220425135350",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-25T17:45:32",
+        "dependencies": [],
+        "last_updated": "2022-04-25T21:37:02",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6363481234703119
+        },
+        "name": "click_prediction_small-bayes-gbm-150-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 150,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-150-44",
+        "slug": "click-prediction-small-bayes-gbm-150-44-20220425174532",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-25T21:37:18",
+        "dependencies": [],
+        "last_updated": "2022-04-26T02:07:19",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6485173209165966
+        },
+        "name": "click_prediction_small-bayes-gbm-175-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-175-5",
+        "slug": "click-prediction-small-bayes-gbm-175-5-20220425213718",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-26T02:07:35",
+        "dependencies": [],
+        "last_updated": "2022-04-26T06:47:41",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6504352701533652
+        },
+        "name": "click_prediction_small-bayes-gbm-175-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-175-10",
+        "slug": "click-prediction-small-bayes-gbm-175-10-20220426020735",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-26T06:47:42",
+        "dependencies": [],
+        "last_updated": "2022-04-26T11:18:26",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6367578547177433
+        },
+        "name": "click_prediction_small-bayes-gbm-175-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-175-16",
+        "slug": "click-prediction-small-bayes-gbm-175-16-20220426064742",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-26T11:18:42",
+        "dependencies": [],
+        "last_updated": "2022-04-26T15:48:28",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6370134504979786
+        },
+        "name": "click_prediction_small-bayes-gbm-175-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-175-42",
+        "slug": "click-prediction-small-bayes-gbm-175-42-20220426111842",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-26T15:48:44",
+        "dependencies": [],
+        "last_updated": "2022-04-26T20:18:35",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6368828049957447
+        },
+        "name": "click_prediction_small-bayes-gbm-175-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 175,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-175-44",
+        "slug": "click-prediction-small-bayes-gbm-175-44-20220426154844",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-26T21:06:47",
+        "dependencies": [],
+        "last_updated": "2022-04-27T02:13:44",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6486573325572873
+        },
+        "name": "click_prediction_small-bayes-gbm-200-5",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 5
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-200-5",
+        "slug": "click-prediction-small-bayes-gbm-200-5-20220426210647",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-27T02:14:00",
+        "dependencies": [],
+        "last_updated": "2022-04-27T07:19:48",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6501377216512829
+        },
+        "name": "click_prediction_small-bayes-gbm-200-10",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 10
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-200-10",
+        "slug": "click-prediction-small-bayes-gbm-200-10-20220427021400",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-27T07:19:48",
+        "dependencies": [],
+        "last_updated": "2022-04-27T12:29:48",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6369270668442485
+        },
+        "name": "click_prediction_small-bayes-gbm-200-16",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 16
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-200-16",
+        "slug": "click-prediction-small-bayes-gbm-200-16-20220427071948",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-27T12:30:04",
+        "dependencies": [],
+        "last_updated": "2022-04-27T17:39:36",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.637226265227411
+        },
+        "name": "click_prediction_small-bayes-gbm-200-42",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 42
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-200-42",
+        "slug": "click-prediction-small-bayes-gbm-200-42-20220427123004",
+        "tests": []
+    },
+    {
+        "author": "root",
+        "created_at": "2022-04-27T17:39:36",
+        "dependencies": [],
+        "last_updated": "2022-04-27T22:49:44",
+        "last_updated_by": "root",
+        "metrics": {
+            "score": 0.6367755264944819
+        },
+        "name": "click_prediction_small-bayes-gbm-200-44",
+        "parameters": {
+            "dataset": "click_prediction_small",
+            "encoder": "bayes",
+            "marginal": false,
+            "model": "gbm",
+            "n_estimators": 200,
+            "residual": false,
+            "seed": 44
+        },
+        "short_slug": "click-prediction-small-bayes-gbm-200-44",
+        "slug": "click-prediction-small-bayes-gbm-200-44-20220427173936",
+        "tests": []
     }
 ]
