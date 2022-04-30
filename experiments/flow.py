@@ -68,7 +68,7 @@ def gen_flow(
 
             # Split and encode
             supervised = tasks.check_supervised(algorithm=encoder)
-            encoder_object = tasks.init_encoder(algorithm=encoder, metadata=meta)
+            encoder_object = tasks.init_encoder(algorithm=encoder, metadata=meta, residual=residual)
             train, test = tasks.split(data=data, metadata=meta, seed=seed)
             with case(supervised, True):
                 fitted_encoder_super = tasks.fit_encoder(
@@ -147,5 +147,28 @@ def gen_sample_viz_flow(project: str = "sample.json") -> Flow:
         experiments, _ = project.to_tabular()
         df = tasks.project_to_df(data=experiments)
         _ = tasks.render_sample_perf_plot(data=df)
+
+    return flow
+
+
+def gen_comparison_viz_flow(project: str = "compare.json") -> Flow:
+    """Generate a flow to render comparison performance visualizations.
+
+    Parameters
+    ----------
+    project : str, optional (default "compare.json")
+        The name of the project JSON file.
+
+    Returns
+    -------
+    Flow
+        The generated flow.
+    """
+    init_project = LazyProject(fpath=OUTPUT_DIR / project, mode="r", author="root")
+    with Flow(name="Render compare visualizations") as flow:
+        project = init_project()
+        experiments, _ = project.to_tabular()
+        df = tasks.project_to_df(data=experiments)
+        _ = tasks.render_comparison_perf_plot(data=df)
 
     return flow

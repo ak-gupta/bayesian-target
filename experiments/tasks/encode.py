@@ -33,7 +33,7 @@ def check_supervised(algorithm: str) -> bool:
 
 
 @task(name="Initialize encoder")
-def init_encoder(algorithm: str, metadata: Dict):
+def init_encoder(algorithm: str, metadata: Dict, residual: bool = False):
     """Initialize a categorical encoder.
 
     Parameters
@@ -42,6 +42,10 @@ def init_encoder(algorithm: str, metadata: Dict):
         The type of categorical encoder.
     metadata : dict
         The metadata configuration for the dataset.
+    residual : bool, optional (default False)
+        Whether or not the current experiment uses residual modelling for encoding.
+        If ``True`` with a regression dataset and ``algorithm = "bayes"``, the
+        target distribution will change to ``normal``.
 
     Returns
     -------
@@ -59,7 +63,10 @@ def init_encoder(algorithm: str, metadata: Dict):
     elif algorithm == "target":
         return TargetEncoder()
     elif algorithm == "bayes":
-        return BayesianTargetEncoder(dist=metadata["dist"], chunksize=300)
+        if residual and metadata["dataset_type"] == "regression":
+            return BayesianTargetEncoder(dist="normal", chunksize=300)
+        else:
+            return BayesianTargetEncoder(dist=metadata["dist"], chunksize=300)
 
 
 @task(name="Fit encoder")
@@ -136,7 +143,8 @@ def transform(data: pd.DataFrame, encoder, metadata: Dict) -> pd.DataFrame:
     """
     logger = prefect.context.get("logger")
     logger.info("Running transform...")
-    encoder.set_params(sample=False)
+    if isinstance(encoder, BayesianTargetEncoder):
+        encoder.set_params(sample=False)
     X_encoded = encoder.transform(data[metadata["nominal"]].to_numpy())
     logger.info("Data successfully transformed...")
     transformed = pd.DataFrame(

@@ -2,9 +2,7 @@
 When should you use this package?
 =================================
 
-Coming soon.
-
-The plan is to leverage the experimental framework discussed by :footcite:t:`pargent`
+We have leveraged the experimental framework discussed by :footcite:t:`pargent`
 to analyze bayesian target encoding (BTE) and answer the following questions:
 
 - **Marginal BTE**: Is there lift from a staged approach:
@@ -13,15 +11,27 @@ to analyze bayesian target encoding (BTE) and answer the following questions:
   #. Fit the encoder using the submodel output as the target.
   #. Use the encoding and the raw input non-categorical data to fit the final model.
 
-- Ensemble methodology\ :footcite:p:`larionov`
-
-  - How much does repeated sampling help?
-  - How many samples do you need?
-
 .. [*]
 
     What if the encoder is fitted using the residuals from the submodel as the
     target?
+
+Ensemble methodology\ :footcite:p:`larionov`
+--------------------------------------------
+
+.. image:: ../../experiments/output/all-datasets-sampling.png
+  :align: center
+
+We wanted to answer the following questions:
+
+- How much does repeated sampling help?
+- How many samples do you need?
+
+The short answer is that repeated sampling will *almost definitely help* with test
+performance. Only two datasets, :doc:`churn <classification/churn>` and :doc:`flight-delay-usa-dec-2017 <regression/flight>`,
+saw decreases in test performance.
+
+Surprisingly, only 25 samples are required to see an increase in performance.
 
 Comparative encoding methodology
 --------------------------------
@@ -104,16 +114,17 @@ Classification
 +===========================================+===============================================================+
 | `40701 <https://www.openml.org/d/40701>`_ | :doc:`churn <classification/churn>`                           |
 +-------------------------------------------+---------------------------------------------------------------+
+| `41434 <https://www.openml.org/d/41434>`_ | :doc:`click_prediction_small <classification/click>`          |
++-------------------------------------------+---------------------------------------------------------------+
 
 Performance evaluation
 ----------------------
 
 :footcite:t:`pargent` discussed a three-phase approach for creating a baseline
 assessment of model performance. We'll adapt that here and use something slightly
-different: 
-
-  **baseline performance** is the average test score for a model fitted with
-  **no categorical features** using 10-fold cross-validation.
+different. **Baseline performance** will be the average test score for a model fitted
+using the *standard* bayesian target encoder. We will repeat each experiment with 5
+different random seeds for the train-test split.
 
 Similar to :footcite:t:`pargent`, we will use root mean squared error (RMSE) for
 evaluating the performance of regression models and the area under the receiver
