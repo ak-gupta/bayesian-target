@@ -17,3 +17,9 @@ Sampling experiment
 
 .. image:: ../../../experiments/output/avocado-sales-sampling.png
     :align: center
+
+Encoder comparison
+------------------
+
+.. image:: ../../../experiments/output/avocado-sales-comparison.png
+    :align: center

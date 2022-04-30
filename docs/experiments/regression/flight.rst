@@ -17,3 +17,9 @@ Sampling experiment
 
 .. image:: ../../../experiments/output/flight-delay-usa-dec-2017-sampling.png
     :align: center
+
+Encoder comparison
+------------------
+
+.. image:: ../../../experiments/output/flight-delay-usa-dec-2017-comparison.png
+    :align: center

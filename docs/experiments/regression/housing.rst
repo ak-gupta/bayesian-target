@@ -17,3 +17,9 @@ Sampling experiment
 
 .. image:: ../../../experiments/output/ames-housing-sampling.png
     :align: center
+
+Encoder comparison
+------------------
+
+.. image:: ../../../experiments/output/ames-housing-comparison.png
+    :align: center

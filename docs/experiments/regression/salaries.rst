@@ -17,3 +17,9 @@ Sampling experiment
 
 .. image:: ../../../experiments/output/employee_salaries-sampling.png
     :align: center
+
+Encoder comparison
+------------------
+
+.. image:: ../../../experiments/output/employee_salaries-comparison.png
+    :align: center

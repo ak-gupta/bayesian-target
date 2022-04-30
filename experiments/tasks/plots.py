@@ -53,14 +53,13 @@ def render_sample_perf_plot(data: pd.DataFrame):
             ].mean()
             data["score-change"] = (data[("metrics", "score")] - non_sample) / abs(non_sample)
             fig, ax = plt.subplots(figsize=(12, 8))
-            sns.pointplot(
+            sns.violinplot(
                 x=("parameters", "n_estimators"),
                 y="score-change",
                 hue=("parameters", "model"),
                 data=data[data[("parameters", "n_estimators")] > 0],
                 palette="flare",
-                dodge=True,
-                ci="sd",
+                inner="quartile",
                 ax=ax
             ).set(
                 title=f"Effect of number of samples on performance for {name}",
@@ -113,16 +112,13 @@ def render_comparison_perf_plot(data: pd.DataFrame):
             ] += " (" + data[("parameters", "n_estimators")].astype(str) + ")"
 
             fig, ax = plt.subplots(figsize=(12, 8))
-            #sns.pointplot(
             sns.violinplot(
                 x=("parameters", "encoder"),
                 y="score-change",
                 hue=("parameters", "model"),
                 data=data[~mask],
                 palette="flare",
-                inner="points",
-                #dodge=True,
-                #ci="sd",
+                inner="quartile",
                 ax=ax
             ).set(
                 title=f"Effect of encoder on performance for {name}",

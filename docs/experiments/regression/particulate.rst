@@ -17,3 +17,9 @@ Sampling experiment
 
 .. image:: ../../../experiments/output/particulate-matter-ukair-2017-sampling.png
     :align: center
+
+Encoder comparison
+------------------
+
+.. image:: ../../../experiments/outp9ut/particulate-matter-ukari-2017-comparison.png
+    :align: center

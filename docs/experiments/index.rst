@@ -16,6 +16,32 @@ to analyze bayesian target encoding (BTE) and answer the following questions:
     What if the encoder is fitted using the residuals from the submodel as the
     target?
 
+Encoder comparison
+------------------
+
+.. figure:: ../../experiments/output/all-datasets-comparison.png
+  :align: center
+
+  ``(m)`` indicates that the encoder used the "marginal" approach. ``(r)`` indicates
+  that the encoder uses the "residual" approach.
+
+In this experiment, we wanted to compare the standard bayesian target encoding to other
+popular encoding methodologies. We also wanted to test a "staged approach", where we
+
+#. fit a submodel that uses all non-categorical columns as features,
+#. fit the encoder using either the submodel output (the "marginal" approach) or the residuals as the target, and
+#. use the encoding and raw numeric features to fit the final model.
+
+The idea here is that the categorical encoding can try to use the information not captured
+by numeric variables and produce a more useful encoding.
+
+The aggregated visualization doesn't show this well, but we have three takeaways from this
+experiment:
+
+#. Non-sampled bayesian target encoding does not outperform other encoding methods,
+#. Sample bayesian target encoding performs the best, and
+#. marginal/residual encoding provides very incremental benefit at best.
+
 Ensemble methodology\ :footcite:p:`larionov`
 --------------------------------------------
 
