@@ -336,7 +336,9 @@ class BayesianTargetEncoder(_BaseEncoder):
 
         encoded = []
         for idx, cat in enumerate(self.categories_):
-            LOG.debug(f"Running transform for categorical {idx} with {cat.shape[0]} levels")
+            LOG.debug(
+                f"Running transform for categorical {idx} with {cat.shape[0]} levels"
+            )
             # Get the masked array for each level
             varencoded = parallel(
                 fn(
@@ -346,7 +348,8 @@ class BayesianTargetEncoder(_BaseEncoder):
                     self.posterior_params_[idx][levelno],
                     self.random_state,
                 )
-                for levelno in range(cat.shape[0]) if np.sum(X_int[:, idx] == levelno) > 0
+                for levelno in range(cat.shape[0])
+                if np.sum(X_int[:, idx] == levelno) > 0
             )
             # Add new categorical encodings
             if np.sum(~X_mask[:, idx]) > 0:
@@ -361,7 +364,7 @@ class BayesianTargetEncoder(_BaseEncoder):
                         self.dist,
                         self.sample,
                         self.prior_params_,
-                        self.random_state
+                        self.random_state,
                     )
                 )
 
@@ -374,7 +377,10 @@ class BayesianTargetEncoder(_BaseEncoder):
                 chunks = np.array_split(np.arange(len(varencoded)), n_chunks)
 
                 varencoded = list(
-                    np.ma.stack(varencoded[chunk[0]:chunk[-1] + 1], axis=2).sum(axis=2) for chunk in chunks
+                    np.ma.stack(varencoded[chunk[0] : chunk[-1] + 1], axis=2).sum(
+                        axis=2
+                    )
+                    for chunk in chunks
                 )
 
             combined = np.ma.stack(varencoded, axis=2).sum(axis=2)
