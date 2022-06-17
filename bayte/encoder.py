@@ -18,7 +18,7 @@ def _init_prior(dist: str, y) -> Tuple:
 
     Parameters
     ----------
-    dist : {"bernoulli", "exponential", "gamma", "invgamma"}
+    dist : {"bernoulli", "exponential", "gamma", "invgamma", "normal"}
         The likelihood for the target.
     y : array-like of shape (n_samples,)
         Target values.
@@ -36,6 +36,11 @@ def _init_prior(dist: str, y) -> Tuple:
         return tuple(counts)
     elif dist == "exponential":
         return y.shape[0] + 1, np.sum(y)
+    elif dist == "normal":
+        # First parameter is the sample mean
+        mean = np.average(y)
+
+        return mean, 1 / np.sum(1 / np.square(y - mean))
     elif dist in ("gamma", "invgamma"):
         fitter = getattr(scipy.stats, dist)
         alpha, _, _ = fitter.fit(y)
@@ -90,6 +95,15 @@ def _update_posterior(y, mask, dist, params) -> Tuple:
             0,
             params[1] / (1 + params[1] * np.sum(y[mask])),
         )
+    elif dist == "normal":
+        # Known variance is the non-sample variance from the training data
+        var = np.var(y)
+
+        factor = 1 / ((1 / params[1]) + (np.sum(mask) / var))
+
+        return factor * ((params[0] / params[1]) + (np.sum(y[mask]) / var)), np.sqrt(
+            factor
+        )
     elif dist in ("gamma", "invgamma"):
         fitter = getattr(scipy.stats, dist)
         alpha, _, _ = fitter.fit(y)
@@ -99,7 +113,7 @@ def _update_posterior(y, mask, dist, params) -> Tuple:
         raise NotImplementedError(f"Likelihood {dist} has not been implemented.")
 
 
-def _encode_level(mask, dist, sample, params):
+def _encode_level(mask, dist, sample, params, random_state):
     """Encode a given level.
 
     Parameters
@@ -114,6 +128,8 @@ def _encode_level(mask, dist, sample, params):
         Whether to sample or take the first moment from the posterior distribution.
     params : tuple
         Posterior parameters.
+    random_state : int or None
+        An optional random state for reproducible results
 
     Returns
     -------
@@ -126,12 +142,16 @@ def _encode_level(mask, dist, sample, params):
         random_var = scipy.stats.beta(*params)
     elif dist == "multinomial":
         random_var = scipy.stats.dirichlet(params)
+    elif dist == "normal":
+        random_var = scipy.stats.norm(*params)
     elif dist in ("exponential", "gamma", "invgamma"):
         random_var = scipy.stats.gamma(*params)
     else:
         raise NotImplementedError(f"Likelihood {dist} has not been implemented")
 
     if sample:
+        if random_state is not None:
+            random_var.random_state = np.random.Generator(np.random.PCG64(random_state))
         encoding = random_var.rvs(size=1).ravel()
     else:
         avg = random_var.mean()
@@ -169,8 +189,15 @@ class BayesianTargetEncoder(_BaseEncoder):
 
     Parameters
     ----------
-    dist : {"bernoulli", "multinomial", "exponential", "gamma", "invgamma"}
+    dist : {"bernoulli", "multinomial", "exponential", "gamma", "invgamma", "normal"}
         The likelihood for the target.
+
+        .. important::
+
+            For the gamma distribution, we assume a *known* shape parameter alpha. For the
+            normal distribution, we assume a *known* variance. Both are estimated directly
+            from the training data.
+
     sample : bool, optional (default False)
         Whether or not to encode the categorical values as a sample from the posterior
         distribution or the mean.
@@ -198,6 +225,12 @@ class BayesianTargetEncoder(_BaseEncoder):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
+    chunksize : int, optional (default None)
+        The number of categorical levels to combine at one time when calling
+        ``transform``. Increasing the chunksize will increase memory usage. By
+        default, all categoricals will be combined in a single step.
+    random_state : int, optional (default None)
+        An optional random state for scipy sampling.
 
     Attributes
     ----------
@@ -220,6 +253,8 @@ class BayesianTargetEncoder(_BaseEncoder):
         dtype=np.float64,
         handle_unknown: str = "ignore",
         n_jobs: Optional[int] = None,
+        chunksize: int = 10,
+        random_state: Optional[int] = None,
     ):
         """Init method."""
         self.dist = dist
@@ -229,6 +264,8 @@ class BayesianTargetEncoder(_BaseEncoder):
         self.dtype = dtype
         self.handle_unknown = handle_unknown
         self.n_jobs = n_jobs
+        self.chunksize = chunksize
+        self.random_state = random_state
 
     def fit(self, X, y):
         """Fit the bayesian target encoder.
@@ -299,6 +336,9 @@ class BayesianTargetEncoder(_BaseEncoder):
 
         encoded = []
         for idx, cat in enumerate(self.categories_):
+            LOG.debug(
+                f"Running transform for categorical {idx} with {cat.shape[0]} levels"
+            )
             # Get the masked array for each level
             varencoded = parallel(
                 fn(
@@ -306,16 +346,44 @@ class BayesianTargetEncoder(_BaseEncoder):
                     self.dist,
                     self.sample,
                     self.posterior_params_[idx][levelno],
+                    self.random_state,
                 )
                 for levelno in range(cat.shape[0])
+                if np.sum(X_int[:, idx] == levelno) > 0
             )
             # Add new categorical encodings
-            varencoded.append(
-                _encode_level(
-                    (~X_mask[:, idx]), self.dist, self.sample, self.prior_params_
+            if np.sum(~X_mask[:, idx]) > 0:
+                LOG.warning(
+                    f"Found {np.sum(~X_mask[:, idx])} rows with novel levels for "
+                    f"categorical variable {idx}"
                 )
-            )
-            stacked = np.ma.stack(varencoded, axis=2).sum(axis=2)
-            encoded.append(stacked.data)
+
+                varencoded.append(
+                    _encode_level(
+                        (~X_mask[:, idx]),
+                        self.dist,
+                        self.sample,
+                        self.prior_params_,
+                        self.random_state,
+                    )
+                )
+
+            # Combine each chunk before combining everything at the end
+            while len(varencoded) > 2:
+                if self.chunksize is None:
+                    n_chunks = 1
+                else:
+                    n_chunks = np.ceil(len(varencoded) / self.chunksize)
+                chunks = np.array_split(np.arange(len(varencoded)), n_chunks)
+
+                varencoded = list(
+                    np.ma.stack(varencoded[chunk[0] : chunk[-1] + 1], axis=2).sum(
+                        axis=2
+                    )
+                    for chunk in chunks
+                )
+
+            combined = np.ma.stack(varencoded, axis=2).sum(axis=2)
+            encoded.append(combined.data)
 
         return np.hstack(encoded)

@@ -1,0 +1,22 @@
+{
+    "source": "https://www.openml.org/d/41434",
+    "dataset_name": "click_prediction_small",
+    "dataset_type": "classification",
+    "local_file": "click_prediction_small.arff",
+    "dist": "bernoulli",
+    "target": "click",
+    "numeric": [
+        "impression",
+        "url_hash",
+        "depth",
+        "position"
+    ],
+    "nominal": [
+        "ad_id",
+        "advertiser_id",
+        "keyword_id",
+        "title_id",
+        "description_id",
+        "user_id"
+    ]
+}

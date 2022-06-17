@@ -36,7 +36,7 @@ jobs:
             - name: Run flake8
               run: python -m flake8 bayte
             - name: Run unit testing
-              run: python -m pytest tests --cov=./ --cov-report=xml
+              run: python -m pytest tests --cov=./bayte --cov-report=xml
             - name: Run Codecov
               uses: codecov/codecov-action@v2
               with:

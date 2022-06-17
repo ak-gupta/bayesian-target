@@ -1,0 +1,23 @@
+{
+    "source": "https://www.openml.org/d/41251",
+    "dataset_name": "flight-delay-usa-dec-2017",
+    "dataset_type": "regression",
+    "local_file": "flight-delay-usa-dec-2017.csv",
+    "candidate_dists": [
+        "exponential",
+        "invgamma",
+        "normal"
+    ],
+    "dist": "normal",
+    "target": "ARR_DELAY",
+    "numeric": ["CRS_DEP_TIME", "DISTANCE"],
+    "nominal": [
+        "DAY_OF_MONTH",
+        "DAY_OF_WEEK",
+        "OP_UNIQUE_CARRIER",
+        "ORIGIN",
+        "ORIGIN_STATE_NM",
+        "DEST",
+        "DEST_STATE_NM"
+    ]
+}

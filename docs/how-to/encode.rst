@@ -12,12 +12,21 @@ To encode your variables, you have to first choose a likelihood for your target.
 +----------------+-------------+-----------------+
 |                | Multi-class | ``multinomial`` |
 +----------------+-------------+-----------------+
-| Regression     |             | ``exponential`` |
+| Regression     |             | ``normal``      |
++----------------+-------------+-----------------+
+|                |             | ``exponential`` |
 +----------------+-------------+-----------------+
 |                |             | ``gamma``       |
 +----------------+-------------+-----------------+
 |                |             | ``invgamma``    |
 +----------------+-------------+-----------------+
+
+.. important::
+
+    The normal likelihood assumes a *known* variance that is estimated from the
+    training data. Similarly, the gamma and inverse gamma likelihoods assume a
+    known shape parameter. Both of these assumptions were made to help make
+    implementing the algorithm easier.
 
 Basic usage
 -----------
@@ -54,3 +63,8 @@ Changing hyperparameter initialization
 If you want to change how the hyperparameters are initialized for a given likelihood,
 supply a callable for the ``initializer`` argument. This callable must take the ``dist``
 and the target values ``y`` and return a tuple of the parameters.
+
+.. important::
+
+    Although you can change the initializer, your code will break if you try to implement a new
+    likelihood.

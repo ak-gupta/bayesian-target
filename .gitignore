@@ -38,6 +38,13 @@ wheels/
 pip-log.txt
 pip-delete-this-directory.txt
 
+# Experiments
+experiments/data/*/*.arff
+experiments/data/*/*.csv
+experiments/output/base-performance/*
+experiments/output/categorical-encoders/*
+experiments/output/number-of-samples/*
+
 # Unit test / coverage reports
 htmlcov/
 .tox/

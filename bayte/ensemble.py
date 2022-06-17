@@ -11,13 +11,13 @@ from joblib import Parallel, effective_n_jobs
 import numpy as np
 from pandas.api.types import is_categorical_dtype
 from sklearn.base import (
-    BaseEstimator,
     ClassifierMixin,
     RegressorMixin,
     clone,
     is_classifier,
 )
 from sklearn.ensemble._base import BaseEnsemble
+from sklearn.utils import check_random_state
 from sklearn.utils.fixes import delayed
 from sklearn.utils.metaestimators import if_delegate_has_method
 from sklearn.utils.multiclass import check_classification_targets
@@ -26,7 +26,9 @@ from sklearn.utils.validation import check_array, check_is_fitted
 LOG = logging.getLogger(__name__)
 
 
-def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params):
+def _sample_and_fit(
+    estimator, encoder, X, y, categorical_feature, random_state, **fit_params
+):
     """Sample and fit the estimator.
 
     Parameters
@@ -42,6 +44,8 @@ def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params)
         Target values.
     categorical_feature : list
         A boolean mask indicating which columns are categorical
+    random_state : int or None
+        An optional random state for the sampling
     **fit_params
         Parameters to be passed to the underlying estimator.
 
@@ -50,6 +54,8 @@ def _sample_and_fit(estimator, encoder, X, y, categorical_feature, **fit_params)
     estimator
         The trained estimator.
     """
+    if random_state is not None:
+        encoder.set_params(random_state=random_state)
     X_encoded = encoder.transform(X[:, categorical_feature])
     X_sample = np.hstack((X[:, ~categorical_feature], X_encoded))
 
@@ -76,6 +82,8 @@ class BaseSamplingEstimator(BaseEnsemble):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
+    random_state : int, optional (default None)
+        Random seed used for generating random seeds for sampling.
     estimator_params : list of str, optional (default tuple())
         The list of attributes to use as parameters when instantiating a
         new base estimator. If none are given, default parameters are used.
@@ -98,6 +106,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         encoder,
         n_estimators: int = 10,
         n_jobs: Optional[int] = None,
+        random_state: int = None,
         estimator_params: Union[List[str], Tuple] = tuple(),
     ):
         """Init method."""
@@ -106,6 +115,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         self.estimator_params = estimator_params
         self.encoder = encoder
         self.n_jobs = n_jobs
+        self.random_state = random_state
 
     def fit(
         self,
@@ -143,6 +153,8 @@ class BaseSamplingEstimator(BaseEnsemble):
         self
             The trained estimator.
         """
+        rng = check_random_state(self.random_state)
+        self.rstates_ = rng.randint(self.n_estimators * 10, size=self.n_estimators)
         # Get the categorical columns
         if hasattr(X, "columns"):
             self.categorical_ = np.zeros(X.shape[1], dtype=bool)
@@ -155,6 +167,8 @@ class BaseSamplingEstimator(BaseEnsemble):
 
         if is_classifier(self.base_estimator):
             check_classification_targets(y)
+            self.classes_ = np.unique(y)
+
         X, y = self._validate_data(X, y, dtype=None)
 
         if not hasattr(self, "categorical_"):
@@ -174,6 +188,7 @@ class BaseSamplingEstimator(BaseEnsemble):
             self.encoder_ = deepcopy(self.encoder)
             self.encoder_.set_params(sample=True)
         else:
+            LOG.info("Fitting the target encoder.")
             self.encoder_ = clone(self.encoder)
             self.encoder_.set_params(sample=True)
             self.encoder_.fit(
@@ -181,18 +196,24 @@ class BaseSamplingEstimator(BaseEnsemble):
             )  # Need to filter the columns to categoricals
 
         self._validate_estimator()
-        self.estimators_: List[BaseEstimator] = []
-        estimators = [self._make_estimator() for _ in range(self.n_estimators)]
-
         if effective_n_jobs(self.n_jobs) == 1:
             parallel, fn = list, _sample_and_fit
         else:
             parallel = Parallel(n_jobs=self.n_jobs)
             fn = delayed(_sample_and_fit)
 
-        parallel(
-            fn(estimator, self.encoder_, X, y, self.categorical_, **fit_params)
-            for estimator in estimators
+        LOG.info("Training the estimator(s).")
+        self.estimators_ = parallel(
+            fn(
+                clone(self.base_estimator),
+                deepcopy(self.encoder_),
+                X,
+                y,
+                self.categorical_,
+                self.rstates_[idx],
+                **fit_params
+            )
+            for idx in range(self.n_estimators)
         )
 
         return self
@@ -294,6 +315,8 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
+    random_state : int, optional (default None)
+        Random seed used for generating random seeds for sampling.
     estimator_params : list of str, optional (default tuple())
         The list of attributes to use as parameters when instantiating a
         new base estimator. If none are given, default parameters are used.
@@ -317,6 +340,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         n_estimators: int = 10,
         voting: str = "hard",
         n_jobs: Optional[int] = None,
+        random_state: int = None,
         estimator_params: Union[List[str], Tuple] = tuple(),
     ):
         """Init method."""
@@ -325,6 +349,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         self.voting = voting
         self.encoder = encoder
         self.n_jobs = n_jobs
+        self.random_state = random_state
         self.estimator_params = estimator_params
 
     @if_delegate_has_method(delegate="base_estimator")
