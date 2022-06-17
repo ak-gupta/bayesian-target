@@ -90,6 +90,31 @@ def test_estimator_fit_pandas(toy_regression_dataset):
     )
 
 
+def test_estimator_fit_pandas_manual(toy_regression_dataset):
+    """Test a basic fit with a pandas DataFrame and no automatic detection."""
+    X, y = toy_regression_dataset
+    estimator = bt.BayesianTargetRegressor(
+        base_estimator=SVR(kernel="linear"),
+        encoder=bt.BayesianTargetEncoder(dist="normal"),
+        n_estimators=2
+    )
+    X = pd.DataFrame(X)
+    X.columns = X.columns.astype(str)
+
+    estimator.fit(X, y, categorical_feature=["9",])
+
+    assert_array_equal(
+        estimator.categorical_, 
+        np.array([False, False, False, False, False, False, False, False, False, True])
+    )
+    assert hasattr(estimator, "estimators_")
+    assert len(estimator.estimators_) == 2
+    assert not np.array_equal(
+        estimator.estimators_[0].coef_,
+        estimator.estimators_[1].coef_
+    )
+
+
 def test_estimator_reg_prefit(toy_regression_dataset):
     """Test a basic fit with a pre-fitted encoder."""
     X, y = toy_regression_dataset
