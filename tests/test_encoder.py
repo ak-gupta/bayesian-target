@@ -204,6 +204,26 @@ def test_transform_bernoulli():
 
     assert_allclose(out.ravel(), expected, rtol=1e-5)
 
+
+def test_transform_bernoulli_new_level():
+    """Test transforming with a bernoulli likelihood and new levels."""
+    df = pd.DataFrame(
+        {
+            "x1": [0, 1, 2, 1, 0, 1, 2, 3, 3, 2],
+            "y": [0, 1, 1, 0, 1, 0, 0, 1, 1, 0]
+        }
+    )
+
+    encoder = BayesianTargetEncoder(dist="bernoulli")
+    encoder.fit(df[["x1"]], df["y"])
+
+    df2 = pd.DataFrame({"x1": [1, 3, 3, 1, 4, 4, 4, 4]})
+    out = encoder.transform(df2)
+
+    expected = np.array([0.375, 0.833333, 0.833333, 0.375, 0.5, 0.5, 0.5, 0.5])
+    assert_allclose(out.ravel(), expected, rtol=1e-5)
+
+
 def test_transform_multinomial():
     """Test transforming with a multinomial likelihood."""
     df = pd.DataFrame(
