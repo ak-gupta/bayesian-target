@@ -1,7 +1,5 @@
 
-[![codecov](https://codecov.io/github/ak-gupta/bayte/branch/main/graph/badge.svg?token=S8BUVKF37O)](https://codecov.io/github/ak-gupta/bayte)
-
-[![Maintainability](https://api.codeclimate.com/v1/badges/5c0b77d0e9b8f899ee95/maintainability)](https://codeclimate.com/github/ak-gupta/bayte/maintainability)
+[![codecov](https://codecov.io/github/ak-gupta/bayte/branch/main/graph/badge.svg?token=S8BUVKF37O)](https://codecov.io/github/ak-gupta/bayte) [![Maintainability](https://api.codeclimate.com/v1/badges/5c0b77d0e9b8f899ee95/maintainability)](https://codeclimate.com/github/ak-gupta/bayte/maintainability) ![PyPI](https://img.shields.io/pypi/v/bayte) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/bayte) [![Documentation Status](https://readthedocs.org/projects/bayte/badge/?version=latest)](https://bayte.readthedocs.io/en/latest/?badge=latest)
 
 # Overview
 
