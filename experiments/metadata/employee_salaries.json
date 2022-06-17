@@ -1,0 +1,24 @@
+{
+    "source": "https://www.openml.org/d/41445",
+    "dataset_name": "employee_salaries",
+    "dataset_type": "regression",
+    "local_file": "employee_salaries.arff",
+    "candidate_dists": [
+        "exponential",
+        "gamma",
+        "invgamma",
+        "normal"
+    ],
+    "dist": "invgamma",
+    "target": "Current_Annual_Salary",
+    "numeric": [
+        "Year_First_Hired"
+    ],
+    "nominal": [
+        "Gender",
+        "Department_Name",
+        "Division",
+        "Assignment_Category",
+        "Employee_Position_Title"
+    ]
+}

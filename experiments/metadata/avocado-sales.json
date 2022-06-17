@@ -1,0 +1,29 @@
+{
+    "source": "https://www.openml.org/d/41210",
+    "dataset_name": "avocado-sales",
+    "dataset_type": "regression",
+    "local_file": "avocado-sales.csv",
+    "candidate_dists": [
+        "exponential",
+        "gamma",
+        "invgamma",
+        "normal"
+    ],
+    "dist": "gamma",
+    "target": "AveragePrice",
+    "numeric": [
+        "Total Volume",
+        "4046",
+        "4225",
+        "4770",
+        "Total Bags",
+        "Small Bags",
+        "Large Bags",
+        "XLarge Bags"
+    ],
+    "nominal": [
+        "year",
+        "type",
+        "region"
+    ]
+}
