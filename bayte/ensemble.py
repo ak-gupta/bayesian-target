@@ -5,7 +5,7 @@ Ensemble estimator that creates multiple models through sampling.
 
 from copy import deepcopy
 import logging
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Union
 
 from joblib import Parallel, effective_n_jobs
 import numpy as np
@@ -84,9 +84,6 @@ class BaseSamplingEstimator(BaseEnsemble):
         ``-1`` means using all processors.
     random_state : int, optional (default None)
         Random seed used for generating random seeds for sampling.
-    estimator_params : list of str, optional (default tuple())
-        The list of attributes to use as parameters when instantiating a
-        new base estimator. If none are given, default parameters are used.
 
     Attributes
     ----------
@@ -106,13 +103,11 @@ class BaseSamplingEstimator(BaseEnsemble):
         encoder,
         n_estimators: int = 10,
         n_jobs: Optional[int] = None,
-        random_state: int = None,
-        estimator_params: Union[List[str], Tuple] = tuple(),
+        random_state: Optional[int] = None,
     ):
         """Init method."""
         self.base_estimator = base_estimator
         self.n_estimators = n_estimators
-        self.estimator_params = estimator_params
         self.encoder = encoder
         self.n_jobs = n_jobs
         self.random_state = random_state
@@ -239,9 +234,6 @@ class BayesianTargetRegressor(RegressorMixin, BaseSamplingEstimator):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
-    estimator_params : list of str, optional (default tuple())
-        The list of attributes to use as parameters when instantiating a
-        new base estimator. If none are given, default parameters are used.
 
     Attributes
     ----------
@@ -317,9 +309,6 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         ``-1`` means using all processors.
     random_state : int, optional (default None)
         Random seed used for generating random seeds for sampling.
-    estimator_params : list of str, optional (default tuple())
-        The list of attributes to use as parameters when instantiating a
-        new base estimator. If none are given, default parameters are used.
 
     Attributes
     ----------
@@ -340,8 +329,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         n_estimators: int = 10,
         voting: str = "hard",
         n_jobs: Optional[int] = None,
-        random_state: int = None,
-        estimator_params: Union[List[str], Tuple] = tuple(),
+        random_state: Optional[int] = None,
     ):
         """Init method."""
         self.base_estimator = base_estimator
@@ -350,7 +338,6 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         self.encoder = encoder
         self.n_jobs = n_jobs
         self.random_state = random_state
-        self.estimator_params = estimator_params
 
     @if_delegate_has_method(delegate="base_estimator")
     def predict(self, X):
