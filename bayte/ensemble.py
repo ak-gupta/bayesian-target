@@ -5,7 +5,7 @@ Ensemble estimator that creates multiple models through sampling.
 
 from copy import deepcopy
 import logging
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Union
 
 from joblib import Parallel, effective_n_jobs
 import numpy as np
