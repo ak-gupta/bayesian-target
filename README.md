@@ -26,8 +26,10 @@ For reproducibility, you can set the encoding value to the mean of the posterior
 
 ## Installation
 
-```console
-python -m pip install bayte@git+https://github.com/ak-gupta/bayte
+Install from PyPI:
+
+```bash
+python -m pip install bayte
 ```
 
 ## Usage
