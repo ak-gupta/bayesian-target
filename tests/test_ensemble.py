@@ -19,7 +19,7 @@ def test_estimator_reg_fit(toy_regression_dataset):
     """Test a basic fit."""
     X, y = toy_regression_dataset
     estimator = bt.BayesianTargetRegressor(
-        base_estimator=SVR(kernel="linear"),
+        estimator=SVR(kernel="linear"),
         encoder=bt.BayesianTargetEncoder(dist="normal"),
         n_estimators=2
     )
@@ -34,7 +34,7 @@ def test_estimator_parallel_fit(toy_regression_dataset):
     """Test a parallel fit."""
     X, y = toy_regression_dataset
     estimator = bt.BayesianTargetRegressor(
-        base_estimator=SVR(kernel="linear"),
+        estimator=SVR(kernel="linear"),
         encoder=bt.BayesianTargetEncoder(dist="normal"),
         n_estimators=2,
         n_jobs=2
@@ -53,7 +53,7 @@ def test_estimator_clf_fit(toy_classification_dataset):
     """Test a basic fit with a classification task."""
     X, y = toy_classification_dataset
     estimator = bt.BayesianTargetClassifier(
-        base_estimator=LogisticRegression(),
+        estimator=LogisticRegression(),
         encoder=bt.BayesianTargetEncoder(dist="bernoulli"),
         n_estimators=2
     )
@@ -69,7 +69,7 @@ def test_estimator_fit_pandas(toy_regression_dataset):
     """Test a basic fit with a pandas DataFrame."""
     X, y = toy_regression_dataset
     estimator = bt.BayesianTargetRegressor(
-        base_estimator=SVR(kernel="linear"),
+        estimator=SVR(kernel="linear"),
         encoder=bt.BayesianTargetEncoder(dist="normal"),
         n_estimators=2
     )
@@ -94,7 +94,7 @@ def test_estimator_fit_pandas_manual(toy_regression_dataset):
     """Test a basic fit with a pandas DataFrame and no automatic detection."""
     X, y = toy_regression_dataset
     estimator = bt.BayesianTargetRegressor(
-        base_estimator=SVR(kernel="linear"),
+        estimator=SVR(kernel="linear"),
         encoder=bt.BayesianTargetEncoder(dist="normal"),
         n_estimators=2
     )
@@ -122,7 +122,7 @@ def test_estimator_reg_prefit(toy_regression_dataset):
     encoder.fit(X[:, [9]], y)
 
     estimator = bt.BayesianTargetRegressor(
-        base_estimator=SVR(kernel="linear"),
+        estimator=SVR(kernel="linear"),
         encoder=encoder,
         n_estimators=2,
     )
@@ -140,7 +140,7 @@ def test_estimator_reg_predict(toy_regression_dataset):
     """Test basic prediction with a regression dataset."""
     X, y = toy_regression_dataset
     estimator = bt.BayesianTargetRegressor(
-        base_estimator=SVR(kernel="linear"),
+        estimator=SVR(kernel="linear"),
         encoder=bt.BayesianTargetEncoder(dist="normal"),
         n_estimators=2
     )
@@ -155,7 +155,7 @@ def test_estimator_clf_predict(toy_classification_dataset):
     """Test basic prediction with a classification target."""
     X, y = toy_classification_dataset
     estimator = bt.BayesianTargetClassifier(
-        base_estimator=LogisticRegression(),
+        estimator=LogisticRegression(),
         encoder=bt.BayesianTargetEncoder(dist="bernoulli"),
         n_estimators=10
     )
