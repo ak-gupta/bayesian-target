@@ -39,7 +39,7 @@ jobs:
             - name: Run unit testing
               run: python -m pytest tests --cov=./bayte --cov-report=xml
             - name: Run Codecov
-              uses: codecov/codecov-action@v2
+              uses: codecov/codecov-action@v3
               with:
                 fail_ci_if_error: true
                 files: ./coverage.xml
