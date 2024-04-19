@@ -3,15 +3,13 @@
 from typing import Dict
 
 import pandas as pd
-from prefect import task
 from lightgbm import LGBMClassifier, LGBMRegressor
-from sklearn.ensemble import (
-    GradientBoostingClassifier,
-    GradientBoostingRegressor
-)
+from prefect import task
+from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor
 from xgboost import XGBClassifier, XGBRegressor
 
-from bayte import BayesianTargetRegressor, BayesianTargetClassifier
+from bayte import BayesianTargetClassifier, BayesianTargetRegressor
+
 
 @task(name="Check if ensemble")
 def check_ensemble(n_estimators: int) -> bool:
@@ -77,7 +75,7 @@ def train(
     estimator,
     encoder=None,
     n_estimators: int = 0,
-    seed: int = 42
+    seed: int = 42,
 ):
     """Fit the estimator.
 
@@ -108,20 +106,20 @@ def train(
                 base_estimator=estimator,
                 encoder=encoder,
                 n_estimators=n_estimators,
-                random_state=seed
+                random_state=seed,
             )
         else:
             estimator_ = BayesianTargetClassifier(
                 base_estimator=estimator,
                 encoder=encoder,
                 n_estimators=n_estimators,
-                random_state=seed
+                random_state=seed,
             )
 
         estimator_.fit(
             data[features],
             data[metadata["target"]],
-            categorical_feature=metadata["nominal"]
+            categorical_feature=metadata["nominal"],
         )
     else:
         estimator_ = estimator.fit(data[features], data[metadata["target"]])

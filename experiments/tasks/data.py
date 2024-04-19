@@ -51,5 +51,5 @@ def split(
     return train_test_split(
         data[metadata["numeric"] + metadata["nominal"] + [metadata["target"]]],
         test_size=0.2,
-        random_state=seed
+        random_state=seed,
     )

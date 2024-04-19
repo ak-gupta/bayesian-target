@@ -1,6 +1,5 @@
 """Run experiments.
 
-
 I recommend suppressing logging from Prefect.
 
 ```console
@@ -11,6 +10,7 @@ $ export PREFECT__LOGGING__LEVEL=ERROR
 import click
 
 from experiments.flow import gen_flow
+
 
 @click.group()
 def cli():
@@ -29,28 +29,23 @@ def cli():
             "flight-delay-usa-dec-2017",
             "particulate-matter-ukair-2017",
             "churn",
-            "click_prediction_small"
+            "click_prediction_small",
         ]
     ),
-    help="The dataset"
+    help="The dataset",
 )
 @click.option(
     "--algorithm",
     type=click.Choice(["xgboost", "lightgbm", "gbm"]),
-    help="The algorithm"
+    help="The algorithm",
 )
 @click.option(
     "--n-estimators",
     type=click.INT,
     multiple=True,
-    default=[0, 25, 50, 75, 100, 125, 150, 175, 200]
+    default=[0, 25, 50, 75, 100, 125, 150, 175, 200],
 )
-@click.option(
-    "--seeds",
-    type=click.INT,
-    multiple=True,
-    default=[5, 10, 16, 42, 44]
-)
+@click.option("--seeds", type=click.INT, multiple=True, default=[5, 10, 16, 42, 44])
 def sample(dataset, algorithm, n_estimators, seeds):
     """Run the sampling experiment."""
     for n_est in n_estimators:
@@ -61,7 +56,7 @@ def sample(dataset, algorithm, n_estimators, seeds):
                         f"Running experiment for {dataset} with algorithm {algorithm}, "
                         f"{n_est} estimators, and seed {seed}"
                     ),
-                    fg="green"
+                    fg="green",
                 )
             )
             flow = gen_flow(
@@ -70,7 +65,7 @@ def sample(dataset, algorithm, n_estimators, seeds):
                 encoder="bayes",
                 algorithm=algorithm,
                 seed=seed,
-                n_estimators=n_est
+                n_estimators=n_est,
             )
             _ = flow.run()
             if not _.is_successful():
@@ -90,41 +85,30 @@ def sample(dataset, algorithm, n_estimators, seeds):
             "flight-delay-usa-dec-2017",
             "particulate-matter-ukair-2017",
             "churn",
-            "click_prediction_small"
+            "click_prediction_small",
         ]
     ),
-    help="The dataset"
+    help="The dataset",
 )
 @click.option(
     "--algorithm",
     type=click.Choice(["xgboost", "lightgbm", "gbm"]),
-    help="The algorithm"
+    help="The algorithm",
 )
 @click.option(
     "--encoder",
-    type=click.Choice(["frequency", "glmm", "james-stein", "integer", "target", "bayes"]),
-    help="Categorical encoder"
+    type=click.Choice(
+        ["frequency", "glmm", "james-stein", "integer", "target", "bayes"]
+    ),
+    help="Categorical encoder",
+)
+@click.option("--n-estimators", type=click.INT, default=0)
+@click.option("--seeds", type=click.INT, multiple=True, default=[5, 10, 16, 42, 44])
+@click.option(
+    "--marginal", is_flag=True, help="Whether or not to use marginal encoding"
 )
 @click.option(
-    "--n-estimators",
-    type=click.INT,
-    default=0
-)
-@click.option(
-    "--seeds",
-    type=click.INT,
-    multiple=True,
-    default=[5, 10, 16, 42, 44]
-)
-@click.option(
-    "--marginal",
-    is_flag=True,
-    help="Whether or not to use marginal encoding"
-)
-@click.option(
-    "--residual",
-    is_flag=True,
-    help="Whether or not to use residual encoding"
+    "--residual", is_flag=True, help="Whether or not to use residual encoding"
 )
 def compare(dataset, algorithm, encoder, n_estimators, seeds, marginal, residual):
     """Run the comparison experiment."""
@@ -135,7 +119,7 @@ def compare(dataset, algorithm, encoder, n_estimators, seeds, marginal, residual
                     f"Running experiment for {dataset} with algorithm {algorithm}, "
                     f"encoder {encoder}, {n_estimators} estimators, and seed {seed}."
                 ),
-                fg="green"
+                fg="green",
             )
         )
         flow = gen_flow(

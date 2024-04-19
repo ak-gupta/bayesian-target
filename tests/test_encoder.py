@@ -1,20 +1,22 @@
 """Test the encoder."""
 
 import numpy as np
-from numpy.testing import assert_allclose, assert_array_equal
 import pandas as pd
 import pytest
 import scipy.stats
+from numpy.testing import assert_allclose, assert_array_equal
 from sklearn.utils.estimator_checks import check_estimator
 
-from bayte.encoder import (
-    BayesianTargetEncoder,
-    _init_prior
-)
+from bayte.encoder import BayesianTargetEncoder, _init_prior
 
-def test_encoder_validity():
+
+@pytest.mark.parametrize(
+    "estimator,check",
+    list(check_estimator(BayesianTargetEncoder(dist="bernoulli"), generate_only=True)),
+)
+def test_encoder_validity(estimator, check):
     """Test the validity against the scikit-learn API."""
-    check_estimator(BayesianTargetEncoder(dist="bernoulli"))
+    check(estimator)
 
 
 def test_init_prior_bernoulli():
@@ -55,7 +57,7 @@ def test_init_prior_gamma():
     y = scipy.stats.gamma(3).rvs(size=1000)
     out = _init_prior("gamma", y)
 
-    assert np.abs(out[0]/1000 - 3) <= 1
+    assert np.abs(out[0] / 1000 - 3) <= 1
     assert out[1] == 0
     assert out[2] == np.sum(y)
 
@@ -66,7 +68,7 @@ def test_init_prior_invgamma():
     y = scipy.stats.invgamma(5).rvs(size=1000)
     out = _init_prior("invgamma", y)
 
-    assert np.abs(out[0]/1000 - 5) <= 1
+    assert np.abs(out[0] / 1000 - 5) <= 1
     assert out[1] == 0
     assert out[2] == np.sum(y)
 
@@ -74,23 +76,18 @@ def test_init_prior_invgamma():
 def test_fit_invalid_dist():
     """Test raising an error with an invalid likelihood."""
     df = pd.DataFrame(
-        {
-            "x1": [0, 1, 2, 1, 0, 1, 2, 3, 3, 2],
-            "y": [0, 1, 1, 0, 1, 0, 0, 1, 1, 0]
-        }
+        {"x1": [0, 1, 2, 1, 0, 1, 2, 3, 3, 2], "y": [0, 1, 1, 0, 1, 0, 0, 1, 1, 0]}
     )
 
     encoder = BayesianTargetEncoder(dist="fake")
     with pytest.raises(NotImplementedError):
         encoder.fit(df[["x1"]], df["y"])
 
+
 def test_bernoulli_fit():
     """Test fitting the encoder with a binary classification task."""
     df = pd.DataFrame(
-        {
-            "x1": [0, 1, 2, 1, 0, 1, 2, 3, 3, 2],
-            "y": [0, 1, 1, 0, 1, 0, 0, 1, 1, 0]
-        }
+        {"x1": [0, 1, 2, 1, 0, 1, 2, 3, 3, 2], "y": [0, 1, 1, 0, 1, 0, 0, 1, 1, 0]}
     )
 
     encoder = BayesianTargetEncoder(dist="bernoulli")
@@ -103,13 +100,8 @@ def test_bernoulli_fit():
     assert_array_equal(
         encoder.posterior_params_[0],
         np.array(
-            [
-                (1.5, 1.5, 0, 1),
-                (1.5, 2.5, 0, 1),
-                (1.5, 2.5, 0, 1),
-                (2.5, 0.5, 0, 1)
-            ]
-        )
+            [(1.5, 1.5, 0, 1), (1.5, 2.5, 0, 1), (1.5, 2.5, 0, 1), (2.5, 0.5, 0, 1)]
+        ),
     )
 
     # Test parallel
@@ -124,7 +116,7 @@ def test_multinomial_fit():
     df = pd.DataFrame(
         {
             "x1": [0, 1, 2, 2, 2, 1, 1, 3, 3, 1, 2, 3, 3, 2, 0, 0, 0, 1, 0, 1],
-            "y": [0, 1, 1, 1, 0, 2, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 1, 0, 2]
+            "y": [0, 1, 1, 1, 0, 2, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 1, 0, 2],
         }
     )
 
@@ -135,14 +127,7 @@ def test_multinomial_fit():
     assert len(encoder.posterior_params_) == 1
     assert_array_equal(
         encoder.posterior_params_[0],
-        np.array(
-            [
-                (9, 11, 5),
-                (7, 11, 8),
-                (7, 13, 5),
-                (7, 10, 7)
-            ]
-        )
+        np.array([(9, 11, 5), (7, 11, 8), (7, 13, 5), (7, 10, 7)]),
     )
 
     # Test parallel
@@ -155,10 +140,7 @@ def test_multinomial_fit():
 def test_multinomial_fit_missing_classes():
     """Test multinomial fit with missing target levels in categorical."""
     df = pd.DataFrame(
-        {
-            "x1": [0, 1, 0, 1, 1, 1, 0, 2, 1, 2],
-            "y": [0, 0, 1, 1, 0, 2, 2, 1, 0, 2]
-        }
+        {"x1": [0, 1, 0, 1, 1, 1, 0, 2, 1, 2], "y": [0, 0, 1, 1, 0, 2, 2, 1, 0, 2]}
     )
 
     encoder = BayesianTargetEncoder(dist="multinomial")
@@ -167,24 +149,14 @@ def test_multinomial_fit_missing_classes():
     assert encoder.prior_params_ == (4, 3, 3)
     assert len(encoder.posterior_params_) == 1
     assert_array_equal(
-        encoder.posterior_params_[0],
-        np.array(
-            [
-                (5, 4, 4),
-                (7, 4, 4),
-                (4, 4, 4)
-            ]
-        )
+        encoder.posterior_params_[0], np.array([(5, 4, 4), (7, 4, 4), (4, 4, 4)])
     )
 
 
 def test_transform_bernoulli():
     """Test transforming with a bernoulli likelihood."""
     df = pd.DataFrame(
-        {
-            "x1": [0, 1, 2, 1, 0, 1, 2, 3, 3, 2],
-            "y": [0, 1, 1, 0, 1, 0, 0, 1, 1, 0]
-        }
+        {"x1": [0, 1, 2, 1, 0, 1, 2, 3, 3, 2], "y": [0, 1, 1, 0, 1, 0, 0, 1, 1, 0]}
     )
 
     encoder = BayesianTargetEncoder(dist="bernoulli")
@@ -197,7 +169,6 @@ def test_transform_bernoulli():
 
     assert_allclose(out.ravel(), expected, rtol=1e-5)
 
-
     # Test parallel transform
     encoder.set_params(n_jobs=2)
     out = encoder.transform(df[["x1"]])
@@ -208,10 +179,7 @@ def test_transform_bernoulli():
 def test_transform_bernoulli_new_level():
     """Test transforming with a bernoulli likelihood and new levels."""
     df = pd.DataFrame(
-        {
-            "x1": [0, 1, 2, 1, 0, 1, 2, 3, 3, 2],
-            "y": [0, 1, 1, 0, 1, 0, 0, 1, 1, 0]
-        }
+        {"x1": [0, 1, 2, 1, 0, 1, 2, 3, 3, 2], "y": [0, 1, 1, 0, 1, 0, 0, 1, 1, 0]}
     )
 
     encoder = BayesianTargetEncoder(dist="bernoulli")
@@ -229,7 +197,7 @@ def test_transform_multinomial():
     df = pd.DataFrame(
         {
             "x1": [0, 1, 2, 2, 2, 1, 1, 3, 3, 1, 2, 3, 3, 2, 0, 0, 0, 1, 0, 1],
-            "y": [0, 1, 1, 1, 0, 2, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 1, 0, 2]
+            "y": [0, 1, 1, 1, 0, 2, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 1, 0, 2],
         }
     )
 
@@ -285,7 +253,7 @@ def test_transform_exponential(toy_regression_dataset):
 
     for index, params in enumerate(encoder.posterior_params_[0]):
         assert params[1] == 0
-        assert params[2] == (np.sum(y)/(1 + np.sum(y) * np.sum(y[X[:, 9] == index])))
+        assert params[2] == (np.sum(y) / (1 + np.sum(y) * np.sum(y[X[:, 9] == index])))
 
         # Mean of posterior is params[0] * params[2]
         assert np.unique(out[X[:, 9] == index]) == np.array([params[0] * params[2]])
@@ -309,15 +277,15 @@ def test_transform_normal(toy_regression_dataset):
 
     var = np.var(y)
     mean = np.mean(y)
-    hypervar = 1/np.sum(1/np.square(y - mean))
+    hypervar = 1 / np.sum(1 / np.square(y - mean))
     for index, params in enumerate(encoder.posterior_params_[0]):
         nlevel = np.sum(X[:, 9] == index)
         lvlsum = np.sum(y[X[:, 9] == index])
-        assert params[0] == 1/((1/hypervar) + (nlevel/var)) * ((mean/hypervar) + (lvlsum/var))
-        assert params[1] == np.sqrt(1/((1/hypervar) + (nlevel/var)))
-        assert_allclose(
-            np.unique(out[X[:, 9] == index]), np.array(params[0])
+        assert params[0] == 1 / ((1 / hypervar) + (nlevel / var)) * (
+            (mean / hypervar) + (lvlsum / var)
         )
+        assert params[1] == np.sqrt(1 / ((1 / hypervar) + (nlevel / var)))
+        assert_allclose(np.unique(out[X[:, 9] == index]), np.array(params[0]))
 
 
 def test_transform_gamma(toy_regression_dataset):

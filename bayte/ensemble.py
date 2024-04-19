@@ -3,12 +3,12 @@
 Ensemble estimator that creates multiple models through sampling.
 """
 
-from copy import deepcopy
 import logging
-from typing import List, Optional, Union
+from copy import deepcopy
+from typing import ClassVar, List, Literal, Optional, Union
 
-from joblib import Parallel, effective_n_jobs
 import numpy as np
+from joblib import Parallel, effective_n_jobs
 from pandas.api.types import is_categorical_dtype
 from sklearn.base import (
     ClassifierMixin,
@@ -18,12 +18,32 @@ from sklearn.base import (
 )
 from sklearn.ensemble._base import BaseEnsemble
 from sklearn.utils import check_random_state
+from sklearn.utils._available_if import available_if
 from sklearn.utils.fixes import delayed
-from sklearn.utils.metaestimators import if_delegate_has_method
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array, check_is_fitted
 
 LOG = logging.getLogger(__name__)
+
+
+def _available_if_estimator_has(attr: str):
+    """Return a function to check if the estimator has ``attr``.
+
+    Parameters
+    ----------
+    attr : str
+        The attribute to look for.
+
+    Returns
+    -------
+    Any
+        The output of ``available_if``
+    """
+
+    def _check(self):
+        return hasattr(self.estimator, attr)
+
+    return available_if(_check)
 
 
 def _sample_and_fit(
@@ -72,7 +92,7 @@ class BaseSamplingEstimator(BaseEnsemble):
 
     Parameters
     ----------
-    base_estimator : object
+    estimator : object
         The base estimator from which the ensemble is built.
     encoder : BayesianTargetEncoder
         A bayesian target encoder object.
@@ -84,40 +104,44 @@ class BaseSamplingEstimator(BaseEnsemble):
         ``-1`` means using all processors.
     random_state : int, optional (default None)
         Random seed used for generating random seeds for sampling.
+    base_estimator : {"deprecated"}
+        Use ``estimator`` instead.
 
     Attributes
     ----------
     categorical_ : np.ndarray
         A boolean mask indicating which columns are categorical and which are continuous.
-    base_estimator_ : estimator object
+    estimator_ : estimator object
         The base estimator from which the ensemble is grown.
     estimators_ : list
         The collection of fitted base estimators.
     """
 
-    _required_parameters = ["base_estimator", "encoder"]
+    _required_parameters: ClassVar[List[str]] = ["estimator", "encoder"]
 
     def __init__(
         self,
-        base_estimator,
+        estimator,
         encoder,
         n_estimators: int = 10,
         n_jobs: Optional[int] = None,
         random_state: Optional[int] = None,
+        base_estimator: Literal["deprecated"] = "deprecated",
     ):
         """Init method."""
-        self.base_estimator = base_estimator
+        self.estimator = estimator
         self.n_estimators = n_estimators
         self.encoder = encoder
         self.n_jobs = n_jobs
         self.random_state = random_state
+        self.base_estimator = base_estimator
 
     def fit(
         self,
         X,
         y,
         categorical_feature: Union[List[str], List[int], str] = "auto",
-        **fit_params
+        **fit_params,
     ):
         """Fit the estimator.
 
@@ -152,7 +176,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         self.rstates_ = rng.randint(self.n_estimators * 10, size=self.n_estimators)
         # Get the categorical columns
         if hasattr(X, "columns"):
-            self.categorical_ = np.zeros(X.shape[1], dtype=bool)
+            self.categorical_: np.ndarray = np.zeros(X.shape[1], dtype=bool)
             for idx, col in enumerate(X.columns):
                 if categorical_feature == "auto":
                     if is_categorical_dtype(X[col]):
@@ -160,7 +184,7 @@ class BaseSamplingEstimator(BaseEnsemble):
                 elif col in categorical_feature:
                     self.categorical_[idx] = True
 
-        if is_classifier(self.base_estimator):
+        if is_classifier(self.estimator):
             check_classification_targets(y)
             self.classes_ = np.unique(y)
 
@@ -200,13 +224,13 @@ class BaseSamplingEstimator(BaseEnsemble):
         LOG.info("Training the estimator(s).")
         self.estimators_ = parallel(
             fn(
-                clone(self.base_estimator),
+                clone(self.estimator),
                 deepcopy(self.encoder_),
                 X,
                 y,
                 self.categorical_,
                 self.rstates_[idx],
-                **fit_params
+                **fit_params,
             )
             for idx in range(self.n_estimators)
         )
@@ -224,7 +248,7 @@ class BayesianTargetRegressor(RegressorMixin, BaseSamplingEstimator):
 
     Parameters
     ----------
-    base_estimator : object
+    estimator : object
         The base estimator from which the ensemble is built.
     encoder : BayesianTargetEncoder
         A bayesian target encoder object.
@@ -234,18 +258,20 @@ class BayesianTargetRegressor(RegressorMixin, BaseSamplingEstimator):
         The number of cores to run in parallel when fitting the encoder.
         ``None`` means 1 unless in a ``joblib.parallel_backend`` context.
         ``-1`` means using all processors.
+    base_estimator : {"deprecated"}
+        Use ``estimator`` instead.
 
     Attributes
     ----------
     categorical_ : np.ndarray
         A boolean mask indicating which columns are categorical and which are continuous.
-    base_estimator_ : estimator object
+    estimator_ : estimator object
         The base estimator from which the ensemble is grown.
     estimators_ : list
         The collection of fitted base estimators.
     """
 
-    @if_delegate_has_method(delegate="base_estimator")
+    @_available_if_estimator_has("predict")
     def predict(self, X):
         """Call predict on the estimators.
 
@@ -292,7 +318,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
 
     Parameters
     ----------
-    base_estimator : object
+    estimator : object
         The base estimator from which the ensemble is built.
     encoder : BayesianTargetEncoder
         A bayesian target encoder object.
@@ -309,37 +335,41 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         ``-1`` means using all processors.
     random_state : int, optional (default None)
         Random seed used for generating random seeds for sampling.
+    base_estimator : {"deprecated"}
+        Use ``estimator`` instead.
 
     Attributes
     ----------
     categorical_ : np.ndarray
         A boolean mask indicating which columns are categorical and which are continuous.
-    base_estimator_ : estimator object
+    estimator_ : estimator object
         The base estimator from which the ensemble is grown.
     estimators_ : list
         The collection of fitted base estimators.
     """
 
-    _required_parameters = ["base_estimator", "encoder"]
+    _required_parameters: ClassVar[List[str]] = ["estimator", "encoder"]
 
     def __init__(
         self,
-        base_estimator,
+        estimator,
         encoder,
         n_estimators: int = 10,
         voting: str = "hard",
         n_jobs: Optional[int] = None,
         random_state: Optional[int] = None,
+        base_estimator: Literal["deprecated"] = "deprecated",
     ):
         """Init method."""
-        self.base_estimator = base_estimator
+        self.estimator = estimator
         self.n_estimators = n_estimators
         self.voting = voting
         self.encoder = encoder
         self.n_jobs = n_jobs
         self.random_state = random_state
+        self.base_estimator = base_estimator
 
-    @if_delegate_has_method(delegate="base_estimator")
+    @_available_if_estimator_has("predict")
     def predict(self, X):
         """Predict class labels for X.
 
@@ -382,7 +412,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
 
         return vote
 
-    @if_delegate_has_method(delegate="base_estimator")
+    @_available_if_estimator_has("predict_proba")
     def predict_proba(self, X):
         """Call predict_proba on the estimators.
 

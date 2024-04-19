@@ -1,14 +1,13 @@
 """Helpful visualizations for target encoding."""
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
-from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scipy.stats
 import seaborn as sns
-
+from matplotlib.figure import Figure
 
 DIST_MAPPING: Dict = {
     "exponential": "expon",
@@ -17,10 +16,12 @@ DIST_MAPPING: Dict = {
     "normal": "norm",
 }
 
+DEFAULT_CANDIDATES: List[str] = ["exponential", "gamma", "invgamma", "normal"]
+
 
 def visualize_target_dist(
     y: np.ndarray,
-    candidates: List[str] = ["exponential", "gamma", "invgamma", "normal"],
+    candidates: Optional[List[str]] = None,
 ) -> Figure:
     """Produce a histogram for the target variable with traces.
 
@@ -32,8 +33,14 @@ def visualize_target_dist(
     ----------
     y : array-like of shape (n_samples,)
         Target values.
-    candidates : list, optional (default ["exponential", "gamma", "invgamma", "normal"])
-        The candidate likelihoods to consider.
+    candidates : list, optional (default None)
+        The candidate likelihoods to consider. By default, the following distributions
+        will be visualized:
+
+        * ``exponential``,
+        * ``gamma``,
+        * ``invgamma``, and
+        * ``normal``.
 
     Returns
     -------
@@ -44,7 +51,8 @@ def visualize_target_dist(
     # Clip target values above the 99th percentile of the data
     extremes = np.quantile(y, q=[0.01, 0.99])
     target = y[(y > extremes[0]) & (y < extremes[1])]
-    for label in candidates:
+    cand_ = candidates or DEFAULT_CANDIDATES
+    for label in cand_:
         params = getattr(scipy.stats, DIST_MAPPING[label]).fit(target)
         rv = getattr(scipy.stats, DIST_MAPPING[label])(*params)
         x = np.linspace(rv.ppf(0.01), rv.ppf(0.99))
