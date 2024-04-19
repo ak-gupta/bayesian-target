@@ -174,7 +174,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         self.rstates_ = rng.randint(self.n_estimators * 10, size=self.n_estimators)
         # Get the categorical columns
         if hasattr(X, "columns"):
-            self.categorical_ = np.zeros(X.shape[1], dtype=bool)
+            self.categorical_: np.ndarray = np.zeros(X.shape[1], dtype=bool)
             for idx, col in enumerate(X.columns):
                 if categorical_feature == "auto":
                     if is_categorical_dtype(X[col]):
