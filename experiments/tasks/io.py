@@ -7,7 +7,7 @@ import pandas as pd
 from prefect import task
 from scipy.io.arff import loadarff
 
-from .. import DATA_DIR, METADATA_DIR
+from experiments import DATA_DIR, METADATA_DIR
 
 
 @task(name="Read Metadata")
@@ -54,8 +54,10 @@ def read_data(metadata: Dict) -> pd.DataFrame:
     else:
         raise NotImplementedError(f"File type `{fpath.suffix}` not supported.")
 
-    if metadata["dataset_type"] == "classification":
-        if pd.api.types.infer_dtype(data[metadata["target"]]) == "bytes":
-            data[metadata["target"]] = data[metadata["target"]].astype(int)
+    if (
+        metadata["dataset_type"] == "classification"
+        and pd.api.types.infer_dtype(data[metadata["target"]]) == "bytes"
+    ):
+        data[metadata["target"]] = data[metadata["target"]].astype(int)
 
     return data

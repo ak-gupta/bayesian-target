@@ -1,0 +1,174 @@
+[project]
+name = "bayte"
+requires-python = ">=3.8.0"
+description = "Bayesian target encoding with scikit-learn and scipy"
+authors = [
+    { name = "Akshay Gupta", email="akgcodes@gmail.com" }
+]
+license = { file = "LICENSE" }
+classifiers = [
+	"Development Status :: 4 - Beta",
+	"License :: OSI Approved :: MIT License",
+	"Natural Language :: English",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3 :: Only",
+	"Programming Language :: Python :: 3.8",
+	"Programming Language :: Python :: 3.9",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11",
+]
+dependencies = ["pandas<=2.2.2,>=1.0.0", "scikit-learn<=1.4.2,>=1.0.0"]
+
+dynamic = ["readme", "version"]
+
+[project.optional-dependencies]
+build = [
+	"build",
+	"bumpver",
+	"twine",
+	"wheel",
+]
+docs = [
+	"furo",
+	"myst-nb",
+	"sphinx",
+	"sphinxcontrib-bibtex",
+	"sphinx-tabs",
+]
+experiments = [
+	"category_encoders==2.3.0",
+	"lazyscribe==0.3.0",
+	"lightgbm==3.3.1",
+	"seaborn<=0.13.2,>=0.11.0",
+	"prefect==0.15.10",
+	"xgboost==1.5.1",
+]
+plots = [
+	"seaborn<=0.13.2,>=0.11.0"
+]
+qa = [
+    "ruff==0.3.7",
+	"mypy",
+	"pip-tools",
+]
+tests = [
+	"pytest",
+	"pytest-cov",
+]
+dev = [
+    "bayte[build]",
+    "bayte[docs]",
+    "bayte[experiments]",
+    "bayte[plots]",
+    "bayte[qa]",
+    "bayte[tests]",
+]
+
+[project.urls]
+documentation = "https://bayte.readthedocs.io/"
+repository = "https://github.com/ak-gupta/bayte"
+
+# Build system
+[build-system]
+requires = ["setuptools>=64.0.0"]
+build-backend = "setuptools.build_meta"
+
+##############################################################################
+# Setuptools configuration
+##############################################################################
+
+[tool.setuptools]
+include-package-data = true
+zip-safe = false
+packages = ["bayte"]
+
+[tool.setuptools.dynamic]
+version = { attr = "bayte._meta.__version__" }
+readme = { file = ["README.md"], content-type = "text/markdown" }
+
+##############################################################################
+# Tooling
+##############################################################################
+
+# BUMPVER --------------------------------------------------------------------
+
+[bumpver]
+current_version = "0.2.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+
+[bumpver.file_patterns]
+"pyproject.toml" = [
+    'current_version = "{version}"',
+]
+"bayte/_meta.py" = [
+    '__version___ = "{version}"',
+]
+"docs/conf.py" = [
+    'version = "{version}"',
+]
+
+# EDGETEST -------------------------------------------------------------------
+
+[edgetest.envs.core]
+python_version = "3.9"
+extras = ["plots", "tests"]
+upgrade = ["pandas", "scikit-learn", "seaborn"]
+command = "pytest tests"
+
+# RUFF -----------------------------------------------------------------------
+
+[tool.ruff]
+extend-include = ["*.ipynb"]
+target-version = "py38"
+
+[tool.ruff.lint]
+preview = true
+ignore-init-module-imports = true
+select = [
+	"E",  # pycodestyle errors
+	"W",  # pycodestyle warnings
+	"F",  # pyflakes
+	"D",  # pydocstyle
+	"I",  # isort
+	"UP",  # pyupgrade
+	"B",  # flake8-bugbear
+	"C",  # flake8-comprehensions
+	"T20",  # flake8-print
+	"TID252",  # flake8-tidy-imports ban relative imports
+	"SIM",  # flake8-simplify
+	"LOG",  # flake8-logging
+	"RUF",  # Ruff errors
+]
+ignore = [
+	"C901",  # Add back in later
+	"E111",  # Check indentation level. Using formatter instead.
+	"E114",  # Check indentation level. Using formatter instead.
+	"E117",  # Check indentation level. Using formatter instead.
+	"E203",  # Check whitespace. Using formatter instead.
+	"E501",  # Line too long. Using formatter instead.
+	"D206",  # Docstring indentation. Using formatter instead.
+	"D300",  # Use triple single quotes. Using formatter instead.
+	"SIM108",  # Use ternary operator instead of if-else blocks.
+	"SIM105",  # Use ``contextlib.suppress(FileNotFoundError)`` insetad of try - execpt - pass.
+	"UP035",  # ``typing.x`` is deprecated, use ``x`` instead
+	"UP006",  # ``typing.x`` is deprecated, use ``x`` instead
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402"]
+"**/{tests,docs}/*" = ["E402", "D", "F841", "ARG"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+# MYPY -----------------------------------------------------------------------
+
+[tool.mypy]
+python_version = 3.9
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+allow_redefinition = true

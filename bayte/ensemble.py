@@ -3,12 +3,12 @@
 Ensemble estimator that creates multiple models through sampling.
 """
 
-from copy import deepcopy
 import logging
-from typing import List, Literal, Optional, Union
+from copy import deepcopy
+from typing import ClassVar, List, Literal, Optional, Union
 
-from joblib import Parallel, effective_n_jobs
 import numpy as np
+from joblib import Parallel, effective_n_jobs
 from pandas.api.types import is_categorical_dtype
 from sklearn.base import (
     ClassifierMixin,
@@ -18,8 +18,8 @@ from sklearn.base import (
 )
 from sklearn.ensemble._base import BaseEnsemble
 from sklearn.utils import check_random_state
-from sklearn.utils.fixes import delayed
 from sklearn.utils._available_if import available_if
+from sklearn.utils.fixes import delayed
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array, check_is_fitted
 
@@ -117,7 +117,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         The collection of fitted base estimators.
     """
 
-    _required_parameters = ["estimator", "encoder"]
+    _required_parameters: ClassVar[List[str]] = ["estimator", "encoder"]
 
     def __init__(
         self,
@@ -141,7 +141,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         X,
         y,
         categorical_feature: Union[List[str], List[int], str] = "auto",
-        **fit_params
+        **fit_params,
     ):
         """Fit the estimator.
 
@@ -230,7 +230,7 @@ class BaseSamplingEstimator(BaseEnsemble):
                 y,
                 self.categorical_,
                 self.rstates_[idx],
-                **fit_params
+                **fit_params,
             )
             for idx in range(self.n_estimators)
         )
@@ -348,7 +348,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         The collection of fitted base estimators.
     """
 
-    _required_parameters = ["estimator", "encoder"]
+    _required_parameters: ClassVar[List[str]] = ["estimator", "encoder"]
 
     def __init__(
         self,

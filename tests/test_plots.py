@@ -2,6 +2,7 @@
 
 from bayte.plots import visualize_target_dist
 
+
 def test_plot(toy_regression_dataset):
     """Test visualizing the target distribution."""
     _, y = toy_regression_dataset
