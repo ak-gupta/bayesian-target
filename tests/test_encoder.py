@@ -12,9 +12,13 @@ from bayte.encoder import (
     _init_prior
 )
 
-def test_encoder_validity():
+@pytest.mark.parametrize(
+        "estimator,check",
+        list(check_estimator(BayesianTargetEncoder(dist="bernoulli"), generate_only=True))
+)
+def test_encoder_validity(estimator, check):
     """Test the validity against the scikit-learn API."""
-    check_estimator(BayesianTargetEncoder(dist="bernoulli"))
+    check(estimator)
 
 
 def test_init_prior_bernoulli():

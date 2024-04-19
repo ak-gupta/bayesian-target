@@ -5,7 +5,7 @@ Ensemble estimator that creates multiple models through sampling.
 
 from copy import deepcopy
 import logging
-from typing import List, Literal, Optional, Union
+from typing import Callable, List, Literal, Optional, Union
 
 from joblib import Parallel, effective_n_jobs
 import numpy as np
@@ -19,12 +19,30 @@ from sklearn.base import (
 from sklearn.ensemble._base import BaseEnsemble
 from sklearn.utils import check_random_state
 from sklearn.utils.fixes import delayed
-from sklearn.utils.metaestimators import if_delegate_has_method
+from sklearn.utils._available_if import available_if
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array, check_is_fitted
 
 LOG = logging.getLogger(__name__)
 
+
+def _available_if_estimator_has(attr: str):
+    """Return a function to check if the estimator has ``attr``.
+
+    Parameters
+    ----------
+    attr : str
+        The attribute to look for.
+
+    Returns
+    -------
+    Callable
+        The ``available_if`` call.
+    """
+    def _check(self):
+        return hasattr(self.estimator, attr)
+
+    return available_if(_check)
 
 def _sample_and_fit(
     estimator, encoder, X, y, categorical_feature, random_state, **fit_params
@@ -251,7 +269,7 @@ class BayesianTargetRegressor(RegressorMixin, BaseSamplingEstimator):
         The collection of fitted base estimators.
     """
 
-    @if_delegate_has_method(delegate="estimator")
+    @_available_if_estimator_has("predict")
     def predict(self, X):
         """Call predict on the estimators.
 
@@ -349,7 +367,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         self.random_state = random_state
         self.base_estimator = base_estimator
 
-    @if_delegate_has_method(delegate="estimator")
+    @_available_if_estimator_has("predict")
     def predict(self, X):
         """Predict class labels for X.
 
@@ -392,7 +410,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
 
         return vote
 
-    @if_delegate_has_method(delegate="estimator")
+    @_available_if_estimator_has("predict_proba")
     def predict_proba(self, X):
         """Call predict_proba on the estimators.
 
