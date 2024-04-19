@@ -2,18 +2,20 @@
 
 from typing import Dict
 
-from bayte import BayesianTargetEncoder
+import numpy as np
+import pandas as pd
+import prefect
 from category_encoders import (
     CountEncoder,
     GLMMEncoder,
     JamesSteinEncoder,
     TargetEncoder,
 )
-import numpy as np
-import pandas as pd
-import prefect
 from prefect import task
 from sklearn.preprocessing import OrdinalEncoder
+
+from bayte import BayesianTargetEncoder
+
 
 @task(name="Check supervised")
 def check_supervised(algorithm: str) -> bool:
@@ -76,7 +78,7 @@ def fit_encoder(
     encoder,
     estimator=None,
     marginal: bool = False,
-    residual: bool = False
+    residual: bool = False,
 ):
     """Fit the encoder.
 

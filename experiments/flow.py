@@ -1,10 +1,10 @@
 """Basic model fit and score flow."""
 
 from lazyscribe.prefect import LazyProject
-from prefect import Flow, Parameter, case
+from prefect import Flow, case
 from prefect.tasks.control_flow import merge
 
-from . import tasks, OUTPUT_DIR
+from experiments import OUTPUT_DIR, tasks
 
 
 def gen_flow(
@@ -15,7 +15,7 @@ def gen_flow(
     marginal: bool = False,
     residual: bool = False,
     seed: int = 42,
-    n_estimators: int = 0
+    n_estimators: int = 0,
 ) -> Flow:
     """Create a model fit and score flow.
 
@@ -63,12 +63,13 @@ def gen_flow(
             meta = tasks.read_metadata(dataset=dataset)
             data = tasks.read_data(metadata=meta)
 
-
             estimator = tasks.init_model(algorithm=algorithm, metadata=meta, seed=seed)
 
             # Split and encode
             supervised = tasks.check_supervised(algorithm=encoder)
-            encoder_object = tasks.init_encoder(algorithm=encoder, metadata=meta, residual=residual)
+            encoder_object = tasks.init_encoder(
+                algorithm=encoder, metadata=meta, residual=residual
+            )
             train, test = tasks.split(data=data, metadata=meta, seed=seed)
             with case(supervised, True):
                 fitted_encoder_super = tasks.fit_encoder(
@@ -77,7 +78,7 @@ def gen_flow(
                     encoder=encoder_object,
                     estimator=estimator,
                     marginal=marginal,
-                    residual=residual
+                    residual=residual,
                 )
             with case(supervised, False):
                 fitted_encoder_unsup = tasks.fit_encoder(
@@ -99,10 +100,7 @@ def gen_flow(
                 finaltest = tasks.drop_nulls(data=test_transformed)
                 # Fit and score
                 fitted_estimator_std = tasks.train(
-                    data=finaltrain,
-                    metadata=meta,
-                    estimator=estimator,
-                    seed=seed
+                    data=finaltrain, metadata=meta, estimator=estimator, seed=seed
                 )
                 score_std = tasks.score_model(
                     data=finaltest, metadata=meta, estimator=fitted_estimator_std

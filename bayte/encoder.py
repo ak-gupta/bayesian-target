@@ -1,11 +1,11 @@
 """Bayesian target encoder."""
 
 import logging
-from typing import Callable, List, Optional, Tuple, Union
+from typing import Callable, ClassVar, List, Optional, Tuple, Union
 
-from joblib import Parallel, effective_n_jobs
 import numpy as np
 import scipy.stats
+from joblib import Parallel, effective_n_jobs
 from sklearn.preprocessing._encoders import _BaseEncoder
 from sklearn.utils.fixes import delayed
 from sklearn.utils.validation import check_is_fitted
@@ -242,7 +242,7 @@ class BayesianTargetEncoder(_BaseEncoder):
         the parameters for the posterior distribution for the given level.
     """
 
-    _required_parameters = ["dist"]
+    _required_parameters: ClassVar[List[str]] = ["dist"]
 
     def __init__(
         self,
@@ -384,12 +384,12 @@ class BayesianTargetEncoder(_BaseEncoder):
                     n_chunks = np.ceil(len(varencoded) / self.chunksize)
                 chunks = np.array_split(np.arange(len(varencoded)), n_chunks)
 
-                varencoded = list(
+                varencoded = [
                     np.ma.stack(varencoded[chunk[0] : chunk[-1] + 1], axis=2).sum(
                         axis=2
                     )
                     for chunk in chunks
-                )
+                ]
 
             combined = np.ma.stack(varencoded, axis=2).sum(axis=2)
             encoded.append(combined.data)

@@ -1,14 +1,13 @@
 """Import path."""
 
-from ._meta import __version__  # noqa: F401
-
 from typing import List
 
-from .encoder import BayesianTargetEncoder
-from .ensemble import BayesianTargetClassifier, BayesianTargetRegressor
+from bayte._meta import __version__  # noqa: F401
+from bayte.encoder import BayesianTargetEncoder
+from bayte.ensemble import BayesianTargetClassifier, BayesianTargetRegressor
 
 __all__: List[str] = [
-    "BayesianTargetEncoder",
     "BayesianTargetClassifier",
+    "BayesianTargetEncoder",
     "BayesianTargetRegressor",
 ]

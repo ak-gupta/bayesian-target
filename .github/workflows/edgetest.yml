@@ -13,9 +13,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: develop
+
       - id: run-edgetest
-        uses: fdosani/run-edgetest-action@v1.0
+        uses: edgetest-dev/run-edgetest-action@v1.4
         with:
-          edgetest-flags: '-c setup.cfg -r requirements.txt --export'
+          edgetest-flags: '-c pyproject.toml -r requirements.txt --export'
           base-branch: 'develop'
           skip-pr: 'false'
