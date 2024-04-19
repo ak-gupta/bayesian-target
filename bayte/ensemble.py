@@ -19,11 +19,31 @@ from sklearn.base import (
 from sklearn.ensemble._base import BaseEnsemble
 from sklearn.utils import check_random_state
 from sklearn.utils.fixes import delayed
-from sklearn.utils.metaestimators import if_delegate_has_method
+from sklearn.utils._available_if import available_if
 from sklearn.utils.multiclass import check_classification_targets
 from sklearn.utils.validation import check_array, check_is_fitted
 
 LOG = logging.getLogger(__name__)
+
+
+def _available_if_estimator_has(attr: str):
+    """Return a function to check if the estimator has ``attr``.
+
+    Parameters
+    ----------
+    attr : str
+        The attribute to look for.
+
+    Returns
+    -------
+    Any
+        The output of ``available_if``
+    """
+
+    def _check(self):
+        return hasattr(self.estimator, attr)
+
+    return available_if(_check)
 
 
 def _sample_and_fit(
@@ -106,7 +126,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         n_estimators: int = 10,
         n_jobs: Optional[int] = None,
         random_state: Optional[int] = None,
-        base_estimator: Literal["deprecated"] = "deprecated"
+        base_estimator: Literal["deprecated"] = "deprecated",
     ):
         """Init method."""
         self.estimator = estimator
@@ -156,7 +176,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         self.rstates_ = rng.randint(self.n_estimators * 10, size=self.n_estimators)
         # Get the categorical columns
         if hasattr(X, "columns"):
-            self.categorical_ = np.zeros(X.shape[1], dtype=bool)
+            self.categorical_: np.ndarray = np.zeros(X.shape[1], dtype=bool)
             for idx, col in enumerate(X.columns):
                 if categorical_feature == "auto":
                     if is_categorical_dtype(X[col]):
@@ -251,7 +271,7 @@ class BayesianTargetRegressor(RegressorMixin, BaseSamplingEstimator):
         The collection of fitted base estimators.
     """
 
-    @if_delegate_has_method(delegate="estimator")
+    @_available_if_estimator_has("predict")
     def predict(self, X):
         """Call predict on the estimators.
 
@@ -338,7 +358,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         voting: str = "hard",
         n_jobs: Optional[int] = None,
         random_state: Optional[int] = None,
-        base_estimator: Literal["deprecated"] = "deprecated"
+        base_estimator: Literal["deprecated"] = "deprecated",
     ):
         """Init method."""
         self.estimator = estimator
@@ -349,7 +369,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         self.random_state = random_state
         self.base_estimator = base_estimator
 
-    @if_delegate_has_method(delegate="estimator")
+    @_available_if_estimator_has("predict")
     def predict(self, X):
         """Predict class labels for X.
 
@@ -392,7 +412,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
 
         return vote
 
-    @if_delegate_has_method(delegate="estimator")
+    @_available_if_estimator_has("predict_proba")
     def predict_proba(self, X):
         """Call predict_proba on the estimators.
 
