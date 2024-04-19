@@ -5,7 +5,7 @@ Ensemble estimator that creates multiple models through sampling.
 
 from copy import deepcopy
 import logging
-from typing import Callable, List, Literal, Optional, Union
+from typing import List, Literal, Optional, Union
 
 from joblib import Parallel, effective_n_jobs
 import numpy as np
@@ -36,13 +36,15 @@ def _available_if_estimator_has(attr: str):
 
     Returns
     -------
-    Callable
-        The ``available_if`` call.
+    Any
+        The output of ``available_if``
     """
+
     def _check(self):
         return hasattr(self.estimator, attr)
 
     return available_if(_check)
+
 
 def _sample_and_fit(
     estimator, encoder, X, y, categorical_feature, random_state, **fit_params
@@ -124,7 +126,7 @@ class BaseSamplingEstimator(BaseEnsemble):
         n_estimators: int = 10,
         n_jobs: Optional[int] = None,
         random_state: Optional[int] = None,
-        base_estimator: Literal["deprecated"] = "deprecated"
+        base_estimator: Literal["deprecated"] = "deprecated",
     ):
         """Init method."""
         self.estimator = estimator
@@ -356,7 +358,7 @@ class BayesianTargetClassifier(ClassifierMixin, BaseSamplingEstimator):
         voting: str = "hard",
         n_jobs: Optional[int] = None,
         random_state: Optional[int] = None,
-        base_estimator: Literal["deprecated"] = "deprecated"
+        base_estimator: Literal["deprecated"] = "deprecated",
     ):
         """Init method."""
         self.estimator = estimator

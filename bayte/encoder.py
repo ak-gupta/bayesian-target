@@ -8,7 +8,6 @@ import numpy as np
 import scipy.stats
 from sklearn.preprocessing._encoders import _BaseEncoder
 from sklearn.utils.fixes import delayed
-from sklearn.utils._tags import _safe_tags
 from sklearn.utils.validation import check_is_fitted
 
 LOG = logging.getLogger(__name__)
@@ -289,7 +288,9 @@ class BayesianTargetEncoder(_BaseEncoder):
             X, y, dtype=None, force_all_finite=not tags.get("allow_nan", True)
         )
         self._fit(
-            X, handle_unknown=self.handle_unknown, force_all_finite=not tags.get("allow_nan", True)
+            X,
+            handle_unknown=self.handle_unknown,
+            force_all_finite=not tags.get("allow_nan", True),
         )
         # Initialize the prior distribution parameters
         initializer_ = self.initializer or _init_prior
@@ -396,6 +397,4 @@ class BayesianTargetEncoder(_BaseEncoder):
         return np.hstack(encoded)
 
     def _more_tags(self):
-        return {
-            "allow_nan": False
-        }
+        return {"allow_nan": False}
