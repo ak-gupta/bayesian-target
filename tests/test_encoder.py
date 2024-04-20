@@ -103,6 +103,12 @@ def test_bernoulli_fit():
             [(1.5, 1.5, 0, 1), (1.5, 2.5, 0, 1), (1.5, 2.5, 0, 1), (2.5, 0.5, 0, 1)]
         ),
     )
+    assert_allclose(
+        np.array(encoder.encoding_),
+        np.array([[[0.5], [0.375], [0.375], [0.833333]]]),
+        rtol=1e-5
+    )
+    assert_array_equal(encoder.default_encoding_, np.array([0.5]))
 
     # Test parallel
     encoder.set_params(n_jobs=2)
@@ -129,6 +135,21 @@ def test_multinomial_fit():
         encoder.posterior_params_[0],
         np.array([(9, 11, 5), (7, 11, 8), (7, 13, 5), (7, 10, 7)]),
     )
+    assert_allclose(
+        np.array(encoder.encoding_),
+        np.array(
+            [
+                [
+                    [0.36, 0.44, 0.2],
+                    [0.26923, 0.423077, 0.307692],
+                    [0.28, 0.52, 0.2],
+                    [0.291667, 0.416667, 0.291667]
+                ]
+            ]
+        ),
+        rtol=1e-5
+    )
+    assert_array_equal(encoder.default_encoding_, np.array([0.3, 0.45, 0.25]))
 
     # Test parallel
     encoder.set_params(n_jobs=2)
